@@ -8,9 +8,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; }
         .header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 30px 20px 20px 20px; text-align: center; position: relative; }
-        .header-logo { width: 300px; margin-bottom: 10px; }
         .header h1 { font-size: 2.2em; margin-bottom: 10px; }
-        .icba-name { font-size: 1.1em; font-weight: 600; margin-top: 8px; letter-spacing: 1px; }
         .form-container { padding: 40px; }
         .parameter-group { margin-bottom: 25px; padding: 20px; border: 2px solid #ecf0f1; border-radius: 10px; transition: all 0.3s ease; }
         .parameter-group:hover { border-color: #3498db; box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1); }
@@ -38,18 +36,20 @@
         .info-box p { color: #34495e; line-height: 1.6; }
         .age-reference { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #3498db; }
         .fa-warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-top: 15px; color: #856404; }
-        .footer { background: #f4f7fa; text-align: center; padding: 25px 10px 15px 10px; border-top: 2px solid #e1e5e9; margin-top: 40px; }
-        .footer-logo { width: 120px; display: block; margin: 0 auto 8px auto; }
-        .footer .icba-name { color: #357abd; font-weight: 700; font-size: 1.1em; letter-spacing: 1px; }
+        .referencias { margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 10px; border-left: 5px solid #17a2b8; }
+        .referencias h3 { color: #17a2b8; margin-bottom: 20px; font-size: 1.3em; }
+        .referencia-item { margin-bottom: 15px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .referencia-item p { margin: 0; line-height: 1.6; color: #2c3e50; }
+        .referencia-item a { color: #3498db; text-decoration: none; font-weight: 500; }
+        .referencia-item a:hover { color: #2980b9; text-decoration: underline; }
+        .footer { background: #f4f7fa; text-align: center; padding: 25px 10px 15px 10px; border-top: 2px solid #e1e5e9; margin-top: 40px; color: #7f8c8d; }
         @media (max-width: 768px) { .input-row { flex-direction: column; align-items: stretch; } .input-row label { margin-bottom: 5px; margin-right: 0; } .input-row input, .input-row select { flex: 1; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-       
-            <h1>🫀Calculadora Función Diastólica ASE 2025</h1>
-            
+            <h1>🫀 Calculadora Función Diastólica ASE 2025</h1>
         </div>
         <div class="form-container">
             <div class="info-box">
@@ -141,7 +141,21 @@
                 <div id="parametros-status" class="parameter-status"></div>
                 <div id="recomendaciones" class="recommendations"></div>
             </div>
+            
+            <div class="referencias">
+                <h3>📚 Referencias Bibliográficas</h3>
+                <div class="referencia-item">
+                    <p><strong>Nagueh SF, Smiseth OA, Appleton CP, et al.</strong> Recommendations for the Evaluation of Left Ventricular Diastolic Function by Echocardiography: An Update from the American Society of Echocardiography and the European Association of Cardiovascular Imaging. <em>J Am Soc Echocardiogr.</em> 2016;29(4):277-314. 
+                    <a href="https://doi.org/10.1016/j.echo.2016.01.011" target="_blank" rel="noopener">doi:10.1016/j.echo.2016.01.011</a></p>
+                </div>
+                <div class="referencia-item">
+                    <p><strong>American Society of Echocardiography.</strong> Guidelines for the Evaluation of Diastolic Function. Updated recommendations based on current evidence. 
+                    <a href="https://www.asecho.org/" target="_blank" rel="noopener">Disponible en: www.asecho.org</a></p>
+                </div>
+            </div>
         </div>
+        <div class="footer">
+            <p>Calculadora basada en las guías ASE para evaluación de función diastólica</p>
         </div>
     </div>
     <script>
