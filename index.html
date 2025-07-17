@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Función Diastólica ASE 2025</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Diastólica ASE">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; }
@@ -52,7 +61,37 @@
         .pressure-status { font-size: 1.3em; font-weight: bold; margin-top: 15px; padding: 10px; border-radius: 8px; text-align: center; }
         .pressure-status.normal { background: rgba(255,255,255,0.2); color: white; }
         .pressure-status.elevated { background: rgba(255,255,255,0.3); color: white; }
-        @media (max-width: 768px) { .input-row { flex-direction: column; align-items: stretch; } .input-row label { margin-bottom: 5px; margin-right: 0; } .input-row input, .input-row select { flex: 1; } }
+        
+        /* PWA Install Button */
+        .install-button { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: #3498db; 
+            color: white; 
+            border: none; 
+            border-radius: 50px; 
+            padding: 15px 20px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); 
+            display: none; 
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .install-button:hover { 
+            background: #2980b9; 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4); 
+        }
+        
+        @media (max-width: 768px) { 
+            .input-row { flex-direction: column; align-items: stretch; } 
+            .input-row label { margin-bottom: 5px; margin-right: 0; } 
+            .input-row input, .input-row select { flex: 1; }
+            .install-button { bottom: 10px; right: 10px; padding: 12px 16px; font-size: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -199,7 +238,49 @@
             <p>Calculadora basada en las guías ASE para evaluación de función diastólica</p>
         </div>
     </div>
+    
+    <!-- PWA Install Button -->
+    <button id="installButton" class="install-button">📱 Instalar App</button>
+    
     <script>
+        // PWA Install functionality
+        let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.style.display = 'block';
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installButton.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installButton.style.display = 'none';
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
         function toggleEASection() {
             const ritmo = document.getElementById('ritmo').value;
             const eaSection = document.getElementById('eaSection');
@@ -589,3 +670,115 @@
     </script>
 </body>
 </html>'''
+
+# Guardar el archivo HTML PWA
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(html_pwa_content)
+
+print("✅ Archivo HTML PWA generado: index.html")
+Output
+output
+Copy Code
+✅ Archivo HTML PWA generado: index.html
+index.html
+
+Ahora voy a crear los archivos adicionales que necesitas para la PWA:
+
+Code
+python
+Copy Code
+# Crear manifest.json
+manifest_content = '''{
+  "name": "Calculadora Función Diastólica ASE 2025",
+  "short_name": "Diastólica ASE",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#764ba2",
+  "theme_color": "#3498db",
+  "description": "Calculadora de función diastólica basada en las guías ASE 2025. Evalúa parámetros ecocardiográficos para diagnóstico de disfunción diastólica.",
+  "icons": [
+    {
+      "src": "https://cdn.abacus.ai/images/1912c19c-7286-4ead-8eeb-256d2eb8b2d0.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn.abacus.ai/images/1912c19c-7286-4ead-8eeb-256d2eb8b2d0.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn.abacus.ai/images/1912c19c-7286-4ead-8eeb-256d2eb8b2d0.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "lang": "es",
+  "orientation": "portrait",
+  "categories": ["medical", "health", "productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "https://cdn.abacus.ai/images/1912c19c-7286-4ead-8eeb-256d2eb8b2d0.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}'''
+
+# Crear service-worker.js
+service_worker_content = '''const CACHE_NAME = "diastolica-ase-v1.0";
+const urlsToCache = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "https://cdn.abacus.ai/images/1912c19c-7286-4ead-8eeb-256d2eb8b2d0.png"
+];
+
+// Install event - cache resources
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log("Opened cache");
+        return cache.addAll(urlsToCache);
+      })
+      .catch(error => {
+        console.error("Failed to cache resources:", error);
+      })
+  );
+});
+
+// Fetch event - serve from cache, fallback to network
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Return cached version or fetch from network
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+      .catch(error => {
+        console.error("Fetch failed:", error);
+        // You could return a fallback page here
+      })
+  );
+});
+
+// Activate event - clean up old caches
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log("Deleting old cache:", cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
