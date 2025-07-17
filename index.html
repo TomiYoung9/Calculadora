@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Función Diastólica ASE 2025</title>
-    
+    <title>CALCULADORA DE FUNCIÓN DIASTÓLICA ASE 2025</title>
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3498db">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Diastólica ASE">
+    <meta name="apple-mobile-web-app-title" content="Función Diastólica">
     <link rel="apple-touch-icon" href="icon-192.png">
-    
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
         .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden; }
@@ -61,43 +60,13 @@
         .pressure-status { font-size: 1.3em; font-weight: bold; margin-top: 15px; padding: 10px; border-radius: 8px; text-align: center; }
         .pressure-status.normal { background: rgba(255,255,255,0.2); color: white; }
         .pressure-status.elevated { background: rgba(255,255,255,0.3); color: white; }
-        
-        /* PWA Install Button */
-        .install-button { 
-            position: fixed; 
-            bottom: 20px; 
-            right: 20px; 
-            background: #3498db; 
-            color: white; 
-            border: none; 
-            border-radius: 50px; 
-            padding: 15px 20px; 
-            font-size: 14px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); 
-            display: none; 
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        .install-button:hover { 
-            background: #2980b9; 
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4); 
-        }
-        
-        @media (max-width: 768px) { 
-            .input-row { flex-direction: column; align-items: stretch; } 
-            .input-row label { margin-bottom: 5px; margin-right: 0; } 
-            .input-row input, .input-row select { flex: 1; }
-            .install-button { bottom: 10px; right: 10px; padding: 12px 16px; font-size: 12px; }
-        }
+        @media (max-width: 768px) { .input-row { flex-direction: column; align-items: stretch; } .input-row label { margin-bottom: 5px; margin-right: 0; } .input-row input, .input-row select { flex: 1; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🫀 Calculadora Función Diastólica ASE 2025</h1>
+            <h1>🫀 CALCULADORA DE FUNCIÓN DIASTÓLICA ASE 2025</h1>
         </div>
         <div class="form-container">
             <div class="info-box">
@@ -213,7 +182,6 @@
                 <div id="parametros-status" class="parameter-status"></div>
                 <div id="recomendaciones" class="recommendations"></div>
             </div>
-            
             <div class="referencias">
                 <h3>📚 Referencias Bibliográficas</h3>
                 <div class="referencia-item">
@@ -238,21 +206,17 @@
             <p>Calculadora basada en las guías ASE para evaluación de función diastólica</p>
         </div>
     </div>
-    
     <!-- PWA Install Button -->
-    <button id="installButton" class="install-button">📱 Instalar App</button>
-    
+    <button id="installButton" class="calculate-btn" style="display:none;position:fixed;bottom:20px;right:20px;z-index:1000;">📱 Instalar App</button>
     <script>
         // PWA Install functionality
         let deferredPrompt;
         const installButton = document.getElementById('installButton');
-
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             installButton.style.display = 'block';
         });
-
         installButton.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -263,24 +227,15 @@
                 deferredPrompt = null;
             }
         });
-
         window.addEventListener('appinstalled', () => {
             installButton.style.display = 'none';
         });
-
         // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
+                navigator.serviceWorker.register('service-worker.js');
             });
         }
-
         function toggleEASection() {
             const ritmo = document.getElementById('ritmo').value;
             const eaSection = document.getElementById('eaSection');
@@ -295,7 +250,6 @@
                 faWarning.style.display = 'none';
             }
         }
-
         function toggleAIInput() {
             const tipoAI = document.getElementById('tipoAI').value;
             const volumenRow = document.getElementById('volumenRow');
@@ -310,7 +264,6 @@
                 document.getElementById('volumenAI').value = '';
             }
         }
-
         function updateAgeReferences() {
             const edad = parseInt(document.getElementById('edad').value);
             const ageReferences = document.getElementById('ageReferences');
@@ -341,7 +294,6 @@
                 ageReferences.style.display = 'none';
             }
         }
-
         function calcularFuncionDiastolica() {
             const velocidadE = parseFloat(document.getElementById('velocidadE').value) || 0;
             const velocidadA = parseFloat(document.getElementById('velocidadA').value) || 0;
@@ -355,22 +307,17 @@
             const ritmo = document.getElementById('ritmo').value;
             const edad = parseInt(document.getElementById('edad').value) || 0;
             const tipoAI = document.getElementById('tipoAI').value;
-
             if (eSeptal === 0 || eLateral === 0 || edad === 0) {
-                alert('Por favor, complete al menos los valores de e\\' septal, e\\' lateral y edad del paciente.');
+                alert('Por favor, complete al menos los valores de e\' septal, e\' lateral y edad del paciente.');
                 return;
             }
-
             const relacionEA = (ritmo === 'sinusal' && velocidadA > 0) ? velocidadE / velocidadA : null;
             const ePromedio = (eSeptal + eLateral) / 2;
             const relacionEeProm = ePromedio > 0 ? velocidadE / ePromedio : 0;
-
             let parametrosAlterados = 0;
             let parametrosEvaluados = 0;
             let statusParametros = [];
-
             let eeAlterado = false, aiAlterado = false, trAlterado = false;
-
             if (ritmo === 'sinusal' && relacionEA !== null) {
                 parametrosEvaluados++;
                 let eaStatus = 'normal';
@@ -401,7 +348,6 @@
                     referencia: eaRef
                 });
             }
-
             parametrosEvaluados++;
             let eStatus = 'normal';
             let eRef = '';
@@ -430,7 +376,6 @@
                 status: eStatus,
                 referencia: eRef
             });
-
             if (relacionEeProm > 0) {
                 parametrosEvaluados++;
                 let eeStatus = 'normal';
@@ -446,13 +391,11 @@
                     referencia: '≤14'
                 });
             }
-
             if (volumenAI > 0 || areaAI > 0) {
                 parametrosEvaluados++;
                 let aiStatus = 'normal';
                 let aiValor = '';
                 let aiRef = '';
-
                 if (tipoAI === 'volumen' && volumenAI > 0) {
                     aiValor = volumenAI + ' ml/m²';
                     aiRef = '≤34 ml/m²';
@@ -470,7 +413,6 @@
                         aiAlterado = true;
                     }
                 }
-
                 statusParametros.push({
                     nombre: tipoAI === 'volumen' ? 'Volumen AI indexado' : 'Área AI',
                     valor: aiValor,
@@ -478,7 +420,6 @@
                     referencia: aiRef
                 });
             }
-
             if (velocidadRT > 0) {
                 parametrosEvaluados++;
                 let rtStatus = 'normal';
@@ -494,7 +435,6 @@
                     referencia: '≤2.8 m/s'
                 });
             }
-
             if (laStrain !== null && laStrain > 0) {
                 parametrosEvaluados++;
                 let strainStatus = 'normal';
@@ -509,17 +449,14 @@
                     referencia: '≥23%'
                 });
             }
-
             let grado = '';
             let gradoDetalle = '';
             let presionLlenado = '';
             let presionLlenadoClase = '';
-
             let criteriosElevados = 0;
             if (relacionEeProm > 14) criteriosElevados++;
             if (aiAlterado) criteriosElevados++;
             if (trAlterado) criteriosElevados++;
-
             if (criteriosElevados >= 2) {
                 presionLlenado = 'Presiones de llenado elevadas';
                 presionLlenadoClase = 'elevated';
@@ -527,7 +464,6 @@
                 presionLlenado = 'Presiones de llenado normales';
                 presionLlenadoClase = 'normal';
             }
-
             if (ritmo === 'sinusal' && velocidadE > 0 && velocidadA > 0) {
                 if (relacionEA < 0.8 && velocidadE <= 50) {
                     grado = 'Grado I (relajación anormal)';
@@ -542,7 +478,7 @@
                     if (trAlterado) alterados++;
                     if (alterados >= 2) {
                         grado = 'Grado II (patrón pseudonormal)';
-                        gradoDetalle = 'E/A 0.8-2.0 y ≥2 de: E/e\\'>14, AI alterada, TR>2.8 m/s';
+                        gradoDetalle = 'E/A 0.8-2.0 y ≥2 de: E/e\'>14, AI alterada, TR>2.8 m/s';
                     } else {
                         grado = 'Normal';
                         gradoDetalle = 'Patrón de llenado normal';
@@ -558,11 +494,9 @@
                 grado = 'No aplicable (datos insuficientes)';
                 gradoDetalle = 'Se requieren valores de E y A para clasificar el grado de disfunción diastólica en ritmo sinusal.';
             }
-
             let diagnosticoPrincipal = '';
             let clasePrincipal = '';
             let recomendaciones = '';
-
             if (fevi !== null && fevi < 50) {
                 document.getElementById('feviWarning').style.display = 'block';
                 diagnosticoPrincipal = '🔴 DISFUNCIÓN DIASTÓLICA (FEVI <50%)';
@@ -628,22 +562,17 @@
                     </ul>
                 `;
             }
-
             document.getElementById('feviWarning').style.display = (fevi !== null && fevi < 50) ? 'block' : 'none';
             document.getElementById('diagnostico').innerHTML = diagnosticoPrincipal + `<br><span style="font-size:0.9em;color:#eee;">(${parametrosAlterados}/${parametrosEvaluados} parámetros alterados)</span>`;
-
             let gradoHtml = '';
             if (grado) {
                 gradoHtml = `<div style="margin-top:10px;font-size:1.2em;"><b>Tipo de disfunción diastólica:</b> ${grado}<br><span style="font-size:0.95em;color:#eee;">${gradoDetalle}</span></div>`;
                 document.getElementById('diagnostico').innerHTML += gradoHtml;
             }
-
             document.getElementById('pressureStatus').textContent = presionLlenado;
             document.getElementById('pressureStatus').className = `pressure-status ${presionLlenadoClase}`;
-
             document.getElementById('results').className = `results ${clasePrincipal}`;
             document.getElementById('results').style.display = 'block';
-
             const statusHTML = statusParametros.map(param => `
                 <div class="parameter-item ${param.status}">
                     <strong>${param.nombre}:</strong> ${param.valor}<br>
@@ -651,17 +580,14 @@
                     <small>Estado: ${param.status === 'alterado' ? '❌ Alterado' : '✅ Normal'}</small>
                 </div>
             `).join('');
-
             document.getElementById('parametros-status').innerHTML = statusHTML;
             document.getElementById('recomendaciones').innerHTML = recomendaciones;
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
-
         document.addEventListener('DOMContentLoaded', function() {
             toggleAIInput();
             toggleEASection();
         });
-
         document.querySelectorAll('input[type="number"]').forEach(input => {
             input.addEventListener('input', function() {
                 if (this.value < 0) this.value = 0;
