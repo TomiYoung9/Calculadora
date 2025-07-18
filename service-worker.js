@@ -1,4 +1,4 @@
-const CACHE_NAME = "diastolica-ase-v1";
+const CACHE_NAME = "diastolica-ase-v2";
 const urlsToCache = [
   "./",
   "./index.html",
