@@ -1,11 +1,11 @@
 {
-  "name": "Calculadora Diastólica ASE 2025",
-  "short_name": "Diastólica ASE",
+  "name": "Calculadora de Función Diastólica - ASE 2025",
+  "short_name": "Función Diastólica",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#764ba2",
-  "theme_color": "#3498db",
-  "description": "Calculadora de función diastólica basada en las guías ASE 2025.",
+  "background_color": "#b7d0e8",
+  "theme_color": "#3a5a7a",
+  "description": "Calculadora interactiva para evaluación de función diastólica según guías ASE 2025.",
   "icons": [
     {
       "src": "icon-192.png",
@@ -17,6 +17,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "lang": "es"
+  ]
 }
