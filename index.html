@@ -42,6 +42,7 @@
             color: #fff;
             padding: 36px 20px 24px 20px;
             text-align: center;
+            position: relative;
         }
         .header h1 {
             font-family: 'Inter', Arial, sans-serif;
@@ -73,6 +74,20 @@
             margin-bottom: 24px;
             font-size: 1.05em;
             box-shadow: 0 2px 8px #4a90e211;
+            position: relative;
+        }
+        .alg-link {
+            display: block;
+            text-align: right;
+            margin-top: 6px;
+            color: #3a5a7a;
+            font-size: 0.97em;
+            text-decoration: underline dotted;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .alg-link:hover {
+            color: #27ae60;
         }
         .form-card {
             background: var(--card-bg);
@@ -279,7 +294,97 @@
         }
         .pressure-status.normal { background: #eafaf1; color: var(--green);}
         .pressure-status.elevated { background: #fdeaea; color: var(--red);}
-        
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
+        }
+        .modal-content {
+            background: #fff;
+            max-width: 700px;
+            margin: 30px auto;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 28px 24px 22px 24px;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: #888;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .modal h2 {
+            margin-top: 0;
+            color: var(--text-main);
+            font-size: 1.4em;
+            margin-bottom: 20px;
+        }
+        .modal-body {
+            font-size: 0.95em;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        .modal-body h4 {
+            color: var(--accent-dark);
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .modal-body hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 16px 0;
+        }
+        .modal-body ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .modal-body li {
+            margin-bottom: 4px;
+        }
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.9em;
+        }
+        .modal-table th, .modal-table td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .modal-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
         @media (max-width: 768px) {
             .container { margin: 0; border-radius: 0; }
             .form-container { padding: 2px 0.5vw 2px 0.5vw; }
@@ -334,6 +439,18 @@
                 padding: 7px 6px;
                 font-size: 0.97em;
             }
+            .modal-content {
+                margin: 10px;
+                max-width: none;
+                padding: 20px 16px;
+                max-height: 90vh;
+            }
+            .modal-table {
+                font-size: 0.8em;
+            }
+            .modal-table th, .modal-table td {
+                padding: 6px 8px;
+            }
         }
     </style>
 </head>
@@ -346,6 +463,7 @@
         <div class="form-container">
             <div class="info-box">
                 <strong>📋 Instrucciones:</strong> Complete los parámetros ecocardiográficos. Los valores de velocidad deben estar en <b>cm/s</b> para E, A, e' y en <b>m/s</b> para la velocidad de regurgitación tricuspídea (TR).
+                <a id="openAlgInfo" class="alg-link" href="javascript:void(0)">¿Cómo funciona el algoritmo?</a>
             </div>
             <form id="diastolicForm">
                 <div class="form-card">
@@ -479,26 +597,186 @@
                 <div id="parametros-status" class="parameter-status"></div>
                 <div id="recomendaciones" class="recommendations"></div>
             </div>
-<div class="referencias">
-    <h3>📚 Referencia</h3>
-    <div class="referencia-item">
-        <p>
-            <strong>ASE 2025. Left Ventricular Diastolic Function by Echo</strong><br>
-            <a href="https://www.asecho.org/guideline/left-ventricular-diastolic-function-by-echo/" target="_blank" rel="noopener">
-                https://www.asecho.org/guideline/left-ventricular-diastolic-function-by-echo/
-            </a>
-        </p>
-    </div>
-</div>
-        <div class="twitter-section">
-            <a href="https://x.com/atomasyoung" target="_blank" rel="noopener" class="twitter-link">
-                <svg class="twitter-icon" viewBox="0 0 1200 1227" fill="currentColor">
-                    <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
-                </svg>
-                @atomasyoung
-            </a>
+            <div class="referencias">
+                <h3>📚 Referencia</h3>
+                <div class="referencia-item">
+                    <p>
+                        <strong>ASE 2025. Left Ventricular Diastolic Function by Echo</strong><br>
+                        <a href="https://www.asecho.org/guideline/left-ventricular-diastolic-function-by-echo/" target="_blank" rel="noopener">
+                            https://www.asecho.org/guideline/left-ventricular-diastolic-function-by-echo/
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="twitter-section">
+                <a href="https://x.com/atomasyoung" target="_blank" rel="noopener" class="twitter-link">
+                    <svg class="twitter-icon" viewBox="0 0 1200 1227" fill="currentColor">
+                        <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
+                    </svg>
+                    @atomasyoung
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- Modal de información del algoritmo -->
+    <div id="algModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2>🧠 ¿Cómo funciona el algoritmo?</h2>
+            <div class="modal-body">
+                <h4>1. Selección inicial</h4>
+                <p>El algoritmo se ramifica según dos factores principales: <strong>FEVI</strong> (fracción de eyección del ventrículo izquierdo) y <strong>Ritmo</strong> (sinusal o fibrilación auricular).</p>
+
+                <hr>
+
+                <h4>2. Si FEVI < 50% (cualquier ritmo)</h4>
+                <p><strong>Diagnóstico:</strong> Se asume disfunción diastólica. El objetivo es estimar la <strong>presión de llenado</strong>.</p>
+                <p><strong>Parámetros evaluados:</strong> e' promedio, AI (volumen o área), velocidad TR, LA Strain (si se ingresa).</p>
+                <p><strong>Interpretación:</strong></p>
+                <ul>
+                    <li>2 o más parámetros alterados → Presión de llenado elevada</li>
+                    <li>2 o más parámetros normales → Presión de llenado normal</li>
+                    <li>Otros casos → Indeterminado</li>
+                </ul>
+
+                <hr>
+
+                <h4>3. Si FEVI ≥ 50% y Ritmo Sinusal</h4>
+                <p><strong>Diagnóstico:</strong> Se evalúa función diastólica y se puede graduar (normal, grado I, II, III).</p>
+                <p><strong>Parámetros:</strong> e' promedio, AI, TR, E/A, LA Strain (si se ingresa).</p>
+                <p><strong>Algoritmo:</strong></p>
+                <ul>
+                    <li>Si hay menos de 3 parámetros disponibles → Indeterminado</li>
+                    <li>Si 3 o más parámetros alterados → Disfunción diastólica</li>
+                    <li>Si 3 o más parámetros normales → Función diastólica normal</li>
+                    <li>Otros casos → Indeterminado</li>
+                </ul>
+                <p><strong>Grado de disfunción (si corresponde):</strong></p>
+                <ul>
+                    <li><strong>Grado I:</strong> E/A < 0.8 y E < 50 cm/s (alteración de relajación)</li>
+                    <li><strong>Grado III:</strong> E/A ≥ 2.0 (restrictivo)</li>
+                    <li><strong>Grado II:</strong> Resto de los casos (pseudonormal)</li>
+                </ul>
+
+                <hr>
+
+                <h4>4. Si Ritmo Fibrilación Auricular</h4>
+                <p><strong>Diagnóstico:</strong> No se gradúa la disfunción. Solo se estima presión de llenado.</p>
+                <p><strong>Parámetros:</strong> e' promedio, AI, TR, LA Strain (si se ingresa). <em>No se utiliza E/A.</em></p>
+                <p><strong>Interpretación:</strong></p>
+                <ul>
+                    <li>2 o más parámetros alterados → Presión de llenado elevada</li>
+                    <li>2 o más parámetros normales → Presión de llenado normal</li>
+                    <li>Otros casos → Indeterminado</li>
+                </ul>
+
+                <hr>
+
+                <h4>5. Parámetros y valores de referencia</h4>
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Parámetro</th>
+                            <th>&lt;50 años</th>
+                            <th>50-64 años</th>
+                            <th>≥65 años</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>e' lateral</td>
+                            <td>≥10 cm/s</td>
+                            <td>≥8.5 cm/s</td>
+                            <td>≥7.0 cm/s</td>
+                        </tr>
+                        <tr>
+                            <td>e' septal</td>
+                            <td>≥8.0 cm/s</td>
+                            <td>≥6.5 cm/s</td>
+                            <td>≥5.0 cm/s</td>
+                        </tr>
+                        <tr>
+                            <td>e' promedio</td>
+                            <td>≥10 cm/s</td>
+                            <td>≥8 cm/s</td>
+                            <td>≥6 cm/s</td>
+                        </tr>
+                        <tr>
+                            <td>E/A</td>
+                            <td>≥1.0</td>
+                            <td>0.8–2.0</td>
+                            <td>0.7–2.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Otros parámetros (independientes de la edad):</strong></p>
+                <ul>
+                    <li><strong>Volumen AI indexado:</strong> ≤34 ml/m²</li>
+                    <li><strong>Área AI:</strong> ≤20 cm²</li>
+                    <li><strong>Velocidad TR:</strong> ≤2.8 m/s</li>
+                    <li><strong>LA Strain:</strong> ≥23%</li>
+                </ul>
+
+                <hr>
+
+                <h4>6. Resumen de caminos diagnósticos</h4>
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>FEVI</th>
+                            <th>Ritmo</th>
+                            <th>Diagnóstico principal</th>
+                            <th>¿Se gradúa?</th>
+                            <th>Criterio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>&lt;50%</td>
+                            <td>Cualquiera</td>
+                            <td>Disfunción diastólica</td>
+                            <td>No</td>
+                            <td>≥2 alterados: presión elevada</td>
+                        </tr>
+                        <tr>
+                            <td>≥50%</td>
+                            <td>Sinusal</td>
+                            <td>Normal/Disfunción/Indeterminado</td>
+                            <td>Sí</td>
+                            <td>≥3 alterados: disfunción</td>
+                        </tr>
+                        <tr>
+                            <td>Cualquiera</td>
+                            <td>FA</td>
+                            <td>Normal/Disfunción/Indeterminado</td>
+                            <td>No</td>
+                            <td>≥2 alterados: presión elevada</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr>
+
+                <h4>7. Notas importantes</h4>
+                <ul>
+                    <li>Si hay menos de 3 parámetros disponibles (en ritmo sinusal con FEVI ≥50%), el resultado es <strong>indeterminado</strong>.</li>
+                    <li><strong>LA Strain</strong> solo se utiliza si se ingresa un valor.</li>
+                    <li>En <strong>fibrilación auricular</strong>, la relación E/A no se utiliza.</li>
+                    <li>En <strong>FEVI &lt;50%</strong>, siempre se asume disfunción diastólica, solo se estima presión de llenado.</li>
+                </ul>
+
+                <hr>
+
+                <p style="font-size:0.9em; color:#666; text-align:center; margin-top:20px;">
+                    <strong>Basado en las guías ASE/EACVI 2025</strong><br>
+                    <em>Left Ventricular Diastolic Function by Echo</em>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Mostrar/ocultar sección E/A según ritmo
         function toggleEASection() {
@@ -515,6 +793,7 @@
                 faWarning.style.display = 'none';
             }
         }
+
         // Mostrar/ocultar input de área/volumen AI
         function toggleAIInput() {
             const tipoAI = document.getElementById('tipoAI').value;
@@ -530,6 +809,7 @@
                 document.getElementById('volumenAI').value = '';
             }
         }
+
         // Mostrar valores de referencia según edad, ritmo, FEVI y tipo de AI
         function updateAgeReferences() {
             const edad = document.getElementById('edad').value;
@@ -538,7 +818,9 @@
             const tipoAI = document.getElementById('tipoAI').value;
             const ageReferences = document.getElementById('ageReferences');
             const ageReferenceContent = document.getElementById('ageReferenceContent');
+
             let eRef, eaRef, edadTexto, eSeptalRef, eLateralRef, aiRef;
+
             if (edad === "1") {
                 edadTexto = "&lt;50 años";
                 eRef = "e' promedio ≥ 10 cm/s";
@@ -558,15 +840,19 @@
                 eSeptalRef = "≥5.0";
                 eLateralRef = "≥7.0";
             }
+
             aiRef = tipoAI === "volumen" ? "Volumen AI indexado ≤34 ml/m²" : "Área AI ≤20 cm²";
+
             let ritmoRef = "";
             if (ritmo === "fa") {
                 ritmoRef = "<br>• En FA no se utiliza E/A";
             }
+
             let feviRef = "";
             if (fevi === "menor") {
                 feviRef = "<br>• FEVI reducida: se asume disfunción diastólica";
             }
+
             ageReferenceContent.innerHTML = `
                 <strong>Edad ${edadTexto}:</strong><br>
                 • ${eRef} (lateral ${eLateralRef} cm/s, septal ${eSeptalRef} cm/s)<br>
@@ -577,16 +863,29 @@
                 • LA Strain ≥ 23%
                 ${feviRef}
             `;
+
             ageReferences.style.display = 'block';
         }
+
         // Mostrar advertencia si falta TR
         function showTrWarning(show) {
             document.getElementById('trWarning').style.display = show ? 'block' : 'none';
             document.getElementById('trWarningResult').style.display = show ? 'block' : 'none';
         }
+
+        // Modal functionality
+        function openModal() {
+            document.getElementById('algModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('algModal').style.display = 'none';
+        }
+
         // Salto automático al siguiente input
         document.addEventListener('DOMContentLoaded', function() {
             let inputs = Array.from(document.querySelectorAll('input,select')).filter(el => el.offsetParent !== null);
+
             document.querySelectorAll('input,select').forEach((el, idx, arr) => {
                 el.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
@@ -597,12 +896,25 @@
                     }
                 });
             });
+
             document.getElementById('velocidadRT').addEventListener('input', function() {
                 const valor = parseFloat(this.value);
                 showTrWarning(!valor || valor === 0);
             });
+
+            // Configurar el botón del modal
+            document.getElementById('openAlgInfo').addEventListener('click', openModal);
+
+            // Cerrar modal al hacer clic fuera
+            document.getElementById('algModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
             updateAgeReferences();
         });
+
         // Lógica principal de cálculo
         function calcularFuncionDiastolica() {
             // Obtener valores
@@ -616,6 +928,7 @@
             const areaAI = parseFloat(document.getElementById('areaAI').value);
             const velocidadRT = parseFloat(document.getElementById('velocidadRT').value);
             const laStrain = parseFloat(document.getElementById('laStrain').value);
+
             let velocidadE = null, velocidadA = null, ea = null;
             if (ritmo === "sinusal") {
                 velocidadE = parseFloat(document.getElementById('velocidadE').value);
@@ -624,6 +937,7 @@
                     ea = velocidadE / velocidadA;
                 }
             }
+
             // Referencias según edad
             let eSeptalRef, eLateralRef, ePromRef, eaMin, eaMax;
             if (edad === "1") {
@@ -642,8 +956,10 @@
                 ePromRef = 6;
                 eaMin = 0.7; eaMax = 2.0;
             }
+
             // Estado de parámetros
             let parametros = [];
+
             // e' lateral
             let eLateralNormal = eLateral >= eLateralRef;
             parametros.push({
@@ -652,6 +968,7 @@
                 estado: isNaN(eLateral) ? "indeterminate" : (eLateralNormal ? "normal" : "abnormal"),
                 referencia: "≥" + eLateralRef + " cm/s"
             });
+
             // e' septal
             let eSeptalNormal = eSeptal >= eSeptalRef;
             parametros.push({
@@ -660,6 +977,7 @@
                 estado: isNaN(eSeptal) ? "indeterminate" : (eSeptalNormal ? "normal" : "abnormal"),
                 referencia: "≥" + eSeptalRef + " cm/s"
             });
+
             // e' promedio
             let eProm = (eSeptal + eLateral) / 2;
             let ePromNormal = eProm >= ePromRef;
@@ -669,6 +987,7 @@
                 estado: isNaN(eProm) ? "indeterminate" : (ePromNormal ? "normal" : "abnormal"),
                 referencia: "≥" + ePromRef + " cm/s"
             });
+
             // E/A (solo en ritmo sinusal)
             let eaNormal = null;
             if (ritmo === "sinusal" && !isNaN(ea)) {
@@ -691,6 +1010,7 @@
                     referencia: (edad === "1" ? "≥" + eaMin : eaMin + "–" + eaMax)
                 });
             }
+
             // LAVI o Área AI
             let aiNormal = null, aiValor = null, aiReferencia = "";
             if (tipoAI === "volumen" && !isNaN(volumenAI)) {
@@ -706,12 +1026,14 @@
                 aiValor = "—";
                 aiReferencia = tipoAI === "volumen" ? "≤34 ml/m²" : "≤20 cm²";
             }
+
             parametros.push({
                 nombre: tipoAI === "volumen" ? "Volumen AI indexado" : "Área AI",
                 valor: aiValor,
                 estado: aiNormal === null ? "indeterminate" : (aiNormal ? "normal" : "abnormal"),
                 referencia: aiReferencia
             });
+
             // Velocidad TR
             let trNormal = !isNaN(velocidadRT) && velocidadRT <= 2.8;
             parametros.push({
@@ -720,6 +1042,7 @@
                 estado: isNaN(velocidadRT) ? "indeterminate" : (trNormal ? "normal" : "abnormal"),
                 referencia: "≤2.8 m/s"
             });
+
             // LA Strain (solo si está)
             let laStrainNormal = !isNaN(laStrain) && laStrain >= 23;
             if (!isNaN(laStrain)) {
@@ -730,8 +1053,10 @@
                     referencia: "≥23%"
                 });
             }
+
             // Mostrar advertencia si falta TR
             showTrWarning(isNaN(velocidadRT));
+
             // Diagnóstico
             let diagnostico = "";
             let pressureStatus = "";
@@ -739,9 +1064,11 @@
             let feviWarning = document.getElementById('feviWarning');
             let trWarningResult = document.getElementById('trWarningResult');
             let indeterminateNote = document.getElementById('indeterminateNote');
+
             feviWarning.style.display = "none";
             trWarningResult.style.display = isNaN(velocidadRT) ? "block" : "none";
             indeterminateNote.style.display = "none";
+
             // Si FEVI <50%
             if (fevi === "menor") {
                 diagnostico = "Disfunción diastólica (FEVI reducida)";
@@ -751,11 +1078,13 @@
             } else if (ritmo === "fa") {
                 // Algoritmo específico para FA
                 let alterados = 0, normales = 0;
+
                 // Solo e' promedio, AI y TR y LA Strain
                 if (!isNaN(eProm)) alterados += ePromNormal ? 0 : 1, normales += ePromNormal ? 1 : 0;
                 if (aiNormal !== null) alterados += aiNormal ? 0 : 1, normales += aiNormal ? 1 : 0;
                 if (!isNaN(velocidadRT)) alterados += trNormal ? 0 : 1, normales += trNormal ? 1 : 0;
                 if (!isNaN(laStrain)) alterados += laStrainNormal ? 0 : 1, normales += laStrainNormal ? 1 : 0;
+
                 if (alterados >= 2) {
                     diagnostico = "Disfunción diastólica";
                     pressureStatus = "Presión de llenado elevada";
@@ -767,22 +1096,26 @@
                     pressureStatus = "";
                     indeterminateNote.style.display = "block";
                 }
+
                 recomendaciones = "En FA no se gradúa la disfunción diastólica. Se estima presión de llenado.";
             } else {
                 // Algoritmo ASE 2025 para FEVI ≥50% y ritmo sinusal
                 let alterados = 0, normales = 0, indeterminados = 0;
+
                 // Considerar e' promedio, AI, TR, E/A, LA Strain
                 if (!isNaN(eProm)) alterados += ePromNormal ? 0 : 1, normales += ePromNormal ? 1 : 0;
                 if (aiNormal !== null) alterados += aiNormal ? 0 : 1, normales += aiNormal ? 1 : 0;
                 if (!isNaN(velocidadRT)) alterados += trNormal ? 0 : 1, normales += trNormal ? 1 : 0;
                 if (!isNaN(ea)) alterados += eaNormal ? 0 : 1, normales += eaNormal ? 1 : 0;
                 if (!isNaN(laStrain)) alterados += laStrainNormal ? 0 : 1, normales += laStrainNormal ? 1 : 0;
+
                 let total = 0;
                 if (!isNaN(eProm)) total++;
                 if (aiNormal !== null) total++;
                 if (!isNaN(velocidadRT)) total++;
                 if (!isNaN(ea)) total++;
                 if (!isNaN(laStrain)) total++;
+
                 // Diagnóstico
                 if (total < 3) {
                     diagnostico = "Indeterminado";
@@ -797,6 +1130,7 @@
                     diagnostico = "Indeterminado";
                     indeterminateNote.style.display = "block";
                 }
+
                 // Grado de disfunción si corresponde
                 if (diagnostico === "Disfunción diastólica" && !isNaN(ea) && !isNaN(velocidadE)) {
                     if (ea < 0.8 && velocidadE < 50) {
@@ -807,16 +1141,20 @@
                         diagnostico += " - Grado II (pseudonormal)";
                     }
                 }
+
                 recomendaciones = "";
             }
+
             // Mostrar resultados
             const results = document.getElementById('results');
             results.className = "results";
             if (diagnostico.includes("normal")) results.classList.add("normal");
             else if (diagnostico.includes("Disfunción") || diagnostico.includes("elevada")) results.classList.add("abnormal");
             else results.classList.add("indeterminate");
+
             document.getElementById('diagnostico').innerHTML = diagnostico;
             document.getElementById('pressureStatus').innerHTML = pressureStatus;
+
             // Parámetros
             let htmlParametros = "";
             parametros.forEach(p => {
@@ -825,18 +1163,23 @@
                 htmlParametros += `<div class="parameter-item ${p.estado}"><strong>${p.nombre}:</strong> ${p.valor} <span style="color:#888;font-size:0.95em;">(${p.referencia})</span></div>`;
             });
             document.getElementById('parametros-status').innerHTML = htmlParametros;
+
             document.getElementById('recomendaciones').innerHTML = recomendaciones;
+
             results.style.display = "block";
             results.scrollIntoView({behavior: "smooth"});
         }
+
         // Para presión de llenado en FEVI reducida
         function evaluarPresionLlenado(parametros, laStrainNormal) {
             let alterados = 0, normales = 0;
+
             // e' lateral, e' septal, e' promedio, AI, TR, LA Strain
             if (parametros[2].estado !== "indeterminate") alterados += parametros[2].estado === "abnormal" ? 1 : 0, normales += parametros[2].estado === "normal" ? 1 : 0;
             if (parametros[3].estado !== "indeterminate") alterados += parametros[3].estado === "abnormal" ? 1 : 0, normales += parametros[3].estado === "normal" ? 1 : 0;
             if (parametros[4].estado !== "indeterminate") alterados += parametros[4].estado === "abnormal" ? 1 : 0, normales += parametros[4].estado === "normal" ? 1 : 0;
             if (parametros[5] && parametros[5].estado !== "indeterminate") alterados += parametros[5].estado === "abnormal" ? 1 : 0, normales += parametros[5].estado === "normal" ? 1 : 0;
+
             if (alterados >= 2) return "Presión de llenado elevada";
             if (normales >= 2) return "Presión de llenado normal";
             return "";
