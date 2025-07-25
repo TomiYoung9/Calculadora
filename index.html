@@ -245,6 +245,15 @@
             margin-bottom: 12px;
             border-left: 4px solid var(--accent);
         }
+        .missing-params-warning {
+            background: #fffbe6;
+            border: 1.5px solid var(--yellow);
+            color: #b38600;
+            padding: 10px 12px;
+            border-radius: 7px;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
         .referencias {
             margin-top: 28px;
             padding: 16px 12px;
@@ -431,7 +440,7 @@
             .results { 
                 padding: 3px 1px; 
             }
-            .info-box, .fa-warning, .fevi-warning, .tr-warning, .indeterminate-note, .age-reference, .recommendations {
+            .info-box, .fa-warning, .fevi-warning, .tr-warning, .indeterminate-note, .age-reference, .recommendations, .missing-params-warning {
                 padding: 7px 6px;
                 font-size: 0.97em;
             }
@@ -462,7 +471,7 @@
         </div>
         <div class="form-container">
             <div class="info-box">
-                <strong>📋 Instrucciones:</strong> Complete los parámetros ecocardiográficos. Los valores de velocidad deben estar en <b>cm/s</b> para E, A, e' y en <b>m/s</b> para la velocidad de regurgitación tricuspídea (TR).
+                <strong>📋 Instrucciones:</strong> Complete los parámetros ecocardiográficos disponibles. Todos los campos son opcionales. Los valores de velocidad deben estar en <b>cm/s</b> para E, A, e' y en <b>m/s</b> para la velocidad de regurgitación tricuspídea (TR).
                 <a id="openAlgInfo" class="alg-link" href="javascript:void(0)">¿Cómo funciona el algoritmo?</a>
             </div>
             <form id="diastolicForm">
@@ -502,12 +511,12 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>Onda E:</label>
-                            <input type="number" id="velocidadE" step="0.1" min="0" max="300">
+                            <input type="number" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional">
                             <span class="unit">cm/s</span>
                         </div>
                         <div class="input-row">
                             <label>Onda A:</label>
-                            <input type="number" id="velocidadA" step="0.1" min="0" max="300">
+                            <input type="number" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional">
                             <span class="unit">cm/s</span>
                         </div>
                     </div>
@@ -520,12 +529,12 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>e' lateral:</label>
-                            <input type="number" id="eLateral" step="0.1" min="0" max="30" required>
+                            <input type="number" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional">
                             <span class="unit">cm/s</span>
                         </div>
                         <div class="input-row">
                             <label>e' septal:</label>
-                            <input type="number" id="eSeptal" step="0.1" min="0" max="30" required>
+                            <input type="number" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional">
                             <span class="unit">cm/s</span>
                         </div>
                     </div>
@@ -542,12 +551,12 @@
                         </div>
                         <div class="input-row" id="volumenRow">
                             <label>Vol AI indexado:</label>
-                            <input type="number" id="volumenAI" step="1" min="0" max="200">
+                            <input type="number" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional">
                             <span class="unit">ml/m²</span>
                         </div>
                         <div class="input-row" id="areaRow" style="display:none;">
                             <label>Área auricular izquierda:</label>
-                            <input type="number" id="areaAI" step="0.1" min="0" max="50">
+                            <input type="number" id="areaAI" step="0.1" min="0" max="50" placeholder="Opcional">
                             <span class="unit">cm²</span>
                         </div>
                     </div>
@@ -560,7 +569,7 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>Velocidad pico de regurgitación tricuspídea:</label>
-                            <input type="number" id="velocidadRT" step="0.01" min="0" max="6">
+                            <input type="number" id="velocidadRT" step="0.01" min="0" max="6" placeholder="Opcional">
                             <span class="unit">m/s</span>
                         </div>
                     </div>
@@ -575,9 +584,6 @@
                         </div>
                     </div>
                 </div>
-                <div id="trWarning" class="tr-warning">
-                    ℹ️ No se ingresó la velocidad de regurgitación tricuspídea. El algoritmo se adapta y utiliza los parámetros disponibles según las guías ASE.
-                </div>
                 <button type="button" class="calculate-btn" onclick="calcularFuncionDiastolica()">
                     🧮 Calcular función diastólica
                 </button>
@@ -585,9 +591,6 @@
             <div id="results" class="results">
                 <div id="feviWarning" class="fevi-warning" style="display:none;">
                     ⚠️ <strong>FEVI reducida:</strong> En pacientes con FEVI &lt;50%, se asume disfunción diastólica. Lo relevante es estimar la presión de llenado.
-                </div>
-                <div id="trWarningResult" class="tr-warning" style="display:none;">
-                    ℹ️ No se ingresó la velocidad de regurgitación tricuspídea. El algoritmo se adapta y utiliza los parámetros disponibles según las guías ASE.
                 </div>
                 <div id="indeterminateNote" class="indeterminate-note" style="display:none;">
                     Se dispone solo de dos parámetros y sus resultados son discordantes (uno normal y otro alterado), por lo que no es posible clasificar la función diastólica según las guías ASE/EACVI.
@@ -644,7 +647,7 @@
 
                 <h4>3. Si FEVI ≥ 50% y Ritmo Sinusal</h4>
                 <p><strong>Diagnóstico:</strong> Se evalúa función diastólica y se puede graduar (normal, grado I, II, III).</p>
-                <p><strong>Parámetros:</strong> e' promedio, AI, TR, E/A, LA Strain (si se ingresa).</p>
+                <p><strong>Parámetros:</strong> e' promedio, AI, TR, E/A, E/e', LA Strain (si se ingresa).</p>
                 <p><strong>Algoritmo:</strong></p>
                 <ul>
                     <li>Si hay menos de 3 parámetros disponibles → Indeterminado</li>
@@ -663,7 +666,7 @@
 
                 <h4>4. Si Ritmo Fibrilación Auricular</h4>
                 <p><strong>Diagnóstico:</strong> No se gradúa la disfunción. Solo se estima presión de llenado.</p>
-                <p><strong>Parámetros:</strong> e' promedio, AI, TR, LA Strain (si se ingresa). <em>No se utiliza E/A.</em></p>
+                <p><strong>Parámetros:</strong> e' promedio, AI, TR, E/e', LA Strain (si se ingresa). <em>No se utiliza E/A.</em></p>
                 <p><strong>Interpretación:</strong></p>
                 <ul>
                     <li>2 o más parámetros alterados → Presión de llenado elevada</li>
@@ -716,6 +719,7 @@
                     <li><strong>Volumen AI indexado:</strong> ≤34 ml/m²</li>
                     <li><strong>Área AI:</strong> ≤20 cm²</li>
                     <li><strong>Velocidad TR:</strong> ≤2.8 m/s</li>
+                    <li><strong>E/e' promedio:</strong> ≤14</li>
                     <li><strong>LA Strain:</strong> ≥23%</li>
                 </ul>
 
@@ -765,6 +769,7 @@
                     <li><strong>LA Strain</strong> solo se utiliza si se ingresa un valor.</li>
                     <li>En <strong>fibrilación auricular</strong>, la relación E/A no se utiliza.</li>
                     <li>En <strong>FEVI &lt;50%</strong>, siempre se asume disfunción diastólica, solo se estima presión de llenado.</li>
+                    <li><strong>Todos los campos son opcionales</strong> - el algoritmo se adapta a los parámetros disponibles.</li>
                 </ul>
 
                 <hr>
@@ -778,6 +783,33 @@
     </div>
 
     <script>
+        // Función para detectar parámetros faltantes
+        function getMissingParams(ritmo, fevi, tipoAI, valores) {
+            let faltan = [];
+            
+            // Parámetros siempre relevantes
+            if (isNaN(valores.eSeptal)) faltan.push("e' septal");
+            if (isNaN(valores.eLateral)) faltan.push("e' lateral");
+            
+            // Aurícula izquierda
+            if (tipoAI === "volumen" && isNaN(valores.volumenAI)) faltan.push("Volumen AI indexado");
+            if (tipoAI === "area" && isNaN(valores.areaAI)) faltan.push("Área AI");
+            
+            // Velocidad TR
+            if (isNaN(valores.velocidadRT)) faltan.push("Velocidad TR");
+            
+            // E/A solo en ritmo sinusal
+            if (ritmo === "sinusal") {
+                if (isNaN(valores.velocidadE)) faltan.push("Onda E");
+                if (isNaN(valores.velocidadA)) faltan.push("Onda A");
+            }
+            
+            // LA Strain es opcional pero se menciona si no está
+            if (isNaN(valores.laStrain)) faltan.push("LA Strain");
+            
+            return faltan;
+        }
+
         // Mostrar/ocultar sección E/A según ritmo
         function toggleEASection() {
             const ritmo = document.getElementById('ritmo').value;
@@ -867,12 +899,6 @@
             ageReferences.style.display = 'block';
         }
 
-        // Mostrar advertencia si falta TR
-        function showTrWarning(show) {
-            document.getElementById('trWarning').style.display = show ? 'block' : 'none';
-            document.getElementById('trWarningResult').style.display = show ? 'block' : 'none';
-        }
-
         // Modal functionality
         function openModal() {
             document.getElementById('algModal').style.display = 'block';
@@ -884,8 +910,6 @@
 
         // Salto automático al siguiente input
         document.addEventListener('DOMContentLoaded', function() {
-            let inputs = Array.from(document.querySelectorAll('input,select')).filter(el => el.offsetParent !== null);
-
             document.querySelectorAll('input,select').forEach((el, idx, arr) => {
                 el.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
@@ -895,11 +919,6 @@
                         if (next) next.focus();
                     }
                 });
-            });
-
-            document.getElementById('velocidadRT').addEventListener('input', function() {
-                const valor = parseFloat(this.value);
-                showTrWarning(!valor || valor === 0);
             });
 
             // Configurar el botón del modal
@@ -917,43 +936,52 @@
 
         // Lógica principal de cálculo
         function calcularFuncionDiastolica() {
-            // Obtener valores
+            // Obtener valores del formulario
             const ritmo = document.getElementById('ritmo').value;
             const edad = document.getElementById('edad').value;
             const fevi = document.getElementById('fevi').value;
-            const eSeptal = parseFloat(document.getElementById('eSeptal').value);
-            const eLateral = parseFloat(document.getElementById('eLateral').value);
             const tipoAI = document.getElementById('tipoAI').value;
-            const volumenAI = parseFloat(document.getElementById('volumenAI').value);
-            const areaAI = parseFloat(document.getElementById('areaAI').value);
-            const velocidadRT = parseFloat(document.getElementById('velocidadRT').value);
-            const laStrain = parseFloat(document.getElementById('laStrain').value);
+            
+            // Crear objeto con todos los valores parseados
+            const valores = {
+                eSeptal: parseFloat(document.getElementById('eSeptal').value),
+                eLateral: parseFloat(document.getElementById('eLateral').value),
+                volumenAI: parseFloat(document.getElementById('volumenAI').value),
+                areaAI: parseFloat(document.getElementById('areaAI').value),
+                velocidadRT: parseFloat(document.getElementById('velocidadRT').value),
+                laStrain: parseFloat(document.getElementById('laStrain').value),
+                velocidadE: parseFloat(document.getElementById('velocidadE').value),
+                velocidadA: parseFloat(document.getElementById('velocidadA').value)
+            };
 
-            let velocidadE = null, velocidadA = null, ea = null;
-            if (ritmo === "sinusal") {
-                velocidadE = parseFloat(document.getElementById('velocidadE').value);
-                velocidadA = parseFloat(document.getElementById('velocidadA').value);
-                if (!isNaN(velocidadE) && !isNaN(velocidadA) && velocidadA > 0) {
-                    ea = velocidadE / velocidadA;
+            // Detectar parámetros faltantes
+            const faltan = getMissingParams(ritmo, fevi, tipoAI, valores);
+
+            // Calcular E/A y E/e' si es posible
+            let ea = null, ee = null;
+            if (ritmo === "sinusal" && !isNaN(valores.velocidadE) && !isNaN(valores.velocidadA) && valores.velocidadA > 0) {
+                ea = valores.velocidadE / valores.velocidadA;
+            }
+
+            // Calcular e' promedio y E/e'
+            let eProm = null;
+            if (!isNaN(valores.eSeptal) && !isNaN(valores.eLateral)) {
+                eProm = (valores.eSeptal + valores.eLateral) / 2;
+                if (!isNaN(valores.velocidadE) && eProm > 0) {
+                    ee = valores.velocidadE / eProm;
                 }
             }
 
             // Referencias según edad
             let eSeptalRef, eLateralRef, ePromRef, eaMin, eaMax;
             if (edad === "1") {
-                eSeptalRef = 8.0;
-                eLateralRef = 10.0;
-                ePromRef = 10;
+                eSeptalRef = 8.0; eLateralRef = 10.0; ePromRef = 10;
                 eaMin = 1.0; eaMax = 99;
             } else if (edad === "2") {
-                eSeptalRef = 6.5;
-                eLateralRef = 8.5;
-                ePromRef = 8;
+                eSeptalRef = 6.5; eLateralRef = 8.5; ePromRef = 8;
                 eaMin = 0.8; eaMax = 2.0;
             } else {
-                eSeptalRef = 5.0;
-                eLateralRef = 7.0;
-                ePromRef = 6;
+                eSeptalRef = 5.0; eLateralRef = 7.0; ePromRef = 6;
                 eaMin = 0.7; eaMax = 2.0;
             }
 
@@ -961,36 +989,42 @@
             let parametros = [];
 
             // e' lateral
-            let eLateralNormal = eLateral >= eLateralRef;
-            parametros.push({
-                nombre: "e' lateral",
-                valor: isNaN(eLateral) ? "—" : eLateral.toFixed(1) + " cm/s",
-                estado: isNaN(eLateral) ? "indeterminate" : (eLateralNormal ? "normal" : "abnormal"),
-                referencia: "≥" + eLateralRef + " cm/s"
-            });
+            if (!isNaN(valores.eLateral)) {
+                let eLateralNormal = valores.eLateral >= eLateralRef;
+                parametros.push({
+                    nombre: "e' lateral",
+                    valor: valores.eLateral.toFixed(1) + " cm/s",
+                    estado: eLateralNormal ? "normal" : "abnormal",
+                    referencia: "≥" + eLateralRef + " cm/s"
+                });
+            }
 
             // e' septal
-            let eSeptalNormal = eSeptal >= eSeptalRef;
-            parametros.push({
-                nombre: "e' septal",
-                valor: isNaN(eSeptal) ? "—" : eSeptal.toFixed(1) + " cm/s",
-                estado: isNaN(eSeptal) ? "indeterminate" : (eSeptalNormal ? "normal" : "abnormal"),
-                referencia: "≥" + eSeptalRef + " cm/s"
-            });
+            if (!isNaN(valores.eSeptal)) {
+                let eSeptalNormal = valores.eSeptal >= eSeptalRef;
+                parametros.push({
+                    nombre: "e' septal",
+                    valor: valores.eSeptal.toFixed(1) + " cm/s",
+                    estado: eSeptalNormal ? "normal" : "abnormal",
+                    referencia: "≥" + eSeptalRef + " cm/s"
+                });
+            }
 
             // e' promedio
-            let eProm = (eSeptal + eLateral) / 2;
-            let ePromNormal = eProm >= ePromRef;
-            parametros.push({
-                nombre: "e' promedio",
-                valor: isNaN(eProm) ? "—" : eProm.toFixed(1) + " cm/s",
-                estado: isNaN(eProm) ? "indeterminate" : (ePromNormal ? "normal" : "abnormal"),
-                referencia: "≥" + ePromRef + " cm/s"
-            });
+            let ePromNormal = null;
+            if (eProm !== null) {
+                ePromNormal = eProm >= ePromRef;
+                parametros.push({
+                    nombre: "e' promedio",
+                    valor: eProm.toFixed(1) + " cm/s",
+                    estado: ePromNormal ? "normal" : "abnormal",
+                    referencia: "≥" + ePromRef + " cm/s"
+                });
+            }
 
             // E/A (solo en ritmo sinusal)
             let eaNormal = null;
-            if (ritmo === "sinusal" && !isNaN(ea)) {
+            if (ritmo === "sinusal" && ea !== null) {
                 if (edad === "1") {
                     eaNormal = ea >= eaMin;
                 } else {
@@ -1002,88 +1036,90 @@
                     estado: eaNormal ? "normal" : "abnormal",
                     referencia: (edad === "1" ? "≥" + eaMin : eaMin + "–" + eaMax)
                 });
-            } else if (ritmo === "sinusal") {
+            }
+
+            // E/e' promedio
+            let eeNormal = null;
+            if (ee !== null) {
+                eeNormal = ee <= 14;
                 parametros.push({
-                    nombre: "Relación E/A",
-                    valor: "—",
-                    estado: "indeterminate",
-                    referencia: (edad === "1" ? "≥" + eaMin : eaMin + "–" + eaMax)
+                    nombre: "E/e' promedio",
+                    valor: ee.toFixed(1),
+                    estado: eeNormal ? "normal" : "abnormal",
+                    referencia: "≤14"
                 });
             }
 
-            // LAVI o Área AI
-            let aiNormal = null, aiValor = null, aiReferencia = "";
-            if (tipoAI === "volumen" && !isNaN(volumenAI)) {
-                aiNormal = volumenAI <= 34;
-                aiValor = volumenAI + " ml/m²";
-                aiReferencia = "≤34 ml/m²";
-            } else if (tipoAI === "area" && !isNaN(areaAI)) {
-                aiNormal = areaAI <= 20;
-                aiValor = areaAI + " cm²";
-                aiReferencia = "≤20 cm²";
-            } else {
-                aiNormal = null;
-                aiValor = "—";
-                aiReferencia = tipoAI === "volumen" ? "≤34 ml/m²" : "≤20 cm²";
+            // Aurícula izquierda
+            let aiNormal = null;
+            if (tipoAI === "volumen" && !isNaN(valores.volumenAI)) {
+                aiNormal = valores.volumenAI <= 34;
+                parametros.push({
+                    nombre: "Volumen AI indexado",
+                    valor: valores.volumenAI + " ml/m²",
+                    estado: aiNormal ? "normal" : "abnormal",
+                    referencia: "≤34 ml/m²"
+                });
+            } else if (tipoAI === "area" && !isNaN(valores.areaAI)) {
+                aiNormal = valores.areaAI <= 20;
+                parametros.push({
+                    nombre: "Área AI",
+                    valor: valores.areaAI + " cm²",
+                    estado: aiNormal ? "normal" : "abnormal",
+                    referencia: "≤20 cm²"
+                });
             }
 
-            parametros.push({
-                nombre: tipoAI === "volumen" ? "Volumen AI indexado" : "Área AI",
-                valor: aiValor,
-                estado: aiNormal === null ? "indeterminate" : (aiNormal ? "normal" : "abnormal"),
-                referencia: aiReferencia
-            });
-
             // Velocidad TR
-            let trNormal = !isNaN(velocidadRT) && velocidadRT <= 2.8;
-            parametros.push({
-                nombre: "Velocidad TR",
-                valor: isNaN(velocidadRT) ? "—" : velocidadRT.toFixed(2) + " m/s",
-                estado: isNaN(velocidadRT) ? "indeterminate" : (trNormal ? "normal" : "abnormal"),
-                referencia: "≤2.8 m/s"
-            });
+            let trNormal = null;
+            if (!isNaN(valores.velocidadRT)) {
+                trNormal = valores.velocidadRT <= 2.8;
+                parametros.push({
+                    nombre: "Velocidad TR",
+                    valor: valores.velocidadRT.toFixed(2) + " m/s",
+                    estado: trNormal ? "normal" : "abnormal",
+                    referencia: "≤2.8 m/s"
+                });
+            }
 
-            // LA Strain (solo si está)
-            let laStrainNormal = !isNaN(laStrain) && laStrain >= 23;
-            if (!isNaN(laStrain)) {
+            // LA Strain
+            let laStrainNormal = null;
+            if (!isNaN(valores.laStrain)) {
+                laStrainNormal = valores.laStrain >= 23;
                 parametros.push({
                     nombre: "LA Strain",
-                    valor: laStrain.toFixed(1) + " %",
+                    valor: valores.laStrain.toFixed(1) + " %",
                     estado: laStrainNormal ? "normal" : "abnormal",
                     referencia: "≥23%"
                 });
             }
 
-            // Mostrar advertencia si falta TR
-            showTrWarning(isNaN(velocidadRT));
-
-            // Diagnóstico
+            // Algoritmo diagnóstico
             let diagnostico = "";
             let pressureStatus = "";
             let recomendaciones = "";
+            
+            // Elementos de advertencia
             let feviWarning = document.getElementById('feviWarning');
-            let trWarningResult = document.getElementById('trWarningResult');
             let indeterminateNote = document.getElementById('indeterminateNote');
-
             feviWarning.style.display = "none";
-            trWarningResult.style.display = isNaN(velocidadRT) ? "block" : "none";
             indeterminateNote.style.display = "none";
 
             // Si FEVI <50%
             if (fevi === "menor") {
                 diagnostico = "Disfunción diastólica (FEVI reducida)";
-                pressureStatus = evaluarPresionLlenado(parametros, laStrainNormal);
+                pressureStatus = evaluarPresionLlenado(ePromNormal, aiNormal, trNormal, eeNormal, laStrainNormal);
                 recomendaciones = "En FEVI reducida, la función diastólica se asume alterada. El foco debe estar en estimar la presión de llenado.";
                 feviWarning.style.display = "block";
             } else if (ritmo === "fa") {
                 // Algoritmo específico para FA
                 let alterados = 0, normales = 0;
 
-                // Solo e' promedio, AI y TR y LA Strain
-                if (!isNaN(eProm)) alterados += ePromNormal ? 0 : 1, normales += ePromNormal ? 1 : 0;
-                if (aiNormal !== null) alterados += aiNormal ? 0 : 1, normales += aiNormal ? 1 : 0;
-                if (!isNaN(velocidadRT)) alterados += trNormal ? 0 : 1, normales += trNormal ? 1 : 0;
-                if (!isNaN(laStrain)) alterados += laStrainNormal ? 0 : 1, normales += laStrainNormal ? 1 : 0;
+                if (ePromNormal !== null) { alterados += ePromNormal ? 0 : 1; normales += ePromNormal ? 1 : 0; }
+                if (aiNormal !== null) { alterados += aiNormal ? 0 : 1; normales += aiNormal ? 1 : 0; }
+                if (trNormal !== null) { alterados += trNormal ? 0 : 1; normales += trNormal ? 1 : 0; }
+                if (eeNormal !== null) { alterados += eeNormal ? 0 : 1; normales += eeNormal ? 1 : 0; }
+                if (laStrainNormal !== null) { alterados += laStrainNormal ? 0 : 1; normales += laStrainNormal ? 1 : 0; }
 
                 if (alterados >= 2) {
                     diagnostico = "Disfunción diastólica";
@@ -1100,21 +1136,14 @@
                 recomendaciones = "En FA no se gradúa la disfunción diastólica. Se estima presión de llenado.";
             } else {
                 // Algoritmo ASE 2025 para FEVI ≥50% y ritmo sinusal
-                let alterados = 0, normales = 0, indeterminados = 0;
+                let alterados = 0, normales = 0, total = 0;
 
-                // Considerar e' promedio, AI, TR, E/A, LA Strain
-                if (!isNaN(eProm)) alterados += ePromNormal ? 0 : 1, normales += ePromNormal ? 1 : 0;
-                if (aiNormal !== null) alterados += aiNormal ? 0 : 1, normales += aiNormal ? 1 : 0;
-                if (!isNaN(velocidadRT)) alterados += trNormal ? 0 : 1, normales += trNormal ? 1 : 0;
-                if (!isNaN(ea)) alterados += eaNormal ? 0 : 1, normales += eaNormal ? 1 : 0;
-                if (!isNaN(laStrain)) alterados += laStrainNormal ? 0 : 1, normales += laStrainNormal ? 1 : 0;
-
-                let total = 0;
-                if (!isNaN(eProm)) total++;
-                if (aiNormal !== null) total++;
-                if (!isNaN(velocidadRT)) total++;
-                if (!isNaN(ea)) total++;
-                if (!isNaN(laStrain)) total++;
+                if (ePromNormal !== null) { alterados += ePromNormal ? 0 : 1; normales += ePromNormal ? 1 : 0; total++; }
+                if (aiNormal !== null) { alterados += aiNormal ? 0 : 1; normales += aiNormal ? 1 : 0; total++; }
+                if (trNormal !== null) { alterados += trNormal ? 0 : 1; normales += trNormal ? 1 : 0; total++; }
+                if (eaNormal !== null) { alterados += eaNormal ? 0 : 1; normales += eaNormal ? 1 : 0; total++; }
+                if (eeNormal !== null) { alterados += eeNormal ? 0 : 1; normales += eeNormal ? 1 : 0; total++; }
+                if (laStrainNormal !== null) { alterados += laStrainNormal ? 0 : 1; normales += laStrainNormal ? 1 : 0; total++; }
 
                 // Diagnóstico
                 if (total < 3) {
@@ -1132,8 +1161,8 @@
                 }
 
                 // Grado de disfunción si corresponde
-                if (diagnostico === "Disfunción diastólica" && !isNaN(ea) && !isNaN(velocidadE)) {
-                    if (ea < 0.8 && velocidadE < 50) {
+                if (diagnostico === "Disfunción diastólica" && ea !== null && !isNaN(valores.velocidadE)) {
+                    if (ea < 0.8 && valores.velocidadE < 50) {
                         diagnostico += " - Grado I (alteración de relajación)";
                     } else if (ea >= 2.0) {
                         diagnostico += " - Grado III (restrictivo)";
@@ -1141,8 +1170,15 @@
                         diagnostico += " - Grado II (pseudonormal)";
                     }
                 }
+            }
 
-                recomendaciones = "";
+            // Crear advertencia de parámetros faltantes
+            let advertenciaFaltantes = "";
+            if (faltan.length > 0) {
+                advertenciaFaltantes = `<div class="missing-params-warning">
+                    <strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.<br>
+                    El diagnóstico puede ser menos preciso según las guías ASE/EACVI 2025.
+                </div>`;
             }
 
             // Mostrar resultados
@@ -1155,34 +1191,33 @@
             document.getElementById('diagnostico').innerHTML = diagnostico;
             document.getElementById('pressureStatus').innerHTML = pressureStatus;
 
-            // Parámetros
+            // Mostrar parámetros evaluados
             let htmlParametros = "";
             parametros.forEach(p => {
-                // No mostrar LA Strain si no está
-                if (p.nombre === "LA Strain" && p.valor === "—") return;
                 htmlParametros += `<div class="parameter-item ${p.estado}"><strong>${p.nombre}:</strong> ${p.valor} <span style="color:#888;font-size:0.95em;">(${p.referencia})</span></div>`;
             });
             document.getElementById('parametros-status').innerHTML = htmlParametros;
 
-            document.getElementById('recomendaciones').innerHTML = recomendaciones;
+            // Combinar recomendaciones con advertencia de faltantes
+            document.getElementById('recomendaciones').innerHTML = advertenciaFaltantes + recomendaciones;
 
             results.style.display = "block";
             results.scrollIntoView({behavior: "smooth"});
         }
 
-        // Para presión de llenado en FEVI reducida
-        function evaluarPresionLlenado(parametros, laStrainNormal) {
+        // Función para evaluar presión de llenado
+        function evaluarPresionLlenado(ePromNormal, aiNormal, trNormal, eeNormal, laStrainNormal) {
             let alterados = 0, normales = 0;
 
-            // e' lateral, e' septal, e' promedio, AI, TR, LA Strain
-            if (parametros[2].estado !== "indeterminate") alterados += parametros[2].estado === "abnormal" ? 1 : 0, normales += parametros[2].estado === "normal" ? 1 : 0;
-            if (parametros[3].estado !== "indeterminate") alterados += parametros[3].estado === "abnormal" ? 1 : 0, normales += parametros[3].estado === "normal" ? 1 : 0;
-            if (parametros[4].estado !== "indeterminate") alterados += parametros[4].estado === "abnormal" ? 1 : 0, normales += parametros[4].estado === "normal" ? 1 : 0;
-            if (parametros[5] && parametros[5].estado !== "indeterminate") alterados += parametros[5].estado === "abnormal" ? 1 : 0, normales += parametros[5].estado === "normal" ? 1 : 0;
+            if (ePromNormal !== null) { alterados += ePromNormal ? 0 : 1; normales += ePromNormal ? 1 : 0; }
+            if (aiNormal !== null) { alterados += aiNormal ? 0 : 1; normales += aiNormal ? 1 : 0; }
+            if (trNormal !== null) { alterados += trNormal ? 0 : 1; normales += trNormal ? 1 : 0; }
+            if (eeNormal !== null) { alterados += eeNormal ? 0 : 1; normales += eeNormal ? 1 : 0; }
+            if (laStrainNormal !== null) { alterados += laStrainNormal ? 0 : 1; normales += laStrainNormal ? 1 : 0; }
 
             if (alterados >= 2) return "Presión de llenado elevada";
             if (normales >= 2) return "Presión de llenado normal";
-            return "";
+            return "Indeterminado";
         }
     </script>
 </body>
