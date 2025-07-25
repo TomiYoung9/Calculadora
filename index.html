@@ -1073,7 +1073,7 @@
             // Velocidad TR
             let trNormal = null;
             if (!isNaN(valores.velocidadRT)) {
-                trNormal = valores.velocidadRT <= 2.8;
+                trNormal = valores.velocidadRT < 2.8;
                 parametros.push({
                     nombre: "Velocidad TR",
                     valor: valores.velocidadRT.toFixed(2) + " m/s",
