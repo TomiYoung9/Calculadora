@@ -522,7 +522,7 @@
                     </div>
                 </div>
                 <div id="faWarning" class="fa-warning" style="display:none;">
-                   ⚠️ <strong>Fibrilación auricular:</strong> La relación E/A no se evaluará. Se utilizará algoritmo específico para FA según ASE 2025.
+                   ⚠️ <strong>Fibrilación auricular:</strong> No se utiliza la relación E/A para el diagnóstico. La onda E sí se usa para calcular E/e' según ASE 2025.
                 </div>
                 <div class="form-card">
                     <h3>🎯 Doppler tisular</h3>
@@ -756,19 +756,37 @@
             return faltan;
         }
 
-        // Mostrar/ocultar sección E/A según ritmo
+        // FUNCIÓN CORREGIDA: Mostrar/ocultar sección E/A según ritmo
         function toggleEASection() {
             const ritmo = document.getElementById('ritmo').value;
             const eaSection = document.getElementById('eaSection');
             const faWarning = document.getElementById('faWarning');
+            
+            // Buscar las filas específicas de Onda E y Onda A
+            const velocidadEInput = document.getElementById('velocidadE');
+            const velocidadAInput = document.getElementById('velocidadA');
+            
+            // Encontrar las filas padre (input-row) de cada input
+            let velocidadERow = velocidadEInput.closest('.input-row');
+            let velocidadARow = velocidadAInput.closest('.input-row');
+
             if (ritmo === 'fa') {
-                eaSection.style.display = 'none';
+                eaSection.style.display = 'block';
                 faWarning.style.display = 'block';
-                document.getElementById('velocidadE').value = '';
-                document.getElementById('velocidadA').value = '';
+                
+                // En FA: mostrar Onda E, ocultar Onda A
+                velocidadERow.style.display = 'flex';
+                velocidadARow.style.display = 'none';
+                
+                // Limpiar solo el valor de Onda A
+                velocidadAInput.value = '';
             } else {
                 eaSection.style.display = 'block';
                 faWarning.style.display = 'none';
+                
+                // En ritmo sinusal: mostrar ambas
+                velocidadERow.style.display = 'flex';
+                velocidadARow.style.display = 'flex';
             }
         }
 
@@ -1135,6 +1153,11 @@
             <strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.<br>
             El diagnóstico puede ser menos preciso según las guías ASE 2025.
         </div>`;
+    }
+
+    // ADVERTENCIA ESPECÍFICA PARA ONDA E FALTANTE
+    if (isNaN(valores.velocidadE)) {
+        advertenciaFaltantes += "<br>⚠️ No se ingresó la onda E, por lo que no se puede calcular E/e'. El diagnóstico se basa en los parámetros disponibles, pero podría ser más preciso si se completa este dato.";
     }
 
     const results = document.getElementById('results');
