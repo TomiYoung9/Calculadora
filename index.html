@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora de Función Diastólica </title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
         :root {
             --main-bg: #b7d0e8;
@@ -394,71 +394,108 @@
             color: var(--text-main);
         }
 
-        @media (max-width: 768px) {
-            .container { margin: 0; border-radius: 0; }
-            .form-container { padding: 2px 0.5vw 2px 0.5vw; }
-            .form-card { 
-                padding: 6px 2px 2px 2px; 
-                margin-bottom: 2px;
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+            .container {
+                width: 95vw;
+                max-width: 400px;
+                margin: 10px auto;
+                border-radius: 12px;
+                box-shadow: none;
+            }
+            .form-container {
+                padding: 12px 10px;
+            }
+            .form-card {
+                padding: 12px 10px 10px 10px;
+                margin-bottom: 12px;
+                border: 1px solid var(--border);
+                box-shadow: none;
             }
             .form-card h3 {
+                font-size: 1.05em;
+                margin-bottom: 8px;
+            }
+            .input-row-group {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .input-row {
+                flex-direction: column;
+                align-items: stretch;
+                margin-bottom: 8px;
+                min-width: 0;
+            }
+            .input-row label {
+                font-size: 0.95em;
+                margin-bottom: 4px;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+            .input-row input,
+            .input-row select {
+                width: 100%;
+                font-size: 0.95em;
+                padding: 8px 10px;
+                box-sizing: border-box;
+            }
+            .unit {
+                margin-left: 0;
+                font-size: 0.9em;
+                color: var(--text-soft);
+                display: inline-block;
+                margin-top: 4px;
+            }
+            .calculate-btn {
+                width: 100%;
                 font-size: 1em;
-                margin-bottom: 6px;
+                padding: 14px 0;
+                border-radius: 8px;
+                margin-top: 16px;
+                box-shadow: none;
             }
-            .input-row-group { 
-                flex-direction: column; 
-                gap: 0; 
-                margin: 0;
+            .results {
+                padding: 14px 12px;
+                font-size: 0.95em;
             }
-            .input-row { 
-                flex-direction: column; 
-                align-items: stretch; 
-                gap: 0; 
-                min-width: 0; 
-                margin-bottom: 1px;
-                padding: 0;
+            .parameter-status {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                margin-top: 10px;
             }
-            .input-row label { 
-                margin-bottom: 1px; 
-                font-size: 0.97em;
+            .parameter-item {
+                font-size: 0.9em;
+                padding: 6px 8px;
+                word-wrap: break-word;
             }
-            .input-row input, .input-row select { 
-                width: 100%; 
-                font-size: 0.97em;
-                padding: 7px 7px;
-            }
-            .parameter-status { 
-                grid-template-columns: 1fr; 
-                gap: 0; 
-                margin-top: 2px;
-            }
-            .parameter-item { 
-                padding: 2px 3px; 
-                font-size: 0.95em; 
-                margin-bottom: 0;
-            }
-            .results { 
-                padding: 3px 1px; 
-            }
-            .info-box, .fa-warning, .fevi-warning, .tr-warning, .indeterminate-note, .age-reference, .recommendations, .missing-params-warning {
-                padding: 7px 6px;
-                font-size: 0.97em;
-            }
-            .referencias {
-                padding: 7px 6px;
-                font-size: 0.97em;
+            .info-box,
+            .referencias,
+            .fa-warning,
+            .fevi-warning,
+            .tr-warning,
+            .indeterminate-note,
+            .age-reference,
+            .recommendations,
+            .missing-params-warning {
+                font-size: 0.9em;
+                padding: 8px 10px;
             }
             .modal-content {
-                margin: 10px;
-                max-width: none;
+                margin: 10px 5px;
+                max-width: 95vw;
                 padding: 20px 16px;
                 max-height: 90vh;
             }
             .modal-table {
                 font-size: 0.8em;
             }
-            .modal-table th, .modal-table td {
-                padding: 6px 8px;
+            /* Ajustes para evitar scroll horizontal en inputs numéricos */
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
             }
         }
     </style>
@@ -511,12 +548,12 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>Onda E:</label>
-                            <input type="number" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional">
+                            <input type="number" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional" />
                             <span class="unit">cm/s</span>
                         </div>
                         <div class="input-row">
                             <label>Onda A:</label>
-                            <input type="number" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional">
+                            <input type="number" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional" />
                             <span class="unit">cm/s</span>
                         </div>
                     </div>
@@ -529,12 +566,12 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>e' lateral:</label>
-                            <input type="number" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional">
+                            <input type="number" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional" />
                             <span class="unit">cm/s</span>
                         </div>
                         <div class="input-row">
                             <label>e' septal:</label>
-                            <input type="number" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional">
+                            <input type="number" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional" />
                             <span class="unit">cm/s</span>
                         </div>
                     </div>
@@ -551,12 +588,12 @@
                         </div>
                         <div class="input-row" id="volumenRow">
                             <label>Vol AI indexado:</label>
-                            <input type="number" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional">
+                            <input type="number" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional" />
                             <span class="unit">ml/m²</span>
                         </div>
                         <div class="input-row" id="areaRow" style="display:none;">
                             <label>Área auricular izquierda:</label>
-                            <input type="number" id="areaAI" step="0.1" min="0" max="50" placeholder="Opcional">
+                            <input type="number" id="areaAI" step="0.1" min="0" max="50" placeholder="Opcional" />
                             <span class="unit">cm²</span>
                         </div>
                     </div>
@@ -569,7 +606,7 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>Velocidad pico de regurgitación tricuspídea:</label>
-                            <input type="number" id="velocidadRT" step="0.01" min="0" max="6" placeholder="Opcional">
+                            <input type="number" id="velocidadRT" step="0.01" min="0" max="6" placeholder="Opcional" />
                             <span class="unit">m/s</span>
                         </div>
                     </div>
@@ -579,7 +616,7 @@
                     <div class="input-row-group">
                         <div class="input-row">
                             <label>LA Strain:</label>
-                            <input type="number" id="laStrain" step="1" min="0" max="60" placeholder="Opcional">
+                            <input type="number" id="laStrain" step="1" min="0" max="60" placeholder="Opcional" />
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -604,7 +641,7 @@
                 <h3>📚 Referencia</h3>
                 <div class="referencia-item">
                     <p>
-                        <strong>ASE 2025. Left Ventricular Diastolic Function by Echo</strong><br>
+                        <strong>ASE 2025. Left Ventricular Diastolic Function by Echo</strong><br />
                         <a href="https://onlinejase.com/article/S0894-7317(25)00157-9/fulltext" target="_blank" rel="noopener">
                             https://onlinejase.com/article/S0894-7317(25)00157-9/fulltext
                         </a>
@@ -612,19 +649,19 @@
                 </div>
             </div>
             <div class="twitter-section" style="display: flex; justify-content: center; gap: 20px; padding: 10px; margin-bottom: 6px;">
-    <a href="https://x.com/atomasyoung" target="_blank" rel="noopener" class="twitter-link" style="display: inline-flex; align-items: center; gap: 8px; color: #111; text-decoration: none; font-weight: 600; font-size: 1.1em; transition: all 0.3s ease;">
-        <svg class="twitter-icon" viewBox="0 0 1200 1227" fill="currentColor" width="24" height="24" aria-hidden="true" focusable="false">
-            <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/>
-        </svg>
-        @atomasyoung
-    </a>
-    <a href="https://www.linkedin.com/in/tomas-young" target="_blank" rel="noopener" class="linkedin-link" style="display: inline-flex; align-items: center; gap: 8px; color: #111; text-decoration: none; font-weight: 600; font-size: 1.1em; transition: all 0.3s ease;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="24" height="24" aria-hidden="true" focusable="false">
-            <path d="M100.28 448H7.4V148.9h92.88zm-46.44-340.7a53.66 53.66 0 1 1 53.66-53.66 53.66 53.66 0 0 1-53.66 53.66zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.6-2.9 13.4-2.9 21.3V448h-92.68s1.2-270.1 0-297.1h92.68v42.1c12.3-19 34.3-46 83.4-46 60.9 0 106.7 39.8 106.7 125.4z"/>
-        </svg>
-        Tomas Young
-    </a>
-</div>
+                <a href="https://x.com/atomasyoung" target="_blank" rel="noopener" class="twitter-link" style="display: inline-flex; align-items: center; gap: 8px; color: #111; text-decoration: none; font-weight: 600; font-size: 1.1em; transition: all 0.3s ease;">
+                    <svg class="twitter-icon" viewBox="0 0 1200 1227" fill="currentColor" width="24" height="24" aria-hidden="true" focusable="false">
+                        <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
+                    </svg>
+                    @atomasyoung
+                </a>
+                <a href="https://www.linkedin.com/in/tomas-young" target="_blank" rel="noopener" class="linkedin-link" style="display: inline-flex; align-items: center; gap: 8px; color: #111; text-decoration: none; font-weight: 600; font-size: 1.1em; transition: all 0.3s ease;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="24" height="24" aria-hidden="true" focusable="false">
+                        <path d="M100.28 448H7.4V148.9h92.88zm-46.44-340.7a53.66 53.66 0 1 1 53.66-53.66 53.66 53.66 0 0 1-53.66 53.66zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.6-2.9 13.4-2.9 21.3V448h-92.68s1.2-270.1 0-297.1h92.68v42.1c12.3-19 34.3-46 83.4-46 60.9 0 106.7 39.8 106.7 125.4z" />
+                    </svg>
+                    Tomas Young
+                </a>
+            </div>
         </div>
     </div>
 
@@ -637,15 +674,15 @@
                 <h4>1. Flujo principal según la nueva guía</h4>
                 <p>El algoritmo ASE 2025 comienza evaluando <strong>e', E/e', y TR velocity</strong> como parámetros principales. Si hay discordancia, se evalúan parámetros adicionales.</p>
 
-                <hr>
+                <hr />
 
                 <h4>2. Si FEVI < 50% (cualquier ritmo)</h4>
                 <p><strong>Diagnóstico:</strong> Se asume disfunción diastólica. El objetivo es estimar la <strong>presión de llenado</strong>.</p>
                 <p><strong>Criterio:</strong> ≥2 parámetros alterados → Presión elevada</p>
-<div style="background:#eafaf1; border-left:4px solid #27ae60; padding:10px 12px; margin:10px 0; border-radius:7px;">
-    <strong>Nota de la calculadora:</strong> Además de estimar presión de llenado, esta herramienta también determina el <b>grado de disfunción diastólica (I, II, III)</b> en FEVI reducida, usando el mismo algoritmo de gradación que para FEVI preservada, para aportar mayor información clínica.
-</div>
-                <hr>
+                <div style="background:#eafaf1; border-left:4px solid #27ae60; padding:10px 12px; margin:10px 0; border-radius:7px;">
+                    <strong>Nota de la calculadora:</strong> Además de estimar presión de llenado, esta herramienta también determina el <b>grado de disfunción diastólica (I, II, III)</b> en FEVI reducida, usando el mismo algoritmo de gradación que para FEVI preservada, para aportar mayor información clínica.
+                </div>
+                <hr />
 
                 <h4>3. Si FEVI ≥ 50% y Ritmo Sinusal</h4>
                 <p><strong>Paso 1:</strong> Evaluar e' promedio, E/e', y TR velocity</p>
@@ -669,14 +706,14 @@
                     <li><strong>Grado II:</strong> Resto de casos</li>
                 </ul>
 
-                <hr>
+                <hr />
 
                 <h4>4. Si Fibrilación Auricular</h4>
                 <p><strong>No se gradúa</strong> la disfunción. Solo se estima presión de llenado.</p>
                 <p><strong>Criterio:</strong> ≥2 parámetros alterados → Presión elevada</p>
                 <p><em>No se utiliza E/A en FA.</em></p>
 
-                <hr>
+                <hr />
 
                 <h4>5. Valores de referencia por edad</h4>
                 <table class="modal-table">
@@ -724,10 +761,10 @@
                     <li><strong>LA Strain:</strong> ≥18% (específico), ≥23% (normal)</li>
                 </ul>
 
-                <hr>
+                <hr />
 
                 <p style="font-size:0.9em; color:#666; text-align:center; margin-top:20px;">
-                    <strong>Basado en las guías ASE 2025</strong><br>
+                    <strong>Basado en las guías ASE 2025</strong><br />
                     <em>Left Ventricular Diastolic Function by Echo</em>
                 </p>
             </div>
@@ -902,295 +939,297 @@
             });
 
             updateAgeReferences();
+            toggleEASection();
+            toggleAIInput();
         });
 
         // Función principal de cálculo - ALGORITMO ASE 2025
-      function calcularFuncionDiastolica() {
-    const ritmo = document.getElementById('ritmo').value;
-    const edad = document.getElementById('edad').value;
-    const fevi = document.getElementById('fevi').value;
-    const tipoAI = document.getElementById('tipoAI').value;
+        function calcularFuncionDiastolica() {
+            const ritmo = document.getElementById('ritmo').value;
+            const edad = document.getElementById('edad').value;
+            const fevi = document.getElementById('fevi').value;
+            const tipoAI = document.getElementById('tipoAI').value;
 
-    // Solo una vez estas variables
-    const feviWarning = document.getElementById('feviWarning');
-    const indeterminateNote = document.getElementById('indeterminateNote');
-    feviWarning.style.display = "none";
-    indeterminateNote.style.display = "none";
+            // Solo una vez estas variables
+            const feviWarning = document.getElementById('feviWarning');
+            const indeterminateNote = document.getElementById('indeterminateNote');
+            feviWarning.style.display = "none";
+            indeterminateNote.style.display = "none";
 
-    const valores = {
-        eSeptal: parseFloat(document.getElementById('eSeptal').value),
-        eLateral: parseFloat(document.getElementById('eLateral').value),
-        volumenAI: parseFloat(document.getElementById('volumenAI').value),
-        areaAI: parseFloat(document.getElementById('areaAI').value),
-        velocidadRT: parseFloat(document.getElementById('velocidadRT').value),
-        laStrain: parseFloat(document.getElementById('laStrain').value),
-        velocidadE: parseFloat(document.getElementById('velocidadE').value),
-        velocidadA: parseFloat(document.getElementById('velocidadA').value)
-    };
+            const valores = {
+                eSeptal: parseFloat(document.getElementById('eSeptal').value),
+                eLateral: parseFloat(document.getElementById('eLateral').value),
+                volumenAI: parseFloat(document.getElementById('volumenAI').value),
+                areaAI: parseFloat(document.getElementById('areaAI').value),
+                velocidadRT: parseFloat(document.getElementById('velocidadRT').value),
+                laStrain: parseFloat(document.getElementById('laStrain').value),
+                velocidadE: parseFloat(document.getElementById('velocidadE').value),
+                velocidadA: parseFloat(document.getElementById('velocidadA').value)
+            };
 
-    const faltan = getMissingParams(ritmo, fevi, tipoAI, valores);
+            const faltan = getMissingParams(ritmo, fevi, tipoAI, valores);
 
-    let ea = null, ee = null;
-    if (ritmo === "sinusal" && !isNaN(valores.velocidadE) && !isNaN(valores.velocidadA) && valores.velocidadA > 0) {
-        ea = valores.velocidadE / valores.velocidadA;
-    }
-
-    let eProm = null;
-    if (!isNaN(valores.eSeptal) && !isNaN(valores.eLateral)) {
-        eProm = (valores.eSeptal + valores.eLateral) / 2;
-        if (!isNaN(valores.velocidadE) && eProm > 0) {
-            ee = valores.velocidadE / eProm;
-        }
-    }
-
-    let eSeptalRef, eLateralRef, ePromRef, eaMin, eaMax;
-    if (edad === "1") {
-        eSeptalRef = 8.0; eLateralRef = 10.0; ePromRef = 10;
-        eaMin = 1.0; eaMax = 99;
-    } else if (edad === "2") {
-        eSeptalRef = 6.5; eLateralRef = 8.5; ePromRef = 8;
-        eaMin = 0.8; eaMax = 2.0;
-    } else {
-        eSeptalRef = 5.0; eLateralRef = 7.0; ePromRef = 6;
-        eaMin = 0.7; eaMax = 2.0;
-    }
-
-    let parametros = [];
-
-    let eLateralNormal = null;
-    if (!isNaN(valores.eLateral)) {
-        eLateralNormal = valores.eLateral >= eLateralRef;
-        parametros.push({
-            nombre: "e' lateral",
-            valor: valores.eLateral.toFixed(1) + " cm/s",
-            estado: eLateralNormal ? "normal" : "abnormal",
-            referencia: "≥" + eLateralRef + " cm/s"
-        });
-    }
-
-    let eSeptalNormal = null;
-    if (!isNaN(valores.eSeptal)) {
-        eSeptalNormal = valores.eSeptal >= eSeptalRef;
-        parametros.push({
-            nombre: "e' septal",
-            valor: valores.eSeptal.toFixed(1) + " cm/s",
-            estado: eSeptalNormal ? "normal" : "abnormal",
-            referencia: "≥" + eSeptalRef + " cm/s"
-        });
-    }
-
-    let ePromNormal = null;
-    if (eProm !== null) {
-        ePromNormal = eProm >= ePromRef;
-        parametros.push({
-            nombre: "e' promedio",
-            valor: eProm.toFixed(1) + " cm/s",
-            estado: ePromNormal ? "normal" : "abnormal",
-            referencia: "≥" + ePromRef + " cm/s"
-        });
-    }
-
-    let eaNormal = null;
-    if (ritmo === "sinusal" && ea !== null) {
-        if (edad === "1") {
-            eaNormal = ea >= eaMin;
-        } else {
-            eaNormal = ea >= eaMin && ea <= eaMax;
-        }
-        parametros.push({
-            nombre: "Relación E/A",
-            valor: ea.toFixed(2),
-            estado: eaNormal ? "normal" : "abnormal",
-            referencia: (edad === "1" ? "≥" + eaMin : eaMin + "–" + eaMax)
-        });
-    }
-
-    let eeNormal = null;
-    if (ee !== null) {
-        eeNormal = ee <= 14;
-        parametros.push({
-            nombre: "E/e' promedio",
-            valor: ee.toFixed(1),
-            estado: eeNormal ? "normal" : "abnormal",
-            referencia: "≤14"
-        });
-    }
-
-    let aiNormal = null;
-    if (tipoAI === "volumen" && !isNaN(valores.volumenAI)) {
-        aiNormal = valores.volumenAI <= 34;
-        parametros.push({
-            nombre: "Volumen AI indexado",
-            valor: valores.volumenAI + " ml/m²",
-            estado: aiNormal ? "normal" : "abnormal",
-            referencia: "≤34 ml/m²"
-        });
-    } else if (tipoAI === "area" && !isNaN(valores.areaAI)) {
-        aiNormal = valores.areaAI <= 20;
-        parametros.push({
-            nombre: "Área AI",
-            valor: valores.areaAI + " cm²",
-            estado: aiNormal ? "normal" : "abnormal",
-            referencia: "≤20 cm²"
-        });
-    }
-
-    let trNormal = null;
-    if (!isNaN(valores.velocidadRT)) {
-        trNormal = valores.velocidadRT < 2.8;
-        parametros.push({
-            nombre: "Velocidad TR",
-            valor: valores.velocidadRT.toFixed(2) + " m/s",
-            estado: trNormal ? "normal" : "abnormal",
-            referencia: "<2.8 m/s"
-        });
-    }
-
-    let laStrainNormal = null;
-    if (!isNaN(valores.laStrain)) {
-        laStrainNormal = valores.laStrain >= 18;
-        parametros.push({
-            nombre: "LA Strain",
-            valor: valores.laStrain.toFixed(1) + " %",
-            estado: laStrainNormal ? "normal" : "abnormal",
-            referencia: "≥18% (específico), ≥23% (normal)"
-        });
-    }
-
-    let diagnostico = "";
-    let pressureStatus = "";
-    let recomendaciones = "";
-
-    if (ritmo === "fa") {
-        let alterados = 0, normales = 0;
-        if (ePromNormal !== null) { alterados += ePromNormal ? 0 : 1; normales += ePromNormal ? 1 : 0; }
-        if (aiNormal !== null) { alterados += aiNormal ? 0 : 1; normales += aiNormal ? 1 : 0; }
-        if (trNormal !== null) { alterados += trNormal ? 0 : 1; normales += trNormal ? 1 : 0; }
-        if (eeNormal !== null) { alterados += eeNormal ? 0 : 1; normales += eeNormal ? 1 : 0; }
-        if (laStrainNormal !== null) { alterados += laStrainNormal ? 0 : 1; normales += laStrainNormal ? 1 : 0; }
-
-        if (alterados >= 2) {
-            diagnostico = "Disfunción diastólica";
-            pressureStatus = "Presión de llenado elevada";
-        } else if (normales >= 2) {
-            diagnostico = "Función diastólica normal";
-            pressureStatus = "Presión de llenado normal";
-        } else {
-            diagnostico = "Indeterminado";
-            pressureStatus = "";
-            indeterminateNote.style.display = "block";
-        }
-        recomendaciones = "En FA no se gradúa la disfunción diastólica. Se estima presión de llenado.";
-    } else {
-        let principalesAlterados = 0, principalesNormales = 0, principalesTotal = 0;
-        if (ePromNormal !== null) { 
-            principalesTotal++; 
-            principalesAlterados += ePromNormal ? 0 : 1; 
-            principalesNormales += ePromNormal ? 1 : 0; 
-        }
-        if (eeNormal !== null) { 
-            principalesTotal++; 
-            principalesAlterados += eeNormal ? 0 : 1; 
-            principalesNormales += eeNormal ? 1 : 0; 
-        }
-        if (trNormal !== null) { 
-            principalesTotal++; 
-            principalesAlterados += trNormal ? 0 : 1; 
-            principalesNormales += trNormal ? 1 : 0; 
-        }
-
-        if (principalesTotal === 3 && principalesAlterados === 3) {
-            diagnostico = "Disfunción diastólica";
-            pressureStatus = "Presión de llenado elevada";
-            recomendaciones = "Los 3 parámetros principales (e', E/e', TR) están alterados según ASE 2025.";
-        } else if (principalesTotal === 3 && principalesNormales === 3) {
-            diagnostico = "Función diastólica normal";
-            pressureStatus = "Presión de llenado normal";
-            recomendaciones = "Los 3 parámetros principales (e', E/e', TR) están normales según ASE 2025.";
-        } else if (principalesTotal >= 2 && (principalesAlterados >= 1 && principalesAlterados < principalesTotal)) {
-            let adicionalesAlterados = false;
-            let adicionalesNormales = false;
-            if (laStrainNormal === false) adicionalesAlterados = true;
-            if (aiNormal === false) adicionalesAlterados = true;
-            if (laStrainNormal === true) adicionalesNormales = true;
-            if (aiNormal === true) adicionalesNormales = true;
-
-            if (adicionalesAlterados) {
-                diagnostico = "Disfunción diastólica";
-                pressureStatus = "Presión de llenado elevada";
-                recomendaciones = "Presión de llenado elevada por parámetros adicionales (LA Strain ≤18% o LAVi >34 ml/m²).";
-            } else if (adicionalesNormales) {
-                diagnostico = "Función diastólica normal";
-                pressureStatus = "Presión de llenado normal";
-                recomendaciones = "Presión de llenado normal por parámetros adicionales.";
-            } else {
-                diagnostico = "Indeterminado";
-                indeterminateNote.style.display = "block";
-                recomendaciones = "Considere eco de ejercicio si hay síntomas o parámetros morfológicos/funcionales anormales.";
+            let ea = null, ee = null;
+            if (ritmo === "sinusal" && !isNaN(valores.velocidadE) && !isNaN(valores.velocidadA) && valores.velocidadA > 0) {
+                ea = valores.velocidadE / valores.velocidadA;
             }
-        } else {
-            diagnostico = "Indeterminado";
-            indeterminateNote.style.display = "block";
-            recomendaciones = "No hay suficientes parámetros principales (e', E/e', TR) para diagnóstico según ASE 2025.";
-        }
 
-        // Grado de disfunción SIEMPRE, incluso FEVI <50%
-        if ((diagnostico === "Disfunción diastólica" || fevi === "menor") && ea !== null && !isNaN(valores.velocidadE)) {
-            if (ea < 0.8 && valores.velocidadE < 50) {
-                diagnostico += " - Grado I (alteración de relajación)";
-            } else if (ea >= 2.0) {
-                diagnostico += " - Grado III (restrictivo)";
-            } else {
-                diagnostico += " - Grado II (pseudonormal)";
+            let eProm = null;
+            if (!isNaN(valores.eSeptal) && !isNaN(valores.eLateral)) {
+                eProm = (valores.eSeptal + valores.eLateral) / 2;
+                if (!isNaN(valores.velocidadE) && eProm > 0) {
+                    ee = valores.velocidadE / eProm;
+                }
             }
+
+            let eSeptalRef, eLateralRef, ePromRef, eaMin, eaMax;
+            if (edad === "1") {
+                eSeptalRef = 8.0; eLateralRef = 10.0; ePromRef = 10;
+                eaMin = 1.0; eaMax = 99;
+            } else if (edad === "2") {
+                eSeptalRef = 6.5; eLateralRef = 8.5; ePromRef = 8;
+                eaMin = 0.8; eaMax = 2.0;
+            } else {
+                eSeptalRef = 5.0; eLateralRef = 7.0; ePromRef = 6;
+                eaMin = 0.7; eaMax = 2.0;
+            }
+
+            let parametros = [];
+
+            let eLateralNormal = null;
+            if (!isNaN(valores.eLateral)) {
+                eLateralNormal = valores.eLateral >= eLateralRef;
+                parametros.push({
+                    nombre: "e' lateral",
+                    valor: valores.eLateral.toFixed(1) + " cm/s",
+                    estado: eLateralNormal ? "normal" : "abnormal",
+                    referencia: "≥" + eLateralRef + " cm/s"
+                });
+            }
+
+            let eSeptalNormal = null;
+            if (!isNaN(valores.eSeptal)) {
+                eSeptalNormal = valores.eSeptal >= eSeptalRef;
+                parametros.push({
+                    nombre: "e' septal",
+                    valor: valores.eSeptal.toFixed(1) + " cm/s",
+                    estado: eSeptalNormal ? "normal" : "abnormal",
+                    referencia: "≥" + eSeptalRef + " cm/s"
+                });
+            }
+
+            let ePromNormal = null;
+            if (eProm !== null) {
+                ePromNormal = eProm >= ePromRef;
+                parametros.push({
+                    nombre: "e' promedio",
+                    valor: eProm.toFixed(1) + " cm/s",
+                    estado: ePromNormal ? "normal" : "abnormal",
+                    referencia: "≥" + ePromRef + " cm/s"
+                });
+            }
+
+            let eaNormal = null;
+            if (ritmo === "sinusal" && ea !== null) {
+                if (edad === "1") {
+                    eaNormal = ea >= eaMin;
+                } else {
+                    eaNormal = ea >= eaMin && ea <= eaMax;
+                }
+                parametros.push({
+                    nombre: "Relación E/A",
+                    valor: ea.toFixed(2),
+                    estado: eaNormal ? "normal" : "abnormal",
+                    referencia: (edad === "1" ? "≥" + eaMin : eaMin + "–" + eaMax)
+                });
+            }
+
+            let eeNormal = null;
+            if (ee !== null) {
+                eeNormal = ee <= 14;
+                parametros.push({
+                    nombre: "E/e' promedio",
+                    valor: ee.toFixed(1),
+                    estado: eeNormal ? "normal" : "abnormal",
+                    referencia: "≤14"
+                });
+            }
+
+            let aiNormal = null;
+            if (tipoAI === "volumen" && !isNaN(valores.volumenAI)) {
+                aiNormal = valores.volumenAI <= 34;
+                parametros.push({
+                    nombre: "Volumen AI indexado",
+                    valor: valores.volumenAI + " ml/m²",
+                    estado: aiNormal ? "normal" : "abnormal",
+                    referencia: "≤34 ml/m²"
+                });
+            } else if (tipoAI === "area" && !isNaN(valores.areaAI)) {
+                aiNormal = valores.areaAI <= 20;
+                parametros.push({
+                    nombre: "Área AI",
+                    valor: valores.areaAI + " cm²",
+                    estado: aiNormal ? "normal" : "abnormal",
+                    referencia: "≤20 cm²"
+                });
+            }
+
+            let trNormal = null;
+            if (!isNaN(valores.velocidadRT)) {
+                trNormal = valores.velocidadRT < 2.8;
+                parametros.push({
+                    nombre: "Velocidad TR",
+                    valor: valores.velocidadRT.toFixed(2) + " m/s",
+                    estado: trNormal ? "normal" : "abnormal",
+                    referencia: "<2.8 m/s"
+                });
+            }
+
+            let laStrainNormal = null;
+            if (!isNaN(valores.laStrain)) {
+                laStrainNormal = valores.laStrain >= 18;
+                parametros.push({
+                    nombre: "LA Strain",
+                    valor: valores.laStrain.toFixed(1) + " %",
+                    estado: laStrainNormal ? "normal" : "abnormal",
+                    referencia: "≥18% (específico), ≥23% (normal)"
+                });
+            }
+
+            let diagnostico = "";
+            let pressureStatus = "";
+            let recomendaciones = "";
+
+            if (ritmo === "fa") {
+                let alterados = 0, normales = 0;
+                if (ePromNormal !== null) { alterados += ePromNormal ? 0 : 1; normales += ePromNormal ? 1 : 0; }
+                if (aiNormal !== null) { alterados += aiNormal ? 0 : 1; normales += aiNormal ? 1 : 0; }
+                if (trNormal !== null) { alterados += trNormal ? 0 : 1; normales += trNormal ? 1 : 0; }
+                if (eeNormal !== null) { alterados += eeNormal ? 0 : 1; normales += eeNormal ? 1 : 0; }
+                if (laStrainNormal !== null) { alterados += laStrainNormal ? 0 : 1; normales += laStrainNormal ? 1 : 0; }
+
+                if (alterados >= 2) {
+                    diagnostico = "Disfunción diastólica";
+                    pressureStatus = "Presión de llenado elevada";
+                } else if (normales >= 2) {
+                    diagnostico = "Función diastólica normal";
+                    pressureStatus = "Presión de llenado normal";
+                } else {
+                    diagnostico = "Indeterminado";
+                    pressureStatus = "";
+                    indeterminateNote.style.display = "block";
+                }
+                recomendaciones = "En FA no se gradúa la disfunción diastólica. Se estima presión de llenado.";
+            } else {
+                let principalesAlterados = 0, principalesNormales = 0, principalesTotal = 0;
+                if (ePromNormal !== null) { 
+                    principalesTotal++; 
+                    principalesAlterados += ePromNormal ? 0 : 1; 
+                    principalesNormales += ePromNormal ? 1 : 0; 
+                }
+                if (eeNormal !== null) { 
+                    principalesTotal++; 
+                    principalesAlterados += eeNormal ? 0 : 1; 
+                    principalesNormales += eeNormal ? 1 : 0; 
+                }
+                if (trNormal !== null) { 
+                    principalesTotal++; 
+                    principalesAlterados += trNormal ? 0 : 1; 
+                    principalesNormales += trNormal ? 1 : 0; 
+                }
+
+                if (principalesTotal === 3 && principalesAlterados === 3) {
+                    diagnostico = "Disfunción diastólica";
+                    pressureStatus = "Presión de llenado elevada";
+                    recomendaciones = "Los 3 parámetros principales (e', E/e', TR) están alterados según ASE 2025.";
+                } else if (principalesTotal === 3 && principalesNormales === 3) {
+                    diagnostico = "Función diastólica normal";
+                    pressureStatus = "Presión de llenado normal";
+                    recomendaciones = "Los 3 parámetros principales (e', E/e', TR) están normales según ASE 2025.";
+                } else if (principalesTotal >= 2 && (principalesAlterados >= 1 && principalesAlterados < principalesTotal)) {
+                    let adicionalesAlterados = false;
+                    let adicionalesNormales = false;
+                    if (laStrainNormal === false) adicionalesAlterados = true;
+                    if (aiNormal === false) adicionalesAlterados = true;
+                    if (laStrainNormal === true) adicionalesNormales = true;
+                    if (aiNormal === true) adicionalesNormales = true;
+
+                    if (adicionalesAlterados) {
+                        diagnostico = "Disfunción diastólica";
+                        pressureStatus = "Presión de llenado elevada";
+                        recomendaciones = "Presión de llenado elevada por parámetros adicionales (LA Strain ≤18% o LAVi >34 ml/m²).";
+                    } else if (adicionalesNormales) {
+                        diagnostico = "Función diastólica normal";
+                        pressureStatus = "Presión de llenado normal";
+                        recomendaciones = "Presión de llenado normal por parámetros adicionales.";
+                    } else {
+                        diagnostico = "Indeterminado";
+                        indeterminateNote.style.display = "block";
+                        recomendaciones = "Considere eco de ejercicio si hay síntomas o parámetros morfológicos/funcionales anormales.";
+                    }
+                } else {
+                    diagnostico = "Indeterminado";
+                    indeterminateNote.style.display = "block";
+                    recomendaciones = "No hay suficientes parámetros principales (e', E/e', TR) para diagnóstico según ASE 2025.";
+                }
+
+                // Grado de disfunción SIEMPRE, incluso FEVI <50%
+                if ((diagnostico === "Disfunción diastólica" || fevi === "menor") && ea !== null && !isNaN(valores.velocidadE)) {
+                    if (ea < 0.8 && valores.velocidadE < 50) {
+                        diagnostico += " - Grado I (alteración de relajación)";
+                    } else if (ea >= 2.0) {
+                        diagnostico += " - Grado III (restrictivo)";
+                    } else {
+                        diagnostico += " - Grado II (pseudonormal)";
+                    }
+                }
+            }
+
+            // Advertencia FEVI reducida
+            if (fevi === "menor") {
+                feviWarning.style.display = "block";
+            } else {
+                feviWarning.style.display = "none";
+            }
+
+            let advertenciaFaltantes = "";
+            if (faltan.length > 0) {
+                advertenciaFaltantes = `<div class="missing-params-warning">
+                    <strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.<br>
+                    El diagnóstico puede ser menos preciso según las guías ASE 2025.
+                </div>`;
+            }
+
+            // ADVERTENCIA ESPECÍFICA PARA ONDA E FALTANTE
+            if (isNaN(valores.velocidadE)) {
+                advertenciaFaltantes += "<br>⚠️ No se ingresó la onda E, por lo que no se puede calcular E/e'. El diagnóstico se basa en los parámetros disponibles, pero podría ser más preciso si se completa este dato.";
+            }
+
+            const results = document.getElementById('results');
+            results.className = "results";
+            if (diagnostico.includes("normal")) results.classList.add("normal");
+            else if (diagnostico.includes("Disfunción") || diagnostico.includes("elevada")) results.classList.add("abnormal");
+            else results.classList.add("indeterminate");
+
+            document.getElementById('diagnostico').innerHTML = diagnostico;
+
+            const pressureDiv = document.getElementById('pressureStatus');
+            pressureDiv.innerHTML = pressureStatus;
+            pressureDiv.className = "pressure-status";
+            if (pressureStatus.includes("elevada")) pressureDiv.classList.add("elevated");
+            else if (pressureStatus.includes("normal")) pressureDiv.classList.add("normal");
+
+            let htmlParametros = "";
+            parametros.forEach(p => {
+                htmlParametros += `<div class="parameter-item ${p.estado}"><strong>${p.nombre}:</strong> ${p.valor} <span style="color:#888;font-size:0.95em;">(${p.referencia})</span></div>`;
+            });
+            document.getElementById('parametros-status').innerHTML = htmlParametros;
+
+            document.getElementById('recomendaciones').innerHTML = advertenciaFaltantes + recomendaciones;
+
+            results.style.display = "block";
+            results.scrollIntoView({behavior: "smooth"});
         }
-    }
-
-    // Advertencia FEVI reducida
-    if (fevi === "menor") {
-        feviWarning.style.display = "block";
-    } else {
-        feviWarning.style.display = "none";
-    }
-
-    let advertenciaFaltantes = "";
-    if (faltan.length > 0) {
-        advertenciaFaltantes = `<div class="missing-params-warning">
-            <strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.<br>
-            El diagnóstico puede ser menos preciso según las guías ASE 2025.
-        </div>`;
-    }
-
-    // ADVERTENCIA ESPECÍFICA PARA ONDA E FALTANTE
-    if (isNaN(valores.velocidadE)) {
-        advertenciaFaltantes += "<br>⚠️ No se ingresó la onda E, por lo que no se puede calcular E/e'. El diagnóstico se basa en los parámetros disponibles, pero podría ser más preciso si se completa este dato.";
-    }
-
-    const results = document.getElementById('results');
-    results.className = "results";
-    if (diagnostico.includes("normal")) results.classList.add("normal");
-    else if (diagnostico.includes("Disfunción") || diagnostico.includes("elevada")) results.classList.add("abnormal");
-    else results.classList.add("indeterminate");
-
-    document.getElementById('diagnostico').innerHTML = diagnostico;
-
-    const pressureDiv = document.getElementById('pressureStatus');
-    pressureDiv.innerHTML = pressureStatus;
-    pressureDiv.className = "pressure-status";
-    if (pressureStatus.includes("elevada")) pressureDiv.classList.add("elevated");
-    else if (pressureStatus.includes("normal")) pressureDiv.classList.add("normal");
-
-    let htmlParametros = "";
-    parametros.forEach(p => {
-        htmlParametros += `<div class="parameter-item ${p.estado}"><strong>${p.nombre}:</strong> ${p.valor} <span style="color:#888;font-size:0.95em;">(${p.referencia})</span></div>`;
-    });
-    document.getElementById('parametros-status').innerHTML = htmlParametros;
-
-    document.getElementById('recomendaciones').innerHTML = advertenciaFaltantes + recomendaciones;
-
-    results.style.display = "block";
-    results.scrollIntoView({behavior: "smooth"});
-}
 
         // Función para evaluar presión de llenado (para FEVI <50%)
         function evaluarPresionLlenado(ePromNormal, aiNormal, trNormal, eeNormal, laStrainNormal) {
