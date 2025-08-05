@@ -394,6 +394,9 @@
             color: var(--text-main);
         }
 
+        /* ======================================= */
+        /* === INICIO DE CAMBIOS PARA MÓVILES === */
+        /* ======================================= */
         @media (max-width: 480px) {
             body {
                 font-size: 14px;
@@ -406,41 +409,41 @@
                 box-shadow: none;
             }
             .form-container {
-                padding: 10px 8px; /* menos padding */
+                padding: 20px 15px; /* Aumentado desde 10px 8px */
             }
             .form-card {
-                padding: 10px 8px 8px 8px; /* menos padding */
-                margin-bottom: 10px; /* menos margen */
+                padding: 16px 14px;   /* Aumentado desde 10px 8px */
+                margin-bottom: 16px;  /* Aumentado desde 10px */
                 border: 1px solid var(--border);
                 box-shadow: none;
             }
             .form-card h3 {
                 font-size: 1em;
-                margin-bottom: 6px;
+                margin-bottom: 12px; /* Aumentado desde 6px */
             }
             .input-row-group {
                 flex-direction: column;
-                gap: 4px; /* menos gap */
+                gap: 14px; /* Aumentado desde 4px */
             }
             .input-row {
                 flex-direction: column;
                 align-items: stretch;
-                margin-bottom: 6px; /* menos margen */
+                margin-bottom: 12px; /* Aumentado desde 6px */
                 min-width: 0;
                 flex: 1 1 auto !important;
                 min-width: 0 !important;
             }
             .input-row label {
                 font-size: 0.9em;
-                margin-bottom: 3px;
+                margin-bottom: 6px; /* Aumentado desde 3px */
                 white-space: normal;
                 word-wrap: break-word;
             }
             .input-row input,
             .input-row select {
                 width: 100%;
-                font-size: 0.9em;
-                padding: 6px 8px; /* menos padding */
+                font-size: 1em;    /* Ligeramente aumentado para mejor tacto */
+                padding: 10px 8px; /* Aumentado desde 6px 8px */
                 box-sizing: border-box;
             }
             .unit {
@@ -448,14 +451,14 @@
                 font-size: 0.85em;
                 color: var(--text-soft);
                 display: inline-block;
-                margin-top: 3px;
+                margin-top: 4px; /* Ligeramente aumentado */
             }
             .calculate-btn {
                 width: 100%;
-                font-size: 1em;
-                padding: 12px 0; /* menos padding */
+                font-size: 1.1em; /* Ligeramente aumentado */
+                padding: 14px 0; /* Aumentado desde 12px */
                 border-radius: 8px;
-                margin-top: 12px; /* menos margen */
+                margin-top: 18px; /* Aumentado desde 12px */
                 box-shadow: none;
             }
             .results {
@@ -464,12 +467,12 @@
             }
             .parameter-status {
                 grid-template-columns: 1fr;
-                gap: 4px;
+                gap: 8px; /* Aumentado desde 4px */
                 margin-top: 8px;
             }
             .parameter-item {
-                font-size: 0.85em;
-                padding: 5px 7px;
+                font-size: 0.9em; /* Ligeramente aumentado */
+                padding: 8px 10px; /* Aumentado desde 5px 7px */
                 word-wrap: break-word;
                 margin-bottom: 4px;
             }
@@ -482,8 +485,8 @@
             .age-reference,
             .recommendations,
             .missing-params-warning {
-                font-size: 0.85em;
-                padding: 6px 8px;
+                font-size: 0.9em; /* Ligeramente aumentado */
+                padding: 10px 12px; /* Aumentado desde 6px 8px */
             }
             .modal-content {
                 margin: 10px 5px;
@@ -501,6 +504,9 @@
                 margin: 0;
             }
         }
+        /* ===================================== */
+        /* === FIN DE CAMBIOS PARA MÓVILES === */
+        /* ===================================== */
     </style>
 </head>
 <body>
@@ -668,7 +674,6 @@
         </div>
     </div>
 
-    <!-- Modal de información del algoritmo -->
     <div id="algModal" class="modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">×</button>
