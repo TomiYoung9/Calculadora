@@ -394,87 +394,86 @@
             color: var(--text-main);
         }
 
-        /* ======================================= */
-        /* === INICIO DE CAMBIOS PARA MÓVILES === */
-        /* ======================================= */
         @media (max-width: 480px) {
             body {
-                font-size: 14px;
+                font-size: 13px;
             }
             .container {
                 width: 95vw;
                 max-width: 400px;
-                margin: 10px auto;
-                border-radius: 12px;
+                margin: 8px auto;
+                border-radius: 10px;
                 box-shadow: none;
             }
             .form-container {
-                padding: 20px 15px; /* Aumentado desde 10px 8px */
+                padding: 8px 6px;
             }
             .form-card {
-                padding: 16px 14px;   /* Aumentado desde 10px 8px */
-                margin-bottom: 16px;  /* Aumentado desde 10px */
+                padding: 12px 10px;
+                margin-bottom: 8px;
                 border: 1px solid var(--border);
                 box-shadow: none;
             }
             .form-card h3 {
                 font-size: 1em;
-                margin-bottom: 12px; /* Aumentado desde 6px */
+                margin-bottom: 8px;
+                line-height: 1.1;
             }
             .input-row-group {
-                flex-direction: column;
-                gap: 14px; /* Aumentado desde 4px */
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px 10px;
             }
             .input-row {
                 flex-direction: column;
                 align-items: stretch;
-                margin-bottom: 12px; /* Aumentado desde 6px */
-                min-width: 0;
-                flex: 1 1 auto !important;
+                margin-bottom: 4px;
                 min-width: 0 !important;
             }
             .input-row label {
-                font-size: 0.9em;
-                margin-bottom: 6px; /* Aumentado desde 3px */
+                font-size: 0.85em;
+                margin-bottom: 2px;
                 white-space: normal;
                 word-wrap: break-word;
             }
             .input-row input,
             .input-row select {
                 width: 100%;
-                font-size: 1em;    /* Ligeramente aumentado para mejor tacto */
-                padding: 10px 8px; /* Aumentado desde 6px 8px */
+                font-size: 0.85em;
+                padding: 5px 6px;
                 box-sizing: border-box;
+                height: 30px;
             }
             .unit {
                 margin-left: 0;
-                font-size: 0.85em;
+                font-size: 0.8em;
                 color: var(--text-soft);
                 display: inline-block;
-                margin-top: 4px; /* Ligeramente aumentado */
+                margin-top: 2px;
             }
             .calculate-btn {
                 width: 100%;
-                font-size: 1.1em; /* Ligeramente aumentado */
-                padding: 14px 0; /* Aumentado desde 12px */
-                border-radius: 8px;
-                margin-top: 18px; /* Aumentado desde 12px */
+                font-size: 1em;
+                padding: 10px 0;
+                border-radius: 7px;
+                margin-top: 10px;
                 box-shadow: none;
             }
             .results {
-                padding: 12px 10px;
+                padding: 10px 8px;
                 font-size: 0.9em;
+                margin-top: 16px;
             }
             .parameter-status {
                 grid-template-columns: 1fr;
-                gap: 8px; /* Aumentado desde 4px */
-                margin-top: 8px;
+                gap: 4px;
+                margin-top: 6px;
             }
             .parameter-item {
-                font-size: 0.9em; /* Ligeramente aumentado */
-                padding: 8px 10px; /* Aumentado desde 5px 7px */
+                font-size: 0.8em;
+                padding: 4px 6px;
                 word-wrap: break-word;
-                margin-bottom: 4px;
+                margin-bottom: 3px;
             }
             .info-box,
             .referencias,
@@ -485,13 +484,18 @@
             .age-reference,
             .recommendations,
             .missing-params-warning {
-                font-size: 0.9em; /* Ligeramente aumentado */
-                padding: 10px 12px; /* Aumentado desde 6px 8px */
+                font-size: 0.85em;
+                padding: 6px 8px;
+                margin-bottom: 6px;
+            }
+            .recommendations {
+                margin-top: 6px;
+                padding: 8px 6px;
             }
             .modal-content {
-                margin: 10px 5px;
+                margin: 8px 5px;
                 max-width: 95vw;
-                padding: 18px 14px;
+                padding: 16px 12px;
                 max-height: 90vh;
             }
             .modal-table {
@@ -504,9 +508,6 @@
                 margin: 0;
             }
         }
-        /* ===================================== */
-        /* === FIN DE CAMBIOS PARA MÓVILES === */
-        /* ===================================== */
     </style>
 </head>
 <body>
@@ -674,6 +675,7 @@
         </div>
     </div>
 
+    <!-- Modal de información del algoritmo -->
     <div id="algModal" class="modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">×</button>
