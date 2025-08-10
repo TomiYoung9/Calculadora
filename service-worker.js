@@ -1,55 +1,138 @@
-const CACHE_NAME = 'diastolic-calculator-v3-network-first';
-const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
+/* service-worker.js — Calculadora de Función Diastólica
+ * Estrategias:
+ * - Navegación (HTML): network-first → fallback index.html
+ * - Estáticos same-origin (css/js/img/svg): cache-first + revalidación
+ * - Google Fonts: css (stale-while-revalidate), woff2 (cache-first)
+ * Auto-update:
+ * - La página envía {type:'SKIP_WAITING'} → self.skipWaiting()
+ * - En activate → clients.claim(); la página escucha controllerchange y recarga
+ */
+
+const VERSION = "v1.0.0";
+const STATIC_CACHE = `df-static-${VERSION}`;
+const FONTS_CACHE  = `df-fonts-${VERSION}`;
+
+// Base path según scope (soporta GitHub Pages en subcarpeta)
+const SCOPE_URL  = new URL(self.registration.scope);
+const BASE_PATH  = SCOPE_URL.pathname.endsWith("/") ? SCOPE_URL.pathname : SCOPE_URL.pathname + "/";
+const INDEX_HTML = BASE_PATH + "index.html";
+
+const CORE_ASSETS = [
+  BASE_PATH,
+  INDEX_HTML,
+  BASE_PATH + "manifest.json",
+  BASE_PATH + "icon-192.png",
+  BASE_PATH + "icon-512.png",
 ];
 
-// Instala y cachea los archivos esenciales
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
-  self.skipWaiting();
+// Precarga segura de core
+async function addAllSafe(cache, urls) {
+  await Promise.all(urls.map(async (u) => {
+    try {
+      const req = new Request(u, { cache: "reload" });
+      await cache.add(req);
+    } catch {}
+  }));
+}
+
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(STATIC_CACHE);
+    await addAllSafe(cache, CORE_ASSETS);
+    // skipWaiting se dispara desde la página para control fino
+  })());
 });
 
-// Limpia cachés viejas al activar
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames =>
-      Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      )
-    )
-  );
-  self.clients.claim();
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys
+      .filter(k => k !== STATIC_CACHE && k !== FONTS_CACHE)
+      .map(k => caches.delete(k)));
+    if (self.registration.navigationPreload) {
+      try { await self.registration.navigationPreload.enable(); } catch {}
+    }
+    await self.clients.claim();
+  })());
 });
 
-// Estrategia: network first, fallback to cache
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Si la respuesta es válida, actualiza la caché
-        if (event.request.method === 'GET' && response && response.status === 200 && response.type === 'basic') {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return response;
-      })
-      .catch(() => {
-        // Si falla la red, intenta desde la caché
-        return caches.match(event.request);
-      })
-  );
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
+
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  const url = new URL(req.url);
+
+  // 1) Navegación / HTML
+  if (req.mode === "navigate") {
+    event.respondWith(networkFirstHTML(event));
+    return;
+  }
+
+  // 2) Google Fonts (CSS)
+  if (url.origin === "https://fonts.googleapis.com") {
+    event.respondWith(staleWhileRevalidate(req, FONTS_CACHE));
+    return;
+  }
+
+  // 3) Google Fonts (WOFF/WOFF2)
+  if (url.origin === "https://fonts.gstatic.com") {
+    event.respondWith(cacheFirst(req, FONTS_CACHE));
+    return;
+  }
+
+  // 4) Estáticos same-origin
+  if (url.origin === location.origin) {
+    if (/\.(?:css|js|mjs|png|jpg|jpeg|webp|svg|ico|gif|json|txt|woff2?)$/i.test(url.pathname)) {
+      event.respondWith(cacheFirst(req, STATIC_CACHE, { revalidate: true }));
+      return;
+    }
+  }
+
+  // 5) Default → red
+});
+
+async function networkFirstHTML(event) {
+  try {
+    const preload = await event.preloadResponse;
+    if (preload) return preload;
+
+    const netRes = await fetch(event.request);
+    const cache = await caches.open(STATIC_CACHE);
+    cache.put(event.request, netRes.clone());
+    return netRes;
+  } catch {
+    const cache = await caches.open(STATIC_CACHE);
+    const fallback = await cache.match(INDEX_HTML);
+    return fallback || new Response("Offline", { status: 503, statusText: "Service Unavailable" });
+  }
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+  const networkFetch = fetch(request).then((res) => {
+    cache.put(request, res.clone());
+    return res;
+  }).catch(() => null);
+  return cached || (await networkFetch) || fetch(request);
+}
+
+async function cacheFirst(request, cacheName, opts = { revalidate: false }) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+  if (cached) {
+    if (opts.revalidate) {
+      fetch(request).then((res) => cache.put(request, res.clone())).catch(() => {});
+    }
+    return cached;
+  }
+  const res = await fetch(request);
+  if (res && (res.ok || res.type === "opaque")) {
+    cache.put(request, res.clone());
+  }
+  return res;
+}
