@@ -91,18 +91,6 @@
     .modal-table th,.modal-table td{border:1px solid #ccc;padding:6px 10px;text-align:center}
     .modal-table th{background:#f0f4f8;font-weight:600}
 
-    /* Explain Mode */
-    .explain{margin-top:12px;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:#f9fafb}
-    .explain h4{margin:0 0 8px;font-size:1.05em;display:flex;align-items:center;gap:8px;color:var(--text-main)}
-    .explain ul{margin:0;padding-left:18px;color:var(--text-soft);line-height:1.5}
-    .explain--normal{background:#eafaf1;border-color:var(--green)}
-    .explain--elevada{background:#fdeaea;border-color:var(--red)}
-    .explain--indet{background:#fffbe6;border-color:var(--yellow)}
-    .chip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.85em;font-weight:600;margin-left:6px}
-    .chip--normal{background:#dff5e7;color:#1c7c4e}
-    .chip--elevada{background:#ffe1df;color:#9b3126}
-    .chip--indet{background:#fff1c7;color:#8a6a00}
-
     /* Footer versión */
     .version-footer{font-size:.85em;color:#6b7280;text-align:center;margin:12px 0 18px}
 
@@ -320,8 +308,6 @@
         <div id="pressureStatus" class="pressure-status"></div>
         <div id="parametros-status" class="parameter-status"></div>
         <div id="recomendaciones" class="recommendations"></div>
-        <!-- Explain Mode dinámico -->
-        <div id="explainBox" class="explain" style="display:none;"></div>
       </div>
 
       <div class="referencias">
@@ -352,7 +338,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.1.2 · actualizada 11/08/2025</div>
+      <div class="version-footer">v1.1.1 · actualizada 11/08/2025</div>
     </div>
   </div>
 
@@ -433,7 +419,7 @@
         if (isNaN(valores.velocidadE)) faltan.push("Onda E");
         if (isNaN(valores.velocidadA)) faltan.push("Onda A");
       }
-      if (isNaN(valores.laStrain)) faltan.push("LARS");
+      if (isNaN(valores.laStrain)) faltan.push("LA Strain");
       return faltan;
     }
 
@@ -534,38 +520,6 @@
         BCRI_CRT:"BCRI/CRT: TDI lateral poco fiable; se prioriza e′ septal (el promedio puede usar solo septal)."
       };
       box.textContent = info[esc] || info.normal;
-    }
-
-    // Explain Mode (determinístico, sin valores)
-    function renderExplain(lap, contexto){
-      const box = document.getElementById('explainBox');
-      if (!box) return;
-      let cls="explain ", chip="", bullets=[];
-      if (lap==="elevada"){
-        cls+="explain--elevada"; chip='<span class="chip chip--elevada">LAP elevada</span>';
-        bullets=[
-          "<strong>Decisión:</strong> ≥2 marcadores principales sugieren LAP alta (e′ por edad reducido, E/e′ elevado y/o TR/PSAP elevada) según ASE 2025.",
-          "<strong>Soporte:</strong> LARS bajo y/o aurícula izquierda aumentada, si se midieron.",
-          (contexto.ritmo==="sinusal" ? "<strong>Ahora:</strong> En RS, gradar con E/A (≥2 ⇒ III; 0.8–2 con LAP alta ⇒ II)." : "<strong>Ahora:</strong> En FA no se gradúa; mantener enfoque multiparámetros.")
-        ];
-      } else if (lap==="normal"){
-        cls+="explain--normal"; chip='<span class="chip chip--normal">LAP normal</span>';
-        bullets=[
-          "<strong>Decisión:</strong> Marcadores principales disponibles concordantes con presión normal.",
-          "<strong>Soporte:</strong> LARS conservado y aurícula izquierda no aumentada, cuando están medidos.",
-          "<strong>Ahora:</strong> Si hay síntomas, usar parámetros adicionales o eco de ejercicio."
-        ];
-      } else {
-        cls+="explain--indet"; chip='<span class="chip chip--indet">Indeterminado</span>';
-        bullets=[
-          "<strong>Decisión:</strong> Marcadores principales discordantes o insuficientes.",
-          "<strong>Desempate:</strong> LARS, LAVi/Área (evitar como primaria en MR significativa), S/D &lt;1 o IVRT bajo.",
-          "<strong>Ahora:</strong> Si hay síntomas y LAP no elevada en reposo, considerar eco de ejercicio."
-        ];
-      }
-      box.className=cls;
-      box.innerHTML=`<h4>💡 Explain Mode ${chip}</h4><ul><li>${bullets.join("</li><li>")}</li></ul>`;
-      box.style.display="block";
     }
 
     // ---------- Algoritmo principal ----------
@@ -817,10 +771,6 @@
 
       results.style.display="block";
 
-      // Explain Mode (derivado del status)
-      const lap = (pressureStatus.includes("elevada") ? "elevada" : (pressureStatus.includes("normal") ? "normal" : "indet"));
-      renderExplain(lap, {ritmo:ritmo, escenario:esc});
-
       // Accesibilidad: foco al encabezado del resultado
       h.focus({preventScroll:true});
       results.scrollIntoView({behavior:"smooth", block:"start"});
@@ -828,11 +778,11 @@
 
     // ---------- Boot ----------
     document.addEventListener('DOMContentLoaded', () => {
-      // Navegación con Enter: usar submit del form
+      // Submit con Enter
       const form = document.getElementById('diastolicForm');
       form.addEventListener('submit', (e)=>{ e.preventDefault(); calcularFuncionDiastolica(); });
 
-      // También Enter en inputs
+      // Enter en inputs
       document.querySelectorAll('input,select').forEach((el)=>{
         el.addEventListener('keydown', (e)=>{
           if (e.key === 'Enter'){ e.preventDefault(); document.getElementById('btnCalcular').click(); }
@@ -864,4 +814,3 @@
   </script>
 </body>
 </html>
-
