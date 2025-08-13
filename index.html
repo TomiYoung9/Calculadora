@@ -341,7 +341,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.2.1 · actualizada 12/08/2025</div>
+      <div class="version-footer">v1.2.2 · actualizada 12/08/2025</div>
     </div>
   </div>
 
@@ -384,10 +384,27 @@
   </div>
 
   <script>
-    // --- Utilidad: parsear coma o punto ---
+    // --- Normalización de decimales para iOS y otros locales ---
+    function normalizeDecimalInputs(){
+      document.querySelectorAll('input[type="number"]').forEach(el=>{
+        // Evita que Safari marque badInput por no coincidir con step
+        el.setAttribute('step','any');
+        // Convierte comas a puntos en tiempo real
+        el.addEventListener('input', ()=>{
+          if (el.value && el.value.includes(',')) {
+            el.value = el.value.replace(/,/g,'.');
+          }
+        });
+      });
+    }
+
+    // --- Utilidad: parsear coma o punto (robusto) ---
     function parseNum(id){
       const el=document.getElementById(id); if(!el) return NaN;
-      const raw=(el.value||'').trim().replace(',','.');
+      let raw=(el.value||'').trim();
+      raw = raw
+        .replace(/\s+/g,'')   // quita espacios
+        .replace(/,/g,'.');   // todas las comas a punto
       const n=parseFloat(raw); return isNaN(n)?NaN:n;
     }
 
@@ -627,7 +644,7 @@
       // Reglas MAC explícitas
       let macHint="";
       if(esc==='MAC' && ritmo==='sinusal' && ea!==null){
-        if(ea<0.8){ macHint="E/A <0.8 (MAC) → LAP normal"; if(!addNorm.includes("LAP por MAC")) addNorm.push("Regla MAC (E/A <0.8)"); }
+        if(ea<0.8){ macHint="E/A <0.8 (MAC) → LAP normal"; if(!addNorm.includes("Regla MAC (E/A <0.8)")) addNorm.push("Regla MAC (E/A <0.8)"); }
         else if(ea>1.8){ macHint="E/A >1.8 (MAC) → LAP elevada"; if(!addElev.includes("Regla MAC (E/A >1.8)")) addElev.push("Regla MAC (E/A >1.8)"); }
         else if(isNaN(v.ivrt)){ macHint="E/A 0.8–1.8 (MAC) → mida IVRT (80 ms)"; }
       }
@@ -812,10 +829,12 @@
         el.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); calcularFuncionDiastolica(); }});
       });
 
+      // Inicializaciones
       updateAgeReferences();
       toggleEASection();
       toggleAIInput();
       syncPresionUI();
+      normalizeDecimalInputs(); // ⬅️ clave para iPhone / locales con coma
       document.getElementById('advancedContent').style.display='none';
     });
   </script>
