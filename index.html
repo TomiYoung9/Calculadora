@@ -58,7 +58,7 @@
     .results{margin-top:26px;padding:22px 18px;border-radius:10px;display:none}
     .results.normal{background:#eafaf1;color:var(--green);border:2px solid var(--green)}
     .results.abnormal{background:#fdeaea;color:var(--red);border:2px solid var(--red)}
-    .results.indeterminate{background:#fffbe6;color:var(--yellow);border:2px solid var(--yellow)}
+    .results.indeterminate{background:#fffbe6;color:#f7b731;border:2px solid var(--yellow)}
     .results h3{font-size:1.2em;margin-bottom:10px}
     .parameter-status{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px;margin-top:12px}
     .parameter-item{background:rgba(255,255,255,0.13);padding:7px 10px;border-radius:7px;border-left:4px solid #fff;font-size:1em}
@@ -342,7 +342,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.2.7 · actualizada 12/08/2025</div>
+      <div class="version-footer">v1.3.1 · actualizada 13/08/2025</div>
     </div>
   </div>
 
@@ -409,7 +409,7 @@
       });
     }
 
-    // --- Utilidad: parsear coma o punto (muy robusto) ---
+    // --- Utilidad: parsear coma o punto (robusto) ---
     function parseNum(id){
       const el=document.getElementById(id); if(!el) return NaN;
       let raw=(el.value||'').trim();
@@ -460,11 +460,11 @@
       else { label.textContent='Velocidad pico TR:'; unidad.textContent='m/s'; input.min=0; input.max=6; input.step=0.01; }
     }
 
-    // Hint por escenario (PAI + estadificación)
+    // Hint por escenario
     function scenarioText(esc,ritmo){
       switch(esc){
-        case 'MAC': return "MAC moderada/severa → E/A &lt;0.8 sugiere PAI normal; &gt;1.8 sugiere PAI elevada. Si 0.8–1.8, use IVRT (≥80 ms normal, &lt;80 ms elevada).";
-        case 'MR': return "MR significativa → priorice LARS, S/D &lt;1 e IVRT bajo (&lt;60–70 ms); LAVi/Área pueden elevarse por volumen.";
+        case 'MAC': return "MAC moderada/severa → E/A <0.8 sugiere PAI normal; >1.8 sugiere PAI elevada. Si 0.8–1.8, use IVRT (≥80 ms normal, <80 ms elevada).";
+        case 'MR': return "MR significativa → priorice LARS, S/D <1 e IVRT bajo (<60–70 ms); LAVi/Área pueden elevarse por volumen.";
         case 'MS': return "MS significativa → apoyarse en TR/PSAP, S/D e IVRT; E y E/A se distorsionan.";
         case 'PHnoCard': return "HP no cardiaca → TR/PSAP no cuentan para PAI (neutralizados); use e′, E/e′ y adicionales.";
         case 'LVAD': return "LVAD → enfoque orientativo (S/D, LARS y clínica); convencionales poco fiables.";
@@ -509,7 +509,7 @@
       document.getElementById('ageReferences').style.display='block';
     }
 
-    // --- Algoritmo con textos integrados ---
+    // --- Algoritmo con textos integrados (PAI + Estadificación ASE 2025) ---
     function calcularFuncionDiastolica(){
       const ritmo=document.getElementById('ritmo').value;
       const edad=document.getElementById('edad').value;
@@ -751,7 +751,7 @@
           }
         }
 
-        // ⬇️ Estadificación ASE en el diagnóstico final (RS únicamente)
+        // Estadificación ASE (RS únicamente)
         if(ritmo==='sinusal' && ea!==null && !isNaN(v.velocidadE)){
           let gradeLabel=null;
           if(ea<0.8 && v.velocidadE<50) gradeLabel="Grado I";
@@ -765,7 +765,7 @@
             !/indeterminado/i.test(dxLower) &&
             (
               dx.startsWith("Disfunción diastólica") ||
-              dx.startsWith("PAI ") || // ya trae PAI normal/elevada
+              dx.startsWith("PAI ") ||
               dx.includes("(probable)") ||
               (fevi==='menor')
             );
@@ -841,6 +841,37 @@
       toggleAIInput();
       syncPresionUI();
       document.getElementById('advancedContent').style.display='none';
+    });
+  </script>
+
+  <!-- ===== Contadores simples (visitas y clicks en Calcular) ===== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const BASE = 'https://api.countapi.xyz';
+      const NS   = 'tomiyoung9-Calculadora';    // Namespace para tu GitHub Pages
+
+      // Visitas totales (cada carga de página)
+      fetch(`${BASE}/hit/${NS}/visitas_total`).catch(()=>{});
+
+      // Visitas únicas por navegador (1 vez por browser)
+      const LSKEY = 'calc_visited_v1';
+      try {
+        if (!localStorage.getItem(LSKEY)) {
+          fetch(`${BASE}/hit/${NS}/visitas_unicas`).catch(()=>{});
+          localStorage.setItem(LSKEY, '1');
+        }
+      } catch(e){
+        // En modo privado sin localStorage, al menos contamos una vez
+        fetch(`${BASE}/hit/${NS}/visitas_unicas`).catch(()=>{});
+      }
+
+      // Clicks en "Calcular" (cada ejecución)
+      const form = document.getElementById('diastolicForm');
+      if (form) {
+        form.addEventListener('submit', function () {
+          fetch(`${BASE}/hit/${NS}/calculos`).catch(()=>{});
+        });
+      }
     });
   </script>
 </body>
