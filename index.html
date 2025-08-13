@@ -128,7 +128,8 @@
     <div class="form-container">
       <a id="openAlgInfo" class="alg-link" href="javascript:void(0)">¿Cómo funciona el algoritmo?</a>
 
-      <form id="diastolicForm">
+      <!-- novalidate agregado -->
+      <form id="diastolicForm" novalidate>
         <div class="form-card">
           <h3>🩺 Contexto clínico</h3>
           <div class="input-row-group">
@@ -341,7 +342,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.2.2 · actualizada 12/08/2025</div>
+      <div class="version-footer">v1.2.4 · actualizada 12/08/2025</div>
     </div>
   </div>
 
@@ -614,19 +615,17 @@
       if(eeOk!==null && !(esc==='HCM' && eeOk===false)){ tot++; alt+=eeOk?0:1; nor+=eeOk?1:0; }
       if(presOk!==null && esc!=='PHnoCard'){ tot++; alt+=presOk?0:1; nor+=presOk?1:0; }
 
-      // Adicionales para resumen de "resuelto por"
+      // Adicionales para resumen
       const addElev=[], addNorm=[];
       const sdLow = (!isNaN(v.sd) && v.sd<1.0);
       const cIV = (esc==='MR'||esc==='MS')?60:70;
       const ivrtLow = (!isNaN(v.ivrt) && v.ivrt<=cIV);
       const ivrtHighMAC = (esc==='MAC' && ea!==null && ea>=0.8 && ea<=1.8 && !isNaN(v.ivrt) && v.ivrt>=80);
 
-      // LARS
       if(!isNaN(v.laStrain)){
         if(v.laStrain<18) addElev.push("LARS ≤18%");
         if(v.laStrain>=23) addNorm.push("LARS ≥23%");
       }
-      // LAVi / Área
       const usarAIcomoPrimaria = (esc!=='MR');
       if(tipoAI==='volumen' && !isNaN(v.volumenAI)){
         if(usarAIcomoPrimaria && v.volumenAI>34) addElev.push("LAVi >34 ml/m²");
@@ -635,13 +634,11 @@
         if(usarAIcomoPrimaria && v.areaAI>20) addElev.push("Área AI >20 cm²");
         if(v.areaAI<=20) addNorm.push("Área AI ≤20 cm²");
       }
-      // S/D
       if(sdLow) addElev.push("Relación S/D <1");
-      // IVRT
       if(ivrtLow) addElev.push("IVRT bajo");
       if(ivrtHighMAC) addNorm.push("IVRT ≥80 ms (MAC)");
 
-      // Reglas MAC explícitas
+      // Reglas MAC
       let macHint="";
       if(esc==='MAC' && ritmo==='sinusal' && ea!==null){
         if(ea<0.8){ macHint="E/A <0.8 (MAC) → LAP normal"; if(!addNorm.includes("Regla MAC (E/A <0.8)")) addNorm.push("Regla MAC (E/A <0.8)"); }
@@ -649,17 +646,15 @@
         else if(isNaN(v.ivrt)){ macHint="E/A 0.8–1.8 (MAC) → mida IVRT (80 ms)"; }
       }
 
-      // Diagnóstico y comentarios
+      // Diagnóstico
       let dx="", ptxt="", comments=[];
       const tieneTRoPSAP=(presOk!==null);
 
-      // FEVI reducida: siempre disfunción, informar LAP
       if(fevi==='menor'){
         feviWarn.style.display="block";
       }
 
       if(ritmo==='fa' || esc==='AF'){
-        // FA: no se gradúa
         let a=0,n=0;
         if(eAvgOk!==null){ a+=eAvgOk?0:1; n+=eAvgOk?1:0; }
         if(eeOk!==null && !(esc==='HCM' && eeOk===false)){ a+=eeOk?0:1; n+=eeOk?1:0; }
@@ -677,25 +672,18 @@
           comments.push("Falta TR/PSAP; añada TR/PSAP o LARS/S-D/IVRT para robustecer.");
         }
       } else {
-        // RS
         if(tieneTRoPSAP){
           if(tot===3 && alt===3){
-            dx="Disfunción diastólica; LAP elevada";
-            ptxt="Presión de llenado elevada";
+            dx="Disfunción diastólica; LAP elevada"; ptxt="Presión de llenado elevada";
           } else if(tot===3 && nor===3){
-            dx="Función diastólica normal";
-            ptxt="Presión de llenado normal";
+            dx="Función diastólica normal"; ptxt="Presión de llenado normal";
           } else if(tot>=2 && alt>=1 && alt<tot){
-            // discordancia -> resolver por adicionales
             if(addElev.length){
-              dx="Disfunción diastólica; LAP elevada";
-              ptxt="Presión de llenado elevada";
+              dx="Disfunción diastólica; LAP elevada"; ptxt="Presión de llenado elevada";
               comments.push("Conclusión resuelta por adicional (elevada): "+addElev.join(", ")+".");
             } else if(addNorm.length){
-              // ¿relajación alterada?
-              const relajBaja = (eAvgOk===false) || (eLatOk===false) || (eSepOk===false);
+              const relajBaja = (eAvgOk===false);
               if(relajBaja){
-                // Grado I solo si E/A<0.8 y E<50
                 if(ea!==null && v.velocidadE<50 && ea<0.8){
                   dx="LAP normal; alteración de la relajación (Grado I)";
                 } else {
@@ -703,39 +691,32 @@
                 }
                 ptxt="Presión de llenado normal";
               } else {
-                dx="Función diastólica normal";
-                ptxt="Presión de llenado normal";
+                dx="Función diastólica normal"; ptxt="Presión de llenado normal";
               }
               comments.push("Conclusión resuelta por adicional (normal): "+addNorm.join(", ")+".");
             } else {
-              dx="Indeterminado";
-              indNote.style.display="block";
+              dx="Indeterminado"; indNote.style.display="block";
               comments.push("Discordancia sin adicionales concluyentes; mida LARS/LAVi/Área/S-D/IVRT.");
             }
           } else {
-            dx="Indeterminado";
-            indNote.style.display="block";
+            dx="Indeterminado"; indNote.style.display="block";
             comments.push("Faltan pilares (e′, E/e′, TR/PSAP) para definir LAP.");
           }
         } else {
-          // Sin TR/PSAP → “probable”
           if(tot>=2 && alt===0){
-            dx="Función diastólica (probable)";
-            ptxt="Presión de llenado probablemente normal";
+            dx="Función diastólica (probable)"; ptxt="Presión de llenado probablemente normal";
             if(addNorm.length) comments.push("Conclusión probable, apoyada por adicional (normal): "+addNorm.join(", ")+".");
             comments.push("Falta TR/PSAP; añada TR/PSAP o LARS/S-D/IVRT para robustecer.");
           } else if(tot>=2 && alt===tot){
-            dx="Disfunción diastólica (probable)";
-            ptxt="Presión de llenado probablemente elevada";
+            dx="Disfunción diastólica (probable)"; ptxt="Presión de llenado probablemente elevada";
             if(addElev.length) comments.push("Conclusión probable, apoyada por adicional (elevada): "+addElev.join(", ")+".");
             comments.push("Falta TR/PSAP; añada TR/PSAP o LARS/S-D/IVRT para confirmar.");
           } else if(tot>=2 && alt>=1 && alt<tot){
             if(addElev.length){
-              dx="Disfunción diastólica (probable)";
-              ptxt="Presión de llenado probablemente elevada";
+              dx="Disfunción diastólica (probable)"; ptxt="Presión de llenado probablemente elevada";
               comments.push("Discordancia resuelta por adicional (elevada): "+addElev.join(", ")+".");
             } else if(addNorm.length){
-              const relajBaja = (eAvgOk===false) || (eLatOk===false) || (eSepOk===false);
+              const relajBaja = (eAvgOk===false);
               if(relajBaja){
                 if(ea!==null && v.velocidadE<50 && ea<0.8){
                   dx="LAP probablemente normal; alteración de la relajación (Grado I)";
@@ -744,26 +725,21 @@
                 }
                 ptxt="Presión de llenado probablemente normal";
               } else {
-                dx="Función diastólica (probable)";
-                ptxt="Presión de llenado probablemente normal";
+                dx="Función diastólica (probable)"; ptxt="Presión de llenado probablemente normal";
               }
               comments.push("Discordancia resuelta por adicional (normal): "+addNorm.join(", ")+".");
             } else {
-              dx="Indeterminado";
-              indNote.style.display="block";
+              dx="Indeterminado"; indNote.style.display="block";
               comments.push("Sin TR/PSAP y sin adicionales concluyentes.");
             }
           } else if(tot===1){
-            dx="Indeterminado";
-            indNote.style.display="block";
+            dx="Indeterminado"; indNote.style.display="block";
             comments.push("Pilar único; añada TR/PSAP y/o LARS/LAVi/Área/S-D/IVRT.");
           } else {
-            dx="Indeterminado";
-            indNote.style.display="block";
+            dx="Indeterminado"; indNote.style.display="block";
           }
         }
 
-        // Gradación RS cuando corresponda (dato complementario)
         if((dx.startsWith("Disfunción") || fevi==='menor') && ritmo==='sinusal' && ea!==null && !isNaN(v.velocidadE)){
           if(ea<0.8 && v.velocidadE<50)      comments.push("Gradación (RS): Grado I si E/A <0.8 y E <50 cm/s (cumplido).");
           else if(ea>=2.0)                    comments.push("Gradación (RS): Grado III si E/A ≥2.0 (cumplido).");
@@ -771,23 +747,19 @@
         }
       }
 
-      // Mensaje TR alto con LAP normal
       if((dx.includes("LAP normal") || ptxt.toLowerCase().includes("normal")) && presOk===false){
-        comments.push("TR/PSAP elevados con E/e′ bajo y LAVi/Área normal sugieren LAP normal; verifique técnica (alineación/aliasing) y/o confirme con PSAP y adicionales.");
+        comments.push("TR/PSAP elevados con E/e′ bajo y LAVi/Área normal sugieren LAP normal; verifique técnica y/o confirme con adicionales.");
       }
 
-      // FEVI reducida: comentario
       if(fevi==='menor'){
         comments.unshift("Con FEVI <50% se asume disfunción diastólica; se informa la LAP según pilares/adicionales.");
       }
 
-      // Advertencias por faltantes
       let adv="";
       if(faltan.length>0) adv+=`<div class="indeterminate-note"><strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.</div>`;
       if(isNaN(v.velocidadE)) adv+="<br>⚠️ Falta Onda E → no se puede calcular E/e′.";
       if(macHint) adv+=`<div class="indeterminate-note" style="background:#e8f4fd;border-color:#b3d8f7;color:#1e3a5f;">${macHint}</div>`;
 
-      // Render
       const results=document.getElementById('results');
       const h=document.getElementById('diagnostico');
       const p=document.getElementById('pressureStatus');
@@ -820,6 +792,8 @@
 
     // Eventos
     document.addEventListener('DOMContentLoaded',()=>{
+      normalizeDecimalInputs(); // ⬅️ clave para iPhone / locales con coma
+
       document.getElementById('openAlgInfo').addEventListener('click',openModal);
       document.getElementById('algModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget) closeModal();});
       document.addEventListener('keydown',(e)=>{if(e.key==="Escape"){const m=document.getElementById('algModal');if(m.style.display==='block') closeModal();}});
@@ -829,12 +803,10 @@
         el.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); calcularFuncionDiastolica(); }});
       });
 
-      // Inicializaciones
       updateAgeReferences();
       toggleEASection();
       toggleAIInput();
       syncPresionUI();
-      normalizeDecimalInputs(); // ⬅️ clave para iPhone / locales con coma
       document.getElementById('advancedContent').style.display='none';
     });
   </script>
