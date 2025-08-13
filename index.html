@@ -47,7 +47,7 @@
       width:100%;
       min-width:0;
       padding:9px 10px;border:1.5px solid var(--border);border-radius:6px;
-      font-size:1em;background:#f7fbfd;color:var(--text-main);
+      font-size:1em;background:#f7fbfd;color:#1a2a36;
     }
     .input-row input:focus,.input-row select:focus{outline:none;border-color:var(--accent)}
     .unit{color:var(--text-soft);font-weight:500;font-size:.97em;white-space:nowrap}
@@ -128,7 +128,7 @@
     <div class="form-container">
       <a id="openAlgInfo" class="alg-link" href="javascript:void(0)">¿Cómo funciona el algoritmo?</a>
 
-      <!-- novalidate agregado -->
+      <!-- novalidate para evitar validación nativa que bloquea con coma en iOS -->
       <form id="diastolicForm" novalidate>
         <div class="form-card">
           <h3>🩺 Contexto clínico</h3>
@@ -342,7 +342,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.2.4 · actualizada 12/08/2025</div>
+      <div class="version-footer">v1.2.5 · actualizada 12/08/2025</div>
     </div>
   </div>
 
@@ -385,28 +385,42 @@
   </div>
 
   <script>
-    // --- Normalización de decimales para iOS y otros locales ---
-    function normalizeDecimalInputs(){
-      document.querySelectorAll('input[type="number"]').forEach(el=>{
-        // Evita que Safari marque badInput por no coincidir con step
-        el.setAttribute('step','any');
-        // Convierte comas a puntos en tiempo real
+    // --- iOS hotfix: usa <input type="text"> con teclado decimal y normaliza comas ---
+    function iosDecimalHotfix(){
+      const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent);
+      const ids = [
+        'velocidadE','velocidadA','eLateral','eSeptal',
+        'volumenAI','areaAI','valorPresion','laStrain','ivrt','sd'
+      ];
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if(!el) return;
+        if(isIOS){
+          el.type = 'text';                     // evita "badInput" en Safari iOS
+          el.setAttribute('inputmode','decimal'); // teclado numérico decimal
+        }else{
+          if(el.type === 'number') el.setAttribute('step','any'); // decimales libres en no-iOS
+        }
+        // Normaliza 3,4 -> 3.4 en vivo
         el.addEventListener('input', ()=>{
-          if (el.value && el.value.includes(',')) {
+          if (typeof el.value === 'string' && el.value.includes(',')) {
             el.value = el.value.replace(/,/g,'.');
           }
         });
       });
     }
 
-    // --- Utilidad: parsear coma o punto (robusto) ---
+    // --- Utilidad: parsear coma o punto (muy robusto) ---
     function parseNum(id){
       const el=document.getElementById(id); if(!el) return NaN;
       let raw=(el.value||'').trim();
       raw = raw
-        .replace(/\s+/g,'')   // quita espacios
-        .replace(/,/g,'.');   // todas las comas a punto
-      const n=parseFloat(raw); return isNaN(n)?NaN:n;
+        .replace(/,/g,'.')         // coma -> punto
+        .replace(/[^0-9.\-]/g,'')  // deja solo dígitos, punto y '-'
+        .replace(/(?!^)-/g,'')     // solo un '-' al inicio
+        .replace(/(\..*)\./g,'$1'); // solo un punto decimal
+      const n=parseFloat(raw);
+      return isNaN(n)?NaN:n;
     }
 
     // Modal
@@ -524,7 +538,6 @@
         escenarioEspecial:esc
       };
 
-      // faltantes
       const faltan=[];
       if(isNaN(v.eSeptal)) faltan.push("e' septal");
       if(isNaN(v.eLateral)) faltan.push("e' lateral");
@@ -535,13 +548,11 @@
       if(ritmo==='sinusal'){ if(isNaN(v.velocidadE)) faltan.push("Onda E"); if(isNaN(v.velocidadA)) faltan.push("Onda A"); }
       if(isNaN(v.laStrain)) faltan.push("LA Strain");
 
-      // E/A
       let ea=null;
       if(ritmo==='sinusal' && !isNaN(v.velocidadE) && !isNaN(v.velocidadA) && v.velocidadA>0){
         ea=v.velocidadE/v.velocidadA;
       }
 
-      // e' promedio (ajustes)
       let eLat=v.eLateral, eSep=v.eSeptal;
       if(esc==='BCRI_CRT' && !isNaN(eSep)) eLat=NaN;
       let eProm=null;
@@ -549,16 +560,13 @@
       else if(!isNaN(eSep)) eProm=eSep;
       else if(!isNaN(eLat)) eProm=eLat;
 
-      // E/e'
       let ee=null; if(!isNaN(v.velocidadE) && eProm>0) ee=v.velocidadE/eProm;
 
-      // Cortes por edad
       let eSepRef,eLatRef,eAvgRef;
       if(edad==='1'){ eSepRef=7; eLatRef=10; eAvgRef=9; }
       else if(edad==='2'){ eSepRef=6; eLatRef=8; eAvgRef=7; }
       else { eSepRef=6; eLatRef=7; eAvgRef=6.5; }
 
-      // Mostrar parámetros
       const params=[];
       let eLatOk=null,eSepOk=null,eAvgOk=null,eeOk=null,aiOk=null,presOk=null,larsOk=null;
 
@@ -609,13 +617,11 @@
         params.push({n:"LA Strain",val:v.laStrain.toFixed(1)+" %",st:larsOk?"normal":"abnormal",ref:refL});
       }
 
-      // Pilares contables
       let alt=0,nor=0,tot=0;
       if(eAvgOk!==null){ tot++; alt+=eAvgOk?0:1; nor+=eAvgOk?1:0; }
       if(eeOk!==null && !(esc==='HCM' && eeOk===false)){ tot++; alt+=eeOk?0:1; nor+=eeOk?1:0; }
       if(presOk!==null && esc!=='PHnoCard'){ tot++; alt+=presOk?0:1; nor+=presOk?1:0; }
 
-      // Adicionales para resumen
       const addElev=[], addNorm=[];
       const sdLow = (!isNaN(v.sd) && v.sd<1.0);
       const cIV = (esc==='MR'||esc==='MS')?60:70;
@@ -638,7 +644,6 @@
       if(ivrtLow) addElev.push("IVRT bajo");
       if(ivrtHighMAC) addNorm.push("IVRT ≥80 ms (MAC)");
 
-      // Reglas MAC
       let macHint="";
       if(esc==='MAC' && ritmo==='sinusal' && ea!==null){
         if(ea<0.8){ macHint="E/A <0.8 (MAC) → LAP normal"; if(!addNorm.includes("Regla MAC (E/A <0.8)")) addNorm.push("Regla MAC (E/A <0.8)"); }
@@ -646,7 +651,6 @@
         else if(isNaN(v.ivrt)){ macHint="E/A 0.8–1.8 (MAC) → mida IVRT (80 ms)"; }
       }
 
-      // Diagnóstico
       let dx="", ptxt="", comments=[];
       const tieneTRoPSAP=(presOk!==null);
 
@@ -682,7 +686,7 @@
               dx="Disfunción diastólica; LAP elevada"; ptxt="Presión de llenado elevada";
               comments.push("Conclusión resuelta por adicional (elevada): "+addElev.join(", ")+".");
             } else if(addNorm.length){
-              const relajBaja = (eAvgOk===false);
+              const relajBaja = (eAvgOk===false) || (eLatOk===false) || (eSepOk===false);
               if(relajBaja){
                 if(ea!==null && v.velocidadE<50 && ea<0.8){
                   dx="LAP normal; alteración de la relajación (Grado I)";
@@ -716,7 +720,7 @@
               dx="Disfunción diastólica (probable)"; ptxt="Presión de llenado probablemente elevada";
               comments.push("Discordancia resuelta por adicional (elevada): "+addElev.join(", ")+".");
             } else if(addNorm.length){
-              const relajBaja = (eAvgOk===false);
+              const relajBaja = (eAvgOk===false) || (eLatOk===false) || (eSepOk===false);
               if(relajBaja){
                 if(ea!==null && v.velocidadE<50 && ea<0.8){
                   dx="LAP probablemente normal; alteración de la relajación (Grado I)";
@@ -792,7 +796,7 @@
 
     // Eventos
     document.addEventListener('DOMContentLoaded',()=>{
-      normalizeDecimalInputs(); // ⬅️ clave para iPhone / locales con coma
+      iosDecimalHotfix(); // ⬅️ PRIMERO: asegura que 3,4 no se pierda en iOS
 
       document.getElementById('openAlgInfo').addEventListener('click',openModal);
       document.getElementById('algModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget) closeModal();});
