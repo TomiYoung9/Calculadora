@@ -4,95 +4,102 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calculadora de Función Diastólica</title>
-
-  <!-- Performance / fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
   <style>
     :root{
-      --main-bg:#b7d0e8; --header-bg:#3a5a7a; --card-bg:#fff;
-      --accent:#27ae60; --accent-dark:#219150; --accent-light:#e9f7ef;
-      --text-main:#1a2a36; --text-soft:#5a6e7f; --border:#e3eaf2; --shadow:0 4px 24px rgba(74,144,226,0.08);
-      --red:#e74c3c; --green:#27ae60; --yellow:#f7b731; --blue:#3498db;
+      --main-bg:#b7d0e8;--header-bg:#3a5a7a;--card-bg:#fff;
+      --accent:#27ae60;--accent-dark:#219150;--accent-light:#e9f7ef;
+      --text-main:#1a2a36;--text-soft:#5a6e7f;--border:#e3eaf2;
+      --shadow:0 4px 24px rgba(74,144,226,0.08);
+      --red:#e74c3c;--green:#27ae60;--yellow:#f7b731;
+      --label-w:200px;
     }
+    *{box-sizing:border-box}
     body{font-family:'Inter',Arial,sans-serif;background:var(--main-bg);min-height:100vh;margin:0}
     .container{max-width:900px;margin:40px auto 0;background:var(--card-bg);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
-    .header{background:var(--header-bg);color:#fff;padding:36px 20px 24px;text-align:center;position:relative}
-    .header h1{font-size:2.1em;font-weight:700;margin:0 0 8px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:14px;color:#fff}
-    .header .subtitle{font-size:1.08em;font-weight:500;color:#fff;margin-top:6px;letter-spacing:.2px}
+    .header{background:var(--header-bg);color:#fff;padding:36px 20px 24px;text-align:center}
+    .header h1{font-size:2.1em;font-weight:700;margin:0 0 8px;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:14px}
+    .header .subtitle{font-size:1.08em;font-weight:500;margin-top:6px;letter-spacing:.2px}
 
     .form-container{padding:36px 22px 28px}
-    .info-box{background:var(--accent-light);color:var(--text-main);padding:15px 20px;border-radius:10px;margin-bottom:24px;font-size:1.05em;box-shadow:0 2px 8px #4a90e211;position:relative}
-    .alg-link{display:block;text-align:right;margin-top:6px;color:#3a5a7a;font-size:.97em;text-decoration:underline dotted;cursor:pointer;transition:color .2s}
+
+    .alg-link{display:block;text-align:right;margin:-6px 0 14px;color:#3a5a7a;font-size:.97em;text-decoration:underline dotted}
     .alg-link:hover{color:var(--accent)}
 
-    .form-card{background:var(--card-bg);border-radius:12px;box-shadow:0 2px 8px #4a90e211;border:1.5px solid var(--border);margin-bottom:20px;padding:22px 18px 12px;transition:box-shadow .2s}
+    .form-card{background:var(--card-bg);border-radius:12px;box-shadow:0 2px 8px #4a90e211;border:1.5px solid var(--border);margin-bottom:20px;padding:22px 18px 12px}
     .form-card h3{color:var(--text-main);font-size:1.13em;font-weight:600;margin-bottom:14px;letter-spacing:.3px}
 
     .input-row-group{display:flex;gap:18px;flex-wrap:wrap}
-    .input-row{display:flex;align-items:center;margin-bottom:10px;gap:10px;flex:1 1 220px;min-width:220px}
-    .input-row--full{flex:1 1 100%;min-width:100%}
-    .input-row label{font-weight:500;color:var(--text-main);font-size:1em;flex:1 1 140px;min-width:0}
-    .input-row input,.input-row select{flex:0 0 120px;padding:9px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:1em;background:#f7fbfd;color:var(--text-main);transition:border-color .2s;min-width:0}
-    .input-row input:focus,.input-row select:focus{outline:none;border-color:var(--accent)}
-    .unit{margin-left:7px;color:var(--text-soft);font-weight:500;font-size:.97em;white-space:nowrap}
 
-    .ai-option-note{font-size:.92em;color:#5a6e7f;margin-top:7px;font-style:italic}
-    .calculate-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:9px;font-size:1.13em;font-weight:700;cursor:pointer;margin-top:14px;box-shadow:0 2px 8px #4a90e211;transition:background .2s, box-shadow .2s}
-    .calculate-btn:hover{background:var(--accent-dark);box-shadow:0 6px 24px #4a90e122}
+    .input-row{
+      display:grid;
+      grid-template-columns: var(--label-w) minmax(0,1fr) auto;
+      align-items:center;
+      gap:10px 12px;
+      margin-bottom:10px;
+      flex:1 1 420px;
+      min-width:360px;
+    }
+    .input-row--full{flex:1 1 100%;min-width:100%}
+
+    .input-row label{font-weight:500;color:var(--text-main);font-size:1em}
+    .input-row input,.input-row select{
+      width:100%;
+      min-width:0;
+      padding:9px 10px;border:1.5px solid var(--border);border-radius:6px;
+      font-size:1em;background:#f7fbfd;color:var(--text-main);
+    }
+    .input-row input:focus,.input-row select:focus{outline:none;border-color:var(--accent)}
+    .unit{color:var(--text-soft);font-weight:500;font-size:.97em;white-space:nowrap}
+
+    .calculate-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:9px;font-size:1.13em;font-weight:700;cursor:pointer;margin-top:14px;box-shadow:0 2px 8px #4a90e211}
+    .calculate-btn:hover{background:var(--accent-dark)}
 
     .results{margin-top:26px;padding:22px 18px;border-radius:10px;display:none}
     .results.normal{background:#eafaf1;color:var(--green);border:2px solid var(--green)}
     .results.abnormal{background:#fdeaea;color:var(--red);border:2px solid var(--red)}
     .results.indeterminate{background:#fffbe6;color:var(--yellow);border:2px solid var(--yellow)}
-    .results h3{font-size:1.2em;margin:0 0 10px}
-
+    .results h3{font-size:1.2em;margin-bottom:10px}
     .parameter-status{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px;margin-top:12px}
-    .parameter-item{background:rgba(255,255,255,.13);padding:7px 10px;border-radius:7px;border-left:4px solid #fff;font-size:1em;margin-bottom:0}
+    .parameter-item{background:rgba(255,255,255,0.13);padding:7px 10px;border-radius:7px;border-left:4px solid #fff;font-size:1em}
     .parameter-item.abnormal{border-left-color:var(--red);background:#fdeaea}
     .parameter-item.normal{border-left-color:var(--green);background:#eafaf1}
     .parameter-item.indeterminate{border-left-color:var(--yellow);background:#fffbe6}
+    .recommendations{margin-top:12px;padding:12px 10px;background:rgba(255,255,255,0.13);border-radius:7px}
 
-    .recommendations{margin-top:12px;padding:12px 10px;background:rgba(255,255,255,.13);border-radius:7px}
-    .fa-warning{background:#fff3cd;border:1px solid #ffeaa7;padding:10px 12px;border-radius:7px;margin-bottom:12px;color:#856404;font-size:1em}
-    .fevi-warning{background:#fff8e1;border:1px solid #ffecb3;padding:10px 12px;border-radius:7px;margin-bottom:12px;color:#6d4c41;font-size:1em}
-    .tr-warning{background:#e3f1fd;border:1.5px solid #b3d8f7;color:#357ab8;padding:10px 12px;border-radius:7px;margin-bottom:12px;font-size:1em;display:none}
-    .indeterminate-note{background:#fffbe6;border:1.5px solid var(--yellow);color:#b38600;padding:10px 12px;border-radius:7px;margin-bottom:12px;font-size:1em}
+    .fevi-warning{background:#fff8e1;border:1px solid #ffecb3;padding:10px 12px;border-radius:7px;margin-bottom:12px;color:#6d4c41}
+    .indeterminate-note{background:#fffbe6;border:1.5px solid var(--yellow);color:#b38600;padding:10px 12px;border-radius:7px;margin-bottom:12px}
     .age-reference{background:#e8f4fd;padding:10px 12px;border-radius:7px;margin-bottom:12px;border-left:4px solid var(--accent)}
-    .missing-params-warning{background:#fffbe6;border:1.5px solid var(--yellow);color:#b38600;padding:10px 12px;border-radius:7px;margin-bottom:12px;font-size:1em}
 
     .referencias{margin-top:28px;padding:16px 12px;background:#f8f9fa;border-radius:9px;border-left:5px solid var(--accent-light)}
     .referencias h3{color:var(--text-main);margin-bottom:12px;font-size:1.08em}
     .referencia-item{margin-bottom:10px;padding:10px;background:#fff;border-radius:7px;box-shadow:0 2px 5px #4a90e20a}
     .referencia-item p{margin:0;line-height:1.6;color:var(--text-main)}
-    .referencia-item a{color:var(--accent);text-decoration:none;font-weight:500}
-    .referencia-item a:hover{color:var(--accent-dark);text-decoration:underline}
+    .referencia-item a{color:var(--accent) !important;text-decoration:none;font-weight:500}
+    .referencia-item a:hover{color:var(--accent-dark) !important;text-decoration:underline}
+    .referencia-item a:visited{color:var(--accent) !important}
+    .referencia-item small, .referencia-item small a{font-size:1em}
 
-    .twitter-section{text-align:center;padding:10px;margin-bottom:6px}
-    .twitter-link,.linkedin-link{display:inline-flex;align-items:center;gap:8px;color:#111;text-decoration:none;font-weight:600;font-size:1.1em;transition:all .3s ease}
+    .twitter-section{text-align:center;padding:10px;margin-bottom:6px;display:flex;justify-content:center;gap:20px}
+    .twitter-link,.linkedin-link{display:inline-flex;align-items:center;gap:8px;color:#111;text-decoration:none;font-weight:600;font-size:1.1em}
     .twitter-link:hover,.linkedin-link:hover{color:var(--accent)}
-    .twitter-icon{width:24px;height:24px}
-    /* evitar color “visitado” violeta en los links sociales */
     .twitter-section a:visited{color:#111}
 
     .pressure-status{font-size:1.08em;font-weight:bold;margin-top:8px;padding:7px;border-radius:7px;text-align:center}
     .pressure-status.normal{background:#eafaf1;color:var(--green)}
     .pressure-status.elevated{background:#fdeaea;color:var(--red)}
 
+    .version-footer{font-size:.85em;color:#5b6470;text-align:center;margin:12px 0 18px}
+
     /* Modal */
-    .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;overflow:auto;background-color:rgba(0,0,0,.5);backdrop-filter:blur(3px)}
-    .modal-content{background:#fff;margin:5% auto;padding:20px 30px;border-radius:12px;max-width:600px;box-shadow:0 4px 24px rgba(0,0,0,.2);position:relative}
+    .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;overflow:auto;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(3px)}
+    .modal-content{background:#fff;margin:5% auto;padding:20px 30px;border-radius:12px;max-width:600px;box-shadow:0 4px 24px rgba(0,0,0,0.2);position:relative}
     .modal-close{position:absolute;top:12px;right:16px;background:transparent;border:none;font-size:28px;font-weight:bold;cursor:pointer;color:#333;line-height:1}
     .modal-close:hover{color:#27ae60}
     .modal-body{max-height:60vh;overflow-y:auto;font-size:.95em;line-height:1.4}
     .modal-table{width:100%;border-collapse:collapse;margin-top:10px}
     .modal-table th,.modal-table td{border:1px solid #ccc;padding:6px 10px;text-align:center}
     .modal-table th{background:#f0f4f8;font-weight:600}
-
-    /* Footer versión */
-    .version-footer{font-size:.85em;color:#6b7280;text-align:center;margin:12px 0 18px}
 
     /* Móvil */
     @media (max-width:480px){
@@ -102,19 +109,11 @@
       .form-card{padding:14px 12px 8px;margin-bottom:8px;border:1px solid var(--border);box-shadow:none}
       .form-card h3{font-size:1.1em;margin-bottom:8px;line-height:1.3}
       .input-row-group{display:block}
-      .input-row{flex-direction:column;align-items:flex-start;margin-bottom:12px;gap:4px;width:100%;min-width:0!important}
-      .input-row--full{flex:none;min-width:0}
-      .input-row label{font-size:1em;flex:none;width:100%;margin:0;white-space:normal;color:var(--text-main)}
-      .input-row input,.input-row select{width:100%;flex:none;padding:8px 10px;font-size:1em;height:36px;box-sizing:border-box;border-radius:6px;border:1.5px solid var(--border);background:#f7fbfd;color:var(--text-main)}
-      .unit{margin-left:0;margin-top:4px;font-size:.85em;color:var(--text-soft);display:inline-block}
-      .calculate-btn{width:100%;font-size:1.1em;padding:10px 0;border-radius:7px;margin-top:10px;box-shadow:none}
+      .input-row{grid-template-columns:1fr;gap:6px;min-width:0}
+      .unit{font-size:.85em;color:var(--text-soft)}
       .results{padding:12px 10px;font-size:1em;margin-top:14px;line-height:1.3}
       .parameter-status{grid-template-columns:1fr;gap:6px;margin-top:8px}
       .parameter-item{font-size:.9em;padding:5px 8px;word-wrap:break-word;margin-bottom:4px;line-height:1.2}
-      .info-box,.referencias,.fa-warning,.fevi-warning,.tr-warning,.indeterminate-note,.age-reference,.recommendations,.missing-params-warning{font-size:.9em;padding:8px 10px;margin-bottom:8px;line-height:1.2}
-      .recommendations{margin-top:8px;padding:8px 10px}
-      .modal-content{margin:10px 5px;max-width:95vw;padding:18px 14px;max-height:90vh}
-      .modal-table{font-size:.85em}
       input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
     }
   </style>
@@ -127,10 +126,7 @@
     </div>
 
     <div class="form-container">
-      <div class="info-box">
-        <strong>📋 Instrucciones:</strong> Complete los parámetros ecocardiográficos disponibles. Todos los campos son opcionales. Las velocidades van en <b>cm/s</b> (E, A, e′) y <b>m/s</b> (TR) o <b>mmHg</b> (PSAP).
-        <a id="openAlgInfo" class="alg-link" href="javascript:void(0)">¿Cómo funciona el algoritmo?</a>
-      </div>
+      <a id="openAlgInfo" class="alg-link" href="javascript:void(0)">¿Cómo funciona el algoritmo?</a>
 
       <form id="diastolicForm">
         <div class="form-card">
@@ -142,6 +138,7 @@
                 <option value="sinusal">Ritmo sinusal</option>
                 <option value="fa">Fibrilación auricular</option>
               </select>
+              <span class="unit"></span>
             </div>
             <div class="input-row">
               <label>FEVI:</label>
@@ -149,6 +146,7 @@
                 <option value="mayorigual">≥50%</option>
                 <option value="menor">&lt;50%</option>
               </select>
+              <span class="unit"></span>
             </div>
             <div class="input-row">
               <label>Edad:</label>
@@ -157,6 +155,24 @@
                 <option value="2">40–65 años</option>
                 <option value="3">&gt;65 años</option>
               </select>
+              <span class="unit"></span>
+            </div>
+            <div class="input-row input-row--full">
+              <label>Escenario especial:</label>
+              <select id="escenarioEspecial" onchange="updateAgeReferences()">
+                <option value="normal" selected>— Caso general —</option>
+                <option value="AF">Fibrilación auricular</option>
+                <option value="MAC">MAC moderada/severa</option>
+                <option value="MR">Insuficiencia mitral significativa</option>
+                <option value="MS">Estenosis mitral significativa</option>
+                <option value="PHnoCard">Hipertensión pulmonar no cardiaca</option>
+                <option value="LVAD">LVAD</option>
+                <option value="HTX">Trasplante cardíaco</option>
+                <option value="Constriccion">Pericarditis constrictiva</option>
+                <option value="HCM">Miocardiopatía hipertrófica</option>
+                <option value="BCRI_CRT">BCRI / CRT / marcapaseo</option>
+              </select>
+              <span class="unit"></span>
             </div>
           </div>
         </div>
@@ -164,6 +180,7 @@
         <div id="ageReferences" class="age-reference" style="display:none;">
           <strong>📊 Valores de referencia para este perfil:</strong>
           <div id="ageReferenceContent"></div>
+          <div id="scenarioHint" style="margin-top:6px;"></div>
         </div>
 
         <div class="form-card" id="eaSection">
@@ -171,18 +188,18 @@
           <div class="input-row-group">
             <div class="input-row">
               <label>Onda E:</label>
-              <input type="number" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
             <div class="input-row">
               <label>Onda A:</label>
-              <input type="number" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
           </div>
         </div>
 
-        <div id="faWarning" class="fa-warning" style="display:none;">
+        <div id="faWarning" class="fevi-warning" style="display:none;">
           ⚠️ <strong>Fibrilación auricular:</strong> No se utiliza la relación E/A para el diagnóstico. La onda E sí se usa para calcular E/e′.
         </div>
 
@@ -191,12 +208,12 @@
           <div class="input-row-group">
             <div class="input-row">
               <label>e′ lateral:</label>
-              <input type="number" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
             <div class="input-row">
               <label>e′ septal:</label>
-              <input type="number" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
           </div>
@@ -211,20 +228,21 @@
                 <option value="volumen">Volumen indexado</option>
                 <option value="area">Área</option>
               </select>
+              <span class="unit"></span>
             </div>
             <div class="input-row" id="volumenRow">
               <label>Vol AI indexado:</label>
-              <input type="number" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">ml/m²</span>
             </div>
             <div class="input-row" id="areaRow" style="display:none;">
               <label>Área auricular izquierda:</label>
-              <input type="number" id="areaAI" step="0.1" min="0" max="60" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="areaAI" step="0.1" min="0" max="60" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm²</span>
             </div>
           </div>
           <div class="ai-option-note">
-            <em>Complete uno u otro parámetro. Referencias: LAVi ≤34 ml/m² o Área ≤20 cm² (proxy de LAVi).</em>
+            <em>Si solo dispone de <strong>Área AI</strong>, se acepta como subrogante de LAVi (umbral ≤20 cm² ≈ LAVi ≤34 ml/m²).</em>
           </div>
         </div>
 
@@ -237,15 +255,13 @@
                 <option value="TR" selected>Velocidad pico TR</option>
                 <option value="PSAP">PSAP</option>
               </select>
+              <span class="unit"></span>
             </div>
             <div class="input-row">
               <label id="labelPresion">Velocidad pico TR:</label>
-              <input type="number" id="valorPresion" step="0.01" min="0" max="6" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="valorPresion" step="0.01" min="0" max="6" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit" id="unidadPresion">m/s</span>
             </div>
-          </div>
-          <div class="tr-warning" id="trNote">
-            Puede usar <strong>PSAP</strong> como alternativa a la velocidad TR: criterio → <strong>PSAP ≥35 mmHg</strong> o <strong>TR ≥2.8 m/s</strong>.
           </div>
         </div>
 
@@ -254,44 +270,35 @@
           <div class="input-row-group">
             <div class="input-row">
               <label>LA Strain:</label>
-              <input type="number" id="laStrain" step="1" min="0" max="60" placeholder="Opcional" inputmode="decimal" />
+              <input type="number" id="laStrain" step="1" min="0" max="60" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">%</span>
             </div>
           </div>
         </div>
 
-        <!-- Calculadora avanzada -->
-        <div class="form-card">
-          <h3>🧩 Calculadora avanzada</h3>
-          <div class="input-row-group">
-            <div class="input-row input-row--full">
-              <label>Escenario especial:</label>
-              <select id="escenarioEspecial" onchange="renderEscenarioInfo()">
-                <option value="normal" selected>— Caso general —</option>
-                <option value="AF">Fibrilación auricular</option>
-                <option value="MAC">MAC moderada/severa</option>
-                <option value="MR">Insuficiencia mitral significativa</option>
-                <option value="MS">Estenosis mitral significativa</option>
-                <option value="PHnoCard">Hipertensión pulmonar no cardiaca</option>
-                <option value="LVAD">LVAD</option>
-                <option value="HTX">Trasplante cardíaco</option>
-                <option value="Constriccion">Pericarditis constrictiva</option>
-                <option value="HCM">Miocardiopatía hipertrófica</option>
-                <option value="BCRI_CRT">BCRI / CRT / marcapaseo</option>
-              </select>
+        <!-- Calculadora avanzada (colapsable) -->
+        <div class="form-card" id="advanced">
+          <h3 style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="toggleAdvanced()">
+            <svg id="advChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" style="transition:transform .2s"><path d="M8 5l8 7-8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            🧩 Calculadora avanzada
+          </h3>
+          <div id="advancedContent" style="display:none;">
+            <div class="input-row-group">
+              <div class="input-row">
+                <label>IVRT:</label>
+                <input type="number" id="ivrt" step="1" min="20" max="200" placeholder="Opcional" inputmode="decimal"/>
+                <span class="unit">ms</span>
+              </div>
+              <div class="input-row">
+                <label>Relación S/D:</label>
+                <input type="number" id="sd" step="0.01" min="0" max="3" placeholder="Opcional" inputmode="decimal"/>
+                <span class="unit">—</span>
+              </div>
             </div>
-            <div class="input-row">
-              <label>IVRT:</label>
-              <input type="number" id="ivrt" step="1" min="20" max="200" placeholder="Opcional" inputmode="decimal" />
-              <span class="unit">ms</span>
-            </div>
-            <div class="input-row">
-              <label>Relación S/D:</label>
-              <input type="number" id="sd" step="0.01" min="0" max="3" placeholder="Opcional" inputmode="decimal" />
-              <span class="unit">—</span>
+            <div class="ai-option-note" style="margin-top:8px;">
+              <em>Use IVRT y S/D para desempatar cuando los pilares estén discordantes o falte TR/PSAP.</em>
             </div>
           </div>
-          <div class="ai-option-note" id="escenarioInfo" style="margin-top:8px;"></div>
         </div>
 
         <button id="btnCalcular" type="submit" class="calculate-btn">🧮 Calcular función diastólica</button>
@@ -317,501 +324,500 @@
             <strong>ASE 2025. Left Ventricular Diastolic Function by Echo</strong><br />
             <a href="https://onlinejase.com/article/S0894-7317(25)00157-9/fulltext" target="_blank" rel="noopener">
               https://onlinejase.com/article/S0894-7317(25)00157-9/fulltext
-            </a><br/>
-            <small>DOI: 10.1016/j.echo.2025.03.011</small>
+            </a><br />
+            <small>DOI: <a href="https://doi.org/10.1016/j.echo.2025.03.011" target="_blank" rel="noopener">10.1016/j.echo.2025.03.011</a></small>
           </p>
         </div>
       </div>
 
-      <div class="twitter-section" style="display:flex;justify-content:center;gap:20px;padding:10px;margin-bottom:6px;">
+      <div class="twitter-section">
         <a href="https://x.com/atomasyoung" target="_blank" rel="noopener" class="twitter-link">
-          <svg class="twitter-icon" viewBox="0 0 1200 1227" fill="currentColor" width="24" height="24" aria-hidden="true" focusable="false">
-            <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" />
-          </svg>
+          <svg class="twitter-icon" viewBox="0 0 1200 1227" fill="currentColor" width="24" height="24" aria-hidden="true"><path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/></svg>
           @atomasyoung
         </a>
         <a href="https://www.linkedin.com/in/tomas-young" target="_blank" rel="noopener" class="linkedin-link">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="24" height="24" aria-hidden="true" focusable="false">
-            <path d="M100.28 448H7.4V148.9h92.88zm-46.44-340.7a53.66 53.66 0 1 1 53.66-53.66 53.66 53.66 0 0 1-53.66 53.66zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.6-2.9 13.4-2.9 21.3V448h-92.68s1.2-270.1 0-297.1h92.68v42.1c12.3-19 34.3-46 83.4-46 60.9 0 106.7 39.8 106.7 125.4z" />
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" width="24" height="24" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zm-46.44-340.7a53.66 53.66 0 1 1 53.66-53.66 53.66 53.66 0 0 1-53.66 53.66zM447.9 448h-92.68V302.4c0-34.7-12.4-58.4-43.4-58.4-23.7 0-37.8 15.9-44 31.3-2.3 5.6-2.9 13.4-2.9 21.3V448h-92.68s1.2-270.1 0-297.1h92.68v42.1c12.3-19 34.3-46 83.4-46 60.9 0 106.7 39.8 106.7 125.4z"/></svg>
           Tomas Young
         </a>
       </div>
 
-      <div class="version-footer">v1.1.3 · actualizada 11/08/2025</div>
+      <div class="version-footer">v1.2.1 · actualizada 12/08/2025</div>
     </div>
   </div>
 
   <!-- Modal -->
-  <div id="algModal" class="modal" aria-hidden="true">
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="algTitle">
-      <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
-      <h2 id="algTitle">🧠 Algoritmo</h2>
+  <div id="algModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h2>🧠 Algoritmo</h2>
       <div class="modal-body">
-        <h4>1) Flujo principal según la guía</h4>
-        <p>El algoritmo ASE 2025 comienza evaluando <strong>e′</strong> (ajustado por edad), <strong>E/e′</strong> y <strong>TR</strong> <em>o</em> <strong>PSAP</strong>. Si hay discordancia, se usan parámetros adicionales.</p>
+        <h4>1) Pilares</h4>
+        <p>e′ (ajustado por edad), E/e′ y TR <em>o</em> PSAP. Si hay discordancia, usar parámetros adicionales.</p>
 
-        <h4>2) Si FEVI &lt;50% (cualquier ritmo)</h4>
-        <p><strong>Diagnóstico:</strong> se asume disfunción diastólica. Objetivo: estimar <strong>presión de llenado</strong>. ≥2 de 3 pilares alterados → LAP elevada.</p>
+        <h4>2) FEVI &lt;50%</h4>
+        <p>Se asume disfunción diastólica. ≥2 de 3 pilares alterados → LAP elevada.</p>
 
-        <h4>3) Si FEVI ≥50% y Ritmo Sinusal</h4>
-        <p><strong>Paso 1:</strong> e′ medio (por edad), E/e′ y TR (o PSAP).</p>
+        <h4>3) FEVI ≥50% y Ritmo sinusal</h4>
         <ul>
           <li>3/3 alterados → LAP elevada</li>
           <li>3/3 normales → LAP normal</li>
-          <li>1–2 alterados → <em>Paso 2</em></li>
+          <li>1–2 alterados → adicionales (LARS ≤18%, LAVi &gt;34 ml/m² o Área &gt;20 cm², S/D &lt;1, IVRT ≤70 ms)</li>
         </ul>
-        <p><strong>Paso 2 (adicionales):</strong> LARS ≤18%, LAVi &gt;34 ml/m² (o Área AI &gt;20 cm² como <em>proxy</em>), S/D venas pulmonares &lt;1, IVRT ≤70 ms.<br/>
-        <strong>Gradación (si RS y datos):</strong> Grado I (E/A &lt;0.8 y E &lt;50 cm/s) · Grado III (E/A ≥2.0) · Grado II (resto).</p>
+        <p><strong>Gradación (si hay datos y RS):</strong> I (E/A &lt;0.8 y E &lt;50 cm/s) · III (E/A ≥2.0) · II (resto)</p>
 
         <h4>4) Fibrilación auricular</h4>
-        <p>No se informa <em>grado</em>. Estime LAP con enfoque multiparámetros; promedie varios ciclos representativos.</p>
+        <p>No se gradúa. Estime LAP con e′ por edad, E/e′ y TR/PSAP; use LARS, S/D e IVRT para desempatar.</p>
 
-        <h4>5) Valores de referencia de e′ por edad</h4>
+        <h4>5) e′ por edad</h4>
         <table class="modal-table">
-          <thead><tr><th>Grupo etario</th><th>e′ septal</th><th>e′ lateral</th><th>e′ promedio</th></tr></thead>
+          <thead><tr><th>Edad</th><th>e′ septal</th><th>e′ lateral</th><th>e′ promedio</th></tr></thead>
           <tbody>
-            <tr><td>20–39 años</td><td>≥7 cm/s</td><td>≥10 cm/s</td><td>≥9 cm/s</td></tr>
-            <tr><td>40–65 años</td><td>≥6 cm/s</td><td>≥8 cm/s</td><td>≥7 cm/s</td></tr>
-            <tr><td>&gt;65 años</td><td>≥6 cm/s</td><td>≥7 cm/s</td><td>≥6.5 cm/s</td></tr>
+            <tr><td>20–39</td><td>≥7</td><td>≥10</td><td>≥9</td></tr>
+            <tr><td>40–65</td><td>≥6</td><td>≥8</td><td>≥7</td></tr>
+            <tr><td>&gt;65</td><td>≥6</td><td>≥7</td><td>≥6.5</td></tr>
           </tbody>
         </table>
 
-        <p><strong>Parámetros independientes de edad:</strong></p>
-        <ul>
-          <li><strong>E/e′ promedio:</strong> ≤14</li>
-          <li><strong>TR:</strong> ≤2.8 m/s <em>o</em> <strong>PSAP:</strong> &lt;35 mmHg</li>
-          <li><strong>LAVi:</strong> ≤34 ml/m² (Área AI ≤20 cm² como aproximación)</li>
-          <li><strong>LA Strain:</strong> ≥18% (específico), ≥23% (normal)</li>
-        </ul>
-
-        <h4>6) Escenarios especiales (ejemplos)</h4>
-        <ul>
-          <li><strong>MAC:</strong> E/A &lt;0.8 → LAP normal; &gt;1.8 → LAP elevada; si 0.8–1.8, use <strong>IVRT</strong> (≥80 ms normal, &lt;80 ms elevada).</li>
-          <li><strong>MR significativa:</strong> LAVi/Área pueden estar altos por volumen; priorizar LARS, S/D &lt;1 e IVRT bajo (&lt;60–70 ms).</li>
-          <li><strong>MS significativa:</strong> E y E/A se alteran por obstrucción; apoyarse en TR/PSAP, S/D e IVRT.</li>
-        </ul>
-
-        <p style="font-size:.9em;color:#666;text-align:center;margin-top:16px;">
-          <strong>Basado en las guías ASE 2025</strong>
-        </p>
+        <p><strong>Independientes de edad:</strong> E/e′ ≤14, TR ≤2.8 m/s <em>o</em> PSAP &lt;35 mmHg, LAVi ≤34 ml/m² (Área ≤20 cm² proxy), LARS ≥18% (específico) / ≥23% (normal).</p>
       </div>
     </div>
   </div>
 
   <script>
-    // ---------- Utilidades ----------
-    function parseNumFromInput(id){
-      const raw = (document.getElementById(id).value || "").trim().replace(',', '.');
-      const n = parseFloat(raw);
-      return isNaN(n) ? NaN : n;
+    // --- Utilidad: parsear coma o punto ---
+    function parseNum(id){
+      const el=document.getElementById(id); if(!el) return NaN;
+      const raw=(el.value||'').trim().replace(',','.');
+      const n=parseFloat(raw); return isNaN(n)?NaN:n;
     }
 
-    function getMissingParams(ritmo, tipoAI, valores) {
-      const faltan = [];
-      if (isNaN(valores.eSeptal)) faltan.push("e' septal");
-      if (isNaN(valores.eLateral)) faltan.push("e' lateral");
-      if (tipoAI === "volumen" && isNaN(valores.volumenAI)) faltan.push("Volumen AI indexado");
-      if (tipoAI === "area" && isNaN(valores.areaAI)) faltan.push("Área AI");
-      if (valores.parametroPresion === "TR" && isNaN(valores.valorPresion)) faltan.push("Velocidad TR");
-      if (valores.parametroPresion === "PSAP" && isNaN(valores.valorPresion)) faltan.push("PSAP");
-      if (ritmo === "sinusal") {
-        if (isNaN(valores.velocidadE)) faltan.push("Onda E");
-        if (isNaN(valores.velocidadA)) faltan.push("Onda A");
-      }
-      if (isNaN(valores.laStrain)) faltan.push("LA Strain");
-      return faltan;
+    // Modal
+    function openModal(){ document.getElementById('algModal').style.display='block'; }
+    function closeModal(){ document.getElementById('algModal').style.display='none'; }
+
+    // Advanced
+    function toggleAdvanced(){
+      const c=document.getElementById('advancedContent');
+      const chev=document.getElementById('advChevron');
+      const open=c.style.display!=='block';
+      c.style.display=open?'block':'none';
+      chev.style.transform=open?'rotate(90deg)':'rotate(0deg)';
     }
 
+    // UI toggles
     function toggleEASection(){
-      const ritmo = document.getElementById('ritmo').value;
-      const eaSection = document.getElementById('eaSection');
-      const faWarning = document.getElementById('faWarning');
-      const eRow = document.getElementById('velocidadE').closest('.input-row');
-      const aRow = document.getElementById('velocidadA').closest('.input-row');
-      if (ritmo === 'fa') {
-        eaSection.style.display='block';
-        faWarning.style.display='block';
-        eRow.style.display='flex';
-        aRow.style.display='none';
-        document.getElementById('velocidadA').value='';
-      } else {
-        faWarning.style.display='none';
-        eRow.style.display='flex';
-        aRow.style.display='flex';
-      }
+      const ritmo=document.getElementById('ritmo').value;
+      const eRow=document.getElementById('velocidadE').closest('.input-row');
+      const aRow=document.getElementById('velocidadA').closest('.input-row');
+      const faWarn=document.getElementById('faWarning');
+      if(ritmo==='fa'){ faWarn.style.display='block'; eRow.style.display='grid'; aRow.style.display='none'; document.getElementById('velocidadA').value=''; }
+      else { faWarn.style.display='none'; eRow.style.display='grid'; aRow.style.display='grid'; }
+    }
+    function toggleAIInput(){
+      const tipo=document.getElementById('tipoAI').value;
+      const vol=document.getElementById('volumenRow');
+      const area=document.getElementById('areaRow');
+      if(tipo==='volumen'){ vol.style.display='grid'; area.style.display='none'; document.getElementById('areaAI').value=''; }
+      else { vol.style.display='none'; area.style.display='grid'; document.getElementById('volumenAI').value=''; }
+    }
+    function syncPresionUI(){
+      const sel=document.getElementById('parametroPresion').value;
+      const label=document.getElementById('labelPresion');
+      const unidad=document.getElementById('unidadPresion');
+      const input=document.getElementById('valorPresion');
+      if(sel==='PSAP'){ label.textContent='PSAP:'; unidad.textContent='mmHg'; input.min=0; input.max=120; input.step=0.1; }
+      else { label.textContent='Velocidad pico TR:'; unidad.textContent='m/s'; input.min=0; input.max=6; input.step=0.01; }
     }
 
-    function toggleAIInput(){
-      const tipoAI = document.getElementById('tipoAI').value;
-      const vol = document.getElementById('volumenRow');
-      const area = document.getElementById('areaRow');
-      if (tipoAI === 'volumen'){ vol.style.display='flex'; area.style.display='none'; document.getElementById('areaAI').value=''; }
-      else { vol.style.display='none'; area.style.display='flex'; document.getElementById('volumenAI').value=''; }
+    // Hint por escenario
+    function scenarioText(esc,ritmo){
+      switch(esc){
+        case 'MAC': return "MAC moderada/severa → E/A &lt;0.8 sugiere LAP normal; &gt;1.8 sugiere LAP elevada. Si 0.8–1.8, use IVRT (≥80 ms normal, &lt;80 ms elevada).";
+        case 'MR': return "MR significativa → priorice LARS, S/D &lt;1 e IVRT bajo (&lt;60–70 ms); LAVi/Área pueden elevarse por volumen.";
+        case 'MS': return "MS significativa → apoyarse en TR/PSAP, S/D e IVRT; E y E/A se distorsionan.";
+        case 'PHnoCard': return "HP no cardiaca → TR/PSAP no cuentan para LAP (neutralizados); use e′, E/e′ y adicionales.";
+        case 'LVAD': return "LVAD → enfoque orientativo (S/D, LARS y clínica); convencionales poco fiables.";
+        case 'HTX': return "Trasplante → priorice LARS y S/D; e′/E/e′ pueden alterarse.";
+        case 'Constriccion': return "Constrictiva → no penalizar e′; priorizar S/D e IVRT.";
+        case 'HCM': return "MCH → E/e′ alto requiere soporte (LARS, S/D, LAVi) antes de concluir LAP elevada.";
+        case 'BCRI_CRT': return "BCRI/CRT → e′ lateral puede ser poco fiable; priorice e′ septal para el promedio.";
+        case 'AF': return "FA → no usar E/A; pilares: e′ por edad, E/e′ y TR/PSAP; soporte con LARS, S/D e IVRT.";
+        default:
+          return (ritmo==='fa')
+            ? "FA → no usar E/A; pilares: e′ por edad, E/e′ y TR/PSAP; soporte con LARS, S/D e IVRT."
+            : "Caso general → pilares e′ (por edad), E/e′ y TR/PSAP; desempate con LARS, LAVi/Área, S/D, IVRT.";
+      }
     }
 
     function updateAgeReferences(){
-      const edad = document.getElementById('edad').value;
-      const ritmo = document.getElementById('ritmo').value;
-      const fevi = document.getElementById('fevi').value;
-      const tipoAI = document.getElementById('tipoAI').value;
-      const ageReferences = document.getElementById('ageReferences');
-      const content = document.getElementById('ageReferenceContent');
+      const edad=document.getElementById('edad').value;
+      const ritmo=document.getElementById('ritmo').value;
+      const fevi=document.getElementById('fevi').value;
+      const tipoAI=document.getElementById('tipoAI').value;
+      const esc=document.getElementById('escenarioEspecial').value;
 
-      let edadTexto, eSeptalRef, eLateralRef, ePromRef;
-      if (edad === "1"){ edadTexto="20–39 años"; eSeptalRef=7.0; eLateralRef=10.0; ePromRef=9.0; }
-      else if (edad === "2"){ edadTexto="40–65 años"; eSeptalRef=6.0; eLateralRef=8.0; ePromRef=7.0; }
-      else { edadTexto=">65 años"; eSeptalRef=6.0; eLateralRef=7.0; ePromRef=6.5; }
+      let eSep,eLat,eAvg;
+      if(edad==='1'){ eSep=7.0; eLat=10.0; eAvg=9.0; }
+      else if(edad==='2'){ eSep=6.0; eLat=8.0; eAvg=7.0; }
+      else { eSep=6.0; eLat=7.0; eAvg=6.5; }
 
-      const aiRef = (tipoAI === "volumen") ? "LAVi ≤34 ml/m²" : "Área AI ≤20 cm² (proxy)";
-      const ritmoRef = (ritmo === "fa") ? "<br>• En FA no se utiliza E/A" : "";
-      const feviRef = (fevi === "menor") ? "<br>• FEVI reducida: se asume disfunción diastólica" : "";
+      const aiRef=(tipoAI==='volumen')?"LAVi ≤34 ml/m²":"Área AI ≤20 cm² (proxy)";
+      const ritmoRef=(ritmo==='fa')?"<br>• En FA no se utiliza E/A":"";
+      const feviRef=(fevi==='menor')?"<br>• FEVI reducida: se asume disfunción diastólica":"";
 
-      content.innerHTML = `
-        <strong>Edad ${edadTexto}:</strong><br>
-        • e′ promedio ≥ ${ePromRef} cm/s (lateral ≥ ${eLateralRef}, septal ≥ ${eSeptalRef})<br>
+      const content=`
+        • e′ promedio ≥ ${eAvg} cm/s (lateral ≥ ${eLat}, septal ≥ ${eSep})<br>
         • E/e′ ≤ 14<br>
         • ${aiRef}<br>
         • TR ≤ 2.8 m/s <em>o</em> PSAP &lt; 35 mmHg<br>
         • LA Strain ≥ 18% (específico), ≥ 23% (normal)
         ${ritmoRef}${feviRef}
       `;
-      ageReferences.style.display='block';
+      document.getElementById('ageReferenceContent').innerHTML=content;
+      document.getElementById('scenarioHint').innerHTML=scenarioText(esc,ritmo);
+      document.getElementById('ageReferences').style.display='block';
     }
 
-    function openModal(){ document.getElementById('algModal').style.display='block'; }
-    function closeModal(){ document.getElementById('algModal').style.display='none'; }
-
-    function syncPresionUI(){
-      const sel = document.getElementById('parametroPresion').value;
-      const label = document.getElementById('labelPresion');
-      const unidad = document.getElementById('unidadPresion');
-      const input = document.getElementById('valorPresion');
-      const note = document.getElementById('trNote');
-      if (sel === 'PSAP'){
-        label.textContent = 'PSAP:';
-        unidad.textContent = 'mmHg';
-        input.placeholder = 'Opcional';
-        input.min = 0; input.max = 120; input.step = 0.1;
-        note.style.display='block';
-      } else {
-        label.textContent = 'Velocidad pico TR:';
-        unidad.textContent = 'm/s';
-        input.placeholder = 'Opcional';
-        input.min = 0; input.max = 6; input.step = 0.01;
-        note.style.display='block';
-      }
-    }
-
-    function renderEscenarioInfo(){
-      const esc = document.getElementById('escenarioEspecial').value;
-      const box = document.getElementById('escenarioInfo');
-      const info = {
-        normal:"Caso general: use e′, E/e′ y TR/PSAP; si hay discordancia, LARS, LAVi/Área, S/D e IVRT ayudan.",
-        AF:"FA: no se usa E/A; enfoque multiparámetros y promediar ciclos (E≥100, E/e′ septal>11, TR≥2.8 o PSAP≥35, DT≤160; soporte: LARS<18%, S/D<1).",
-        MAC:"MAC: E/A <0.8 → LAP normal; >1.8 → LAP elevada; si 0.8–1.8, use IVRT (≥80 ms normal, <80 ms elevada).",
-        MR:"MR significativa: LAVi/Área pueden estar altos por volumen; priorice LARS, S/D <1, IVRT <60–70 ms.",
-        MS:"MS significativa: E y E/A se distorsionan; apoyarse en TR/PSAP, S/D, IVRT <60–70 ms.",
-        PHnoCard:"PH no cardiaca: TR/PSAP altos no cuentan para LAP (neutralizado). Use e′, E/e′ y adicionales.",
-        LVAD:"LVAD: parámetros convencionales poco fiables; reporte orientativo con foco en S/D, LARS y clínica.",
-        HTX:"Trasplante: e′ y E/e′ pueden estar alterados; priorice LARS y S/D; conclusión conservadora.",
-        Constriccion:"Constrictiva: e′ suele ser relativamente alto; no penaliza e′ bajo; priorice S/D e IVRT.",
-        HCM:"MCH: E/e′ alto requiere soporte (LARS, S/D, LAVi) antes de concluir LAP elevada.",
-        BCRI_CRT:"BCRI/CRT: TDI lateral poco fiable; se prioriza e′ septal (el promedio puede usar solo septal)."
-      };
-      box.textContent = info[esc] || info.normal;
-    }
-
-    // ---------- Algoritmo principal ----------
+    // --- Algoritmo con textos integrados ---
     function calcularFuncionDiastolica(){
-      const ritmo = document.getElementById('ritmo').value;
-      const edad = document.getElementById('edad').value;
-      const fevi = document.getElementById('fevi').value;
-      const tipoAI = document.getElementById('tipoAI').value;
-      const parametroPresion = document.getElementById('parametroPresion').value;
-      const esc = document.getElementById('escenarioEspecial').value;
+      const ritmo=document.getElementById('ritmo').value;
+      const edad=document.getElementById('edad').value;
+      const fevi=document.getElementById('fevi').value;
+      const tipoAI=document.getElementById('tipoAI').value;
+      const paramP=document.getElementById('parametroPresion').value;
+      const esc=document.getElementById('escenarioEspecial').value;
 
-      const feviWarning = document.getElementById('feviWarning');
-      const indeterminateNote = document.getElementById('indeterminateNote');
-      feviWarning.style.display="none"; indeterminateNote.style.display="none";
+      const feviWarn=document.getElementById('feviWarning');
+      const indNote=document.getElementById('indeterminateNote');
+      feviWarn.style.display="none"; indNote.style.display="none";
 
-      const valores = {
-        eSeptal: parseNumFromInput('eSeptal'),
-        eLateral: parseNumFromInput('eLateral'),
-        volumenAI: parseNumFromInput('volumenAI'),
-        areaAI: parseNumFromInput('areaAI'),
-        parametroPresion,
-        valorPresion: parseNumFromInput('valorPresion'),
-        laStrain: parseNumFromInput('laStrain'),
-        velocidadE: parseNumFromInput('velocidadE'),
-        velocidadA: parseNumFromInput('velocidadA'),
-        ivrt: parseNumFromInput('ivrt'),
-        sd: parseNumFromInput('sd'),
-        escenarioEspecial: esc
+      const v={
+        eSeptal:parseNum('eSeptal'),
+        eLateral:parseNum('eLateral'),
+        volumenAI:parseNum('volumenAI'),
+        areaAI:parseNum('areaAI'),
+        parametroPresion:paramP,
+        valorPresion:parseNum('valorPresion'),
+        laStrain:parseNum('laStrain'),
+        velocidadE:parseNum('velocidadE'),
+        velocidadA:parseNum('velocidadA'),
+        ivrt:parseNum('ivrt'),
+        sd:parseNum('sd'),
+        escenarioEspecial:esc
       };
 
-      const faltan = getMissingParams(ritmo, tipoAI, valores);
+      // faltantes
+      const faltan=[];
+      if(isNaN(v.eSeptal)) faltan.push("e' septal");
+      if(isNaN(v.eLateral)) faltan.push("e' lateral");
+      if(tipoAI==='volumen' && isNaN(v.volumenAI)) faltan.push("Volumen AI indexado");
+      if(tipoAI==='area' && isNaN(v.areaAI))     faltan.push("Área AI");
+      if(v.parametroPresion==='TR' && isNaN(v.valorPresion))   faltan.push("Velocidad TR");
+      if(v.parametroPresion==='PSAP' && isNaN(v.valorPresion)) faltan.push("PSAP");
+      if(ritmo==='sinusal'){ if(isNaN(v.velocidadE)) faltan.push("Onda E"); if(isNaN(v.velocidadA)) faltan.push("Onda A"); }
+      if(isNaN(v.laStrain)) faltan.push("LA Strain");
 
       // E/A
-      let ea = null;
-      if (ritmo==="sinusal" && !isNaN(valores.velocidadE) && !isNaN(valores.velocidadA) && valores.velocidadA>0){
-        ea = valores.velocidadE / valores.velocidadA;
+      let ea=null;
+      if(ritmo==='sinusal' && !isNaN(v.velocidadE) && !isNaN(v.velocidadA) && v.velocidadA>0){
+        ea=v.velocidadE/v.velocidadA;
       }
 
-      // e′ promedio con ajustes de escenario
-      let eLat = valores.eLateral, eSep = valores.eSeptal;
-      if (esc==="BCRI_CRT" && !isNaN(eSep)) { eLat = NaN; } // ignorar lateral
-      let eProm = null;
-      if (!isNaN(eSep) && !isNaN(eLat)) eProm = (eSep + eLat)/2;
-      else if (!isNaN(eSep)) eProm = eSep;
-      else if (!isNaN(eLat)) eProm = eLat;
+      // e' promedio (ajustes)
+      let eLat=v.eLateral, eSep=v.eSeptal;
+      if(esc==='BCRI_CRT' && !isNaN(eSep)) eLat=NaN;
+      let eProm=null;
+      if(!isNaN(eSep) && !isNaN(eLat)) eProm=(eSep+eLat)/2;
+      else if(!isNaN(eSep)) eProm=eSep;
+      else if(!isNaN(eLat)) eProm=eLat;
 
-      let ee = null;
-      if (!isNaN(valores.velocidadE) && eProm>0) ee = valores.velocidadE / eProm;
+      // E/e'
+      let ee=null; if(!isNaN(v.velocidadE) && eProm>0) ee=v.velocidadE/eProm;
 
-      // Cortes por edad (Tabla 6)
-      let eSeptalRef, eLateralRef, ePromRef;
-      if (edad==="1"){ eSeptalRef=7.0; eLateralRef=10.0; ePromRef=9.0; }
-      else if (edad==="2"){ eSeptalRef=6.0; eLateralRef=8.0; ePromRef=7.0; }
-      else { eSeptalRef=6.0; eLateralRef=7.0; ePromRef=6.5; }
+      // Cortes por edad
+      let eSepRef,eLatRef,eAvgRef;
+      if(edad==='1'){ eSepRef=7; eLatRef=10; eAvgRef=9; }
+      else if(edad==='2'){ eSepRef=6; eLatRef=8; eAvgRef=7; }
+      else { eSepRef=6; eLatRef=7; eAvgRef=6.5; }
 
-      // Render parámetros
-      const parametros = [];
-      let eLateralNormal=null, eSeptalNormal=null, ePromNormal=null, eeNormal=null, aiNormal=null, presionNormal=null, laStrainNormal=null;
+      // Mostrar parámetros
+      const params=[];
+      let eLatOk=null,eSepOk=null,eAvgOk=null,eeOk=null,aiOk=null,presOk=null,larsOk=null;
 
-      if (!isNaN(valores.eLateral)){
-        const ref = (esc==="BCRI_CRT") ? "— (ignorado)" : ("≥"+eLateralRef+" cm/s");
-        eLateralNormal = (esc==="BCRI_CRT") ? null : (valores.eLateral >= eLateralRef);
-        parametros.push({nombre:"e' lateral",valor:valores.eLateral.toFixed(1)+" cm/s",estado:eLateralNormal===null?"indeterminate":(eLateralNormal?"normal":"abnormal"),referencia:ref});
+      if(!isNaN(v.eLateral)){
+        eLatOk=(esc==='BCRI_CRT')?null:(v.eLateral>=eLatRef);
+        params.push({n:"e' lateral",val:v.eLateral.toFixed(1)+" cm/s",st:eLatOk===null?"indeterminate":(eLatOk?"normal":"abnormal"),ref:(esc==='BCRI_CRT')?"— (ignorado)":"≥"+eLatRef+" cm/s"});
       }
-      if (!isNaN(valores.eSeptal)){
-        eSeptalNormal = valores.eSeptal >= eSeptalRef;
-        parametros.push({nombre:"e' septal",valor:valores.eSeptal.toFixed(1)+" cm/s",estado:eSeptalNormal?"normal":"abnormal",referencia:"≥"+eSeptalRef+" cm/s"});
+      if(!isNaN(v.eSeptal)){
+        eSepOk=v.eSeptal>=eSepRef;
+        params.push({n:"e' septal",val:v.eSeptal.toFixed(1)+" cm/s",st:eSepOk?"normal":"abnormal",ref:"≥"+eSepRef+" cm/s"});
       }
-      if (eProm!==null){
-        if (esc==="Constriccion"){
-          ePromNormal=null;
-          parametros.push({nombre:"e' promedio",valor:eProm.toFixed(1)+" cm/s",estado:"indeterminate",referencia:"No penaliza en constricción"});
-        } else {
-          ePromNormal = eProm >= ePromRef;
-          parametros.push({nombre:"e' promedio",valor:eProm.toFixed(1)+" cm/s",estado:ePromNormal?"normal":"abnormal",referencia:"≥"+ePromRef+" cm/s"});
+      if(eProm!==null){
+        if(esc==='Constriccion'){
+          eAvgOk=null;
+          params.push({n:"e' promedio",val:eProm.toFixed(1)+" cm/s",st:"indeterminate",ref:"No penaliza en constricción"});
+        }else{
+          eAvgOk=eProm>=eAvgRef;
+          params.push({n:"e' promedio",val:eProm.toFixed(1)+" cm/s",st:eAvgOk?"normal":"abnormal",ref:"≥"+eAvgRef+" cm/s"});
         }
       }
-      if (ritmo==="sinusal" && ea!==null){
-        parametros.push({nombre:"Relación E/A",valor:ea.toFixed(2),estado:"indeterminate",referencia:"Informativo p/gradación"});
+      if(ritmo==='sinusal' && ea!==null){
+        params.push({n:"Relación E/A",val:ea.toFixed(2),st:"indeterminate",ref:"Informativo p/gradación"});
       }
-      if (ee!==null){
-        const limite=14;
-        eeNormal = ee <= limite;
-        const refTxt = (esc==="HCM") ? "≤14 (requiere soporte si >14)" : "≤14";
-        parametros.push({nombre:"E/e' promedio",valor:ee.toFixed(1),estado:eeNormal?"normal":"abnormal",referencia:refTxt});
+      if(ee!==null){
+        const lim=14; eeOk=ee<=lim;
+        const refTxt=(esc==='HCM')?"≤14 (requiere soporte si >14)":"≤14";
+        params.push({n:"E/e' promedio",val:ee.toFixed(1),st:eeOk?"normal":"abnormal",ref:refTxt});
       }
-
-      if (tipoAI==="volumen" && !isNaN(valores.volumenAI)){
-        aiNormal = valores.volumenAI <= 34;
-        const note = (esc==="MR") ? " (no primaria para LAP en MR)" : "";
-        parametros.push({nombre:"Volumen AI indexado",valor:valores.volumenAI+" ml/m²",estado:aiNormal?"normal":"abnormal",referencia:"≤34 ml/m²"+note});
-      } else if (tipoAI==="area" && !isNaN(valores.areaAI)){
-        aiNormal = valores.areaAI <= 20;
-        const note = (esc==="MR") ? " (no primaria para LAP en MR)" : "";
-        parametros.push({nombre:"Área AI",valor:valores.areaAI+" cm²",estado:aiNormal?"normal":"abnormal",referencia:"≤20 cm² (proxy)"+note});
+      if(tipoAI==='volumen' && !isNaN(v.volumenAI)){
+        aiOk=v.volumenAI<=34; const note=(esc==='MR')?" (no primaria en MR)":"";
+        params.push({n:"Volumen AI indexado",val:v.volumenAI+" ml/m²",st:aiOk?"normal":"abnormal",ref:"≤34 ml/m²"+note});
+      }else if(tipoAI==='area' && !isNaN(v.areaAI)){
+        aiOk=v.areaAI<=20; const note=(esc==='MR')?" (no primaria en MR)":"";
+        params.push({n:"Área AI",val:v.areaAI+" cm²",st:aiOk?"normal":"abnormal",ref:"≤20 cm² (proxy)"+note});
       }
-
-      if (!isNaN(valores.valorPresion)){
-        if (valores.parametroPresion==="TR"){
-          presionNormal = valores.valorPresion <= 2.8;
-          parametros.push({nombre:"Velocidad TR",valor:valores.valorPresion.toFixed(2)+" m/s",estado:presionNormal?"normal":"abnormal",referencia:"≤2.8 m/s"+(esc==="PHnoCard"?" (neutralizado en PH no cardiaca)":"")});
-        } else {
-          presionNormal = valores.valorPresion < 35;
-          parametros.push({nombre:"PSAP",valor:valores.valorPresion.toFixed(1)+" mmHg",estado:presionNormal?"normal":"abnormal",referencia:"<35 mmHg"+(esc==="PHnoCard"?" (neutralizado en PH no cardiaca)":"")});
+      if(!isNaN(v.valorPresion)){
+        if(v.parametroPresion==='TR'){
+          presOk=v.valorPresion<=2.8;
+          params.push({n:"Velocidad TR",val:v.valorPresion.toFixed(2)+" m/s",st:presOk?"normal":"abnormal",ref:"≤2.8 m/s"+(esc==='PHnoCard'?" (neutralizado)":"")});
+        }else{
+          presOk=v.valorPresion<35;
+          params.push({n:"PSAP",val:v.valorPresion.toFixed(1)+" mmHg",st:presOk?"normal":"abnormal",ref:"<35 mmHg"+(esc==='PHnoCard'?" (neutralizado)":"")});
         }
       }
-
-      if (!isNaN(valores.laStrain)){
-        laStrainNormal = valores.laStrain >= 18;
-        parametros.push({nombre:"LA Strain",valor:valores.laStrain.toFixed(1)+" %",estado:laStrainNormal?"normal":"abnormal",referencia:"≥18% (específico), ≥23% (normal)"});
+      if(!isNaN(v.laStrain)){
+        larsOk=v.laStrain>=18;
+        const refL=(v.laStrain>=23)?"≥23% (normal)":"≥18% (específico)";
+        params.push({n:"LA Strain",val:v.laStrain.toFixed(1)+" %",st:larsOk?"normal":"abnormal",ref:refL});
       }
 
-      // Conteo pilares
-      let principalesAlterados=0, principalesNormales=0, principalesTotal=0;
-      if (ePromNormal!==null){ principalesTotal++; principalesAlterados += ePromNormal?0:1; principalesNormales += ePromNormal?1:0; }
-      if (eeNormal!==null && !(esc==="HCM" && eeNormal===false)){ principalesTotal++; principalesAlterados += eeNormal?0:1; principalesNormales += eeNormal?1:0; }
-      if (presionNormal!==null && esc!=="PHnoCard"){ principalesTotal++; principalesAlterados += presionNormal?0:1; principalesNormales += presionNormal?1:0; }
+      // Pilares contables
+      let alt=0,nor=0,tot=0;
+      if(eAvgOk!==null){ tot++; alt+=eAvgOk?0:1; nor+=eAvgOk?1:0; }
+      if(eeOk!==null && !(esc==='HCM' && eeOk===false)){ tot++; alt+=eeOk?0:1; nor+=eeOk?1:0; }
+      if(presOk!==null && esc!=='PHnoCard'){ tot++; alt+=presOk?0:1; nor+=presOk?1:0; }
 
-      // Soportes
-      let soporteElevada=false, soporteNormal=false, macHint="";
-      if (laStrainNormal===false) soporteElevada=true;
-      if (laStrainNormal===true)  soporteNormal=true;
+      // Adicionales para resumen de "resuelto por"
+      const addElev=[], addNorm=[];
+      const sdLow = (!isNaN(v.sd) && v.sd<1.0);
+      const cIV = (esc==='MR'||esc==='MS')?60:70;
+      const ivrtLow = (!isNaN(v.ivrt) && v.ivrt<=cIV);
+      const ivrtHighMAC = (esc==='MAC' && ea!==null && ea>=0.8 && ea<=1.8 && !isNaN(v.ivrt) && v.ivrt>=80);
 
-      if (tipoAI==="volumen" && !isNaN(valores.volumenAI)){
-        if (esc!=="MR" && valores.volumenAI>34) soporteElevada=true;
-        if (valores.volumenAI<=34) soporteNormal=true;
-      } else if (tipoAI==="area" && !isNaN(valores.areaAI)){
-        if (esc!=="MR" && valores.areaAI>20) soporteElevada=true;
-        if (valores.areaAI<=20) soporteNormal=true;
+      // LARS
+      if(!isNaN(v.laStrain)){
+        if(v.laStrain<18) addElev.push("LARS ≤18%");
+        if(v.laStrain>=23) addNorm.push("LARS ≥23%");
+      }
+      // LAVi / Área
+      const usarAIcomoPrimaria = (esc!=='MR');
+      if(tipoAI==='volumen' && !isNaN(v.volumenAI)){
+        if(usarAIcomoPrimaria && v.volumenAI>34) addElev.push("LAVi >34 ml/m²");
+        if(v.volumenAI<=34) addNorm.push("LAVi ≤34 ml/m²");
+      }else if(tipoAI==='area' && !isNaN(v.areaAI)){
+        if(usarAIcomoPrimaria && v.areaAI>20) addElev.push("Área AI >20 cm²");
+        if(v.areaAI<=20) addNorm.push("Área AI ≤20 cm²");
+      }
+      // S/D
+      if(sdLow) addElev.push("Relación S/D <1");
+      // IVRT
+      if(ivrtLow) addElev.push("IVRT bajo");
+      if(ivrtHighMAC) addNorm.push("IVRT ≥80 ms (MAC)");
+
+      // Reglas MAC explícitas
+      let macHint="";
+      if(esc==='MAC' && ritmo==='sinusal' && ea!==null){
+        if(ea<0.8){ macHint="E/A <0.8 (MAC) → LAP normal"; if(!addNorm.includes("LAP por MAC")) addNorm.push("Regla MAC (E/A <0.8)"); }
+        else if(ea>1.8){ macHint="E/A >1.8 (MAC) → LAP elevada"; if(!addElev.includes("Regla MAC (E/A >1.8)")) addElev.push("Regla MAC (E/A >1.8)"); }
+        else if(isNaN(v.ivrt)){ macHint="E/A 0.8–1.8 (MAC) → mida IVRT (80 ms)"; }
       }
 
-      if (!isNaN(valores.sd) && valores.sd<1.0) soporteElevada=true;
-      if (!isNaN(valores.ivrt)){
-        const corte = (esc==="MR"||esc==="MS") ? 60 : 70;
-        if (valores.ivrt<=corte) soporteElevada=true;
-        if (esc==="MAC" && ea!==null && ea>=0.8 && ea<=1.8 && valores.ivrt>=80) soporteNormal=true;
+      // Diagnóstico y comentarios
+      let dx="", ptxt="", comments=[];
+      const tieneTRoPSAP=(presOk!==null);
+
+      // FEVI reducida: siempre disfunción, informar LAP
+      if(fevi==='menor'){
+        feviWarn.style.display="block";
       }
 
-      if (esc==="MAC" && ritmo==="sinusal" && ea!==null){
-        if (ea<0.8){ macHint="MAC: E/A <0.8 → LAP normal"; soporteNormal=true; }
-        else if (ea>1.8){ macHint="MAC: E/A >1.8 → LAP elevada"; soporteElevada=true; }
-        else { macHint = isNaN(valores.ivrt) ? "MAC: E/A 0.8–1.8 → mida IVRT (80 ms) para definir" : macHint; }
-      }
+      if(ritmo==='fa' || esc==='AF'){
+        // FA: no se gradúa
+        let a=0,n=0;
+        if(eAvgOk!==null){ a+=eAvgOk?0:1; n+=eAvgOk?1:0; }
+        if(eeOk!==null && !(esc==='HCM' && eeOk===false)){ a+=eeOk?0:1; n+=eeOk?1:0; }
+        if(presOk!==null && esc!=='PHnoCard'){ a+=presOk?0:1; n+=presOk?1:0; }
 
-      // Decisión
-      let diagnostico="", pressureStatus="", recomendaciones="";
-      const trOpsapDisponible = (presionNormal!==null);
+        if(a>=2){ dx="FA: LAP elevada"; ptxt="Presión de llenado elevada"; }
+        else if(n>=2){ dx="FA: LAP normal"; ptxt="Presión de llenado normal"; }
+        else { dx="FA: Indeterminado"; indNote.style.display="block"; }
 
-      if (ritmo==="fa" || esc==="AF"){
-        // FA: sin gradación
-        let alterados=0, normales=0;
-        if (ePromNormal!==null){ alterados+= ePromNormal?0:1; normales+= ePromNormal?1:0; }
-        if (eeNormal!==null && !(esc==="HCM" && eeNormal===false)){ alterados+= eeNormal?0:1; normales+= eeNormal?1:0; }
-        if (presionNormal!==null && esc!=="PHnoCard"){ alterados+= presionNormal?0:1; normales+= presionNormal?1:0; }
-
-        if (alterados>=2){ diagnostico="Disfunción diastólica"; pressureStatus="Presión de llenado elevada"; }
-        else if (normales>=2){ diagnostico="Función diastólica normal"; pressureStatus="Presión de llenado normal"; }
-        else { diagnostico="Indeterminado"; indeterminateNote.style.display="block"; }
-        recomendaciones = "FA: no se gradúa. Use LARS/S-D/IVRT/LAVi para desempatar si queda dudoso. Considere eco de ejercicio si hay síntomas.";
-
+        comments.push("FA: no se gradúa la disfunción.");
+        if(a>=1 && n>=1){
+          if(addElev.length) comments.push("Discordancia resuelta por adicional (elevada): "+addElev.join(", ")+".");
+          else if(addNorm.length) comments.push("Discordancia resuelta por adicional (normal): "+addNorm.join(", ")+".");
+        } else if(presOk===null){
+          comments.push("Falta TR/PSAP; añada TR/PSAP o LARS/S-D/IVRT para robustecer.");
+        }
       } else {
-        if (trOpsapDisponible){
-          // Caso con los 3 pilares
-          if (principalesTotal===3 && principalesAlterados===3){
-            diagnostico="Disfunción diastólica"; pressureStatus="Presión de llenado elevada";
-            recomendaciones="Los 3 parámetros principales (e′, E/e′, TR/PSAP) están alterados.";
-          } else if (principalesTotal===3 && principalesNormales===3){
-            diagnostico="Función diastólica normal"; pressureStatus="Presión de llenado normal";
-            recomendaciones="Los 3 parámetros principales están normales.";
-          } else if (principalesTotal>=2 && principalesAlterados>=1 && principalesAlterados<principalesTotal){
-            if (soporteElevada){ diagnostico="Disfunción diastólica"; pressureStatus="Presión de llenado elevada"; recomendaciones="Discordancia resuelta por adicionales (LARS ≤18%, LAVi >34* salvo MR, S/D <1 o IVRT bajo)."; }
-            else if (soporteNormal){ diagnostico="Función diastólica normal"; pressureStatus="Presión de llenado normal"; recomendaciones="Discordancia resuelta por adicionales (LARS conservado, LAVi/Área en rango o MAC con IVRT ≥80 ms)."; }
-            else { diagnostico="Indeterminado"; indeterminateNote.style.display="block"; recomendaciones="Añada LARS, LAVi/Área, S/D o IVRT; si hay síntomas y LAP no elevada, considere eco de ejercicio."; }
+        // RS
+        if(tieneTRoPSAP){
+          if(tot===3 && alt===3){
+            dx="Disfunción diastólica; LAP elevada";
+            ptxt="Presión de llenado elevada";
+          } else if(tot===3 && nor===3){
+            dx="Función diastólica normal";
+            ptxt="Presión de llenado normal";
+          } else if(tot>=2 && alt>=1 && alt<tot){
+            // discordancia -> resolver por adicionales
+            if(addElev.length){
+              dx="Disfunción diastólica; LAP elevada";
+              ptxt="Presión de llenado elevada";
+              comments.push("Conclusión resuelta por adicional (elevada): "+addElev.join(", ")+".");
+            } else if(addNorm.length){
+              // ¿relajación alterada?
+              const relajBaja = (eAvgOk===false) || (eLatOk===false) || (eSepOk===false);
+              if(relajBaja){
+                // Grado I solo si E/A<0.8 y E<50
+                if(ea!==null && v.velocidadE<50 && ea<0.8){
+                  dx="LAP normal; alteración de la relajación (Grado I)";
+                } else {
+                  dx="LAP normal; alteración de la relajación probable (gradación no concluyente)";
+                }
+                ptxt="Presión de llenado normal";
+              } else {
+                dx="Función diastólica normal";
+                ptxt="Presión de llenado normal";
+              }
+              comments.push("Conclusión resuelta por adicional (normal): "+addNorm.join(", ")+".");
+            } else {
+              dx="Indeterminado";
+              indNote.style.display="block";
+              comments.push("Discordancia sin adicionales concluyentes; mida LARS/LAVi/Área/S-D/IVRT.");
+            }
           } else {
-            diagnostico="Indeterminado"; indeterminateNote.style.display="block";
-            recomendaciones="Faltan parámetros principales (e′, E/e′, TR/PSAP) para definir LAP.";
+            dx="Indeterminado";
+            indNote.style.display="block";
+            comments.push("Faltan pilares (e′, E/e′, TR/PSAP) para definir LAP.");
           }
         } else {
-          // Sin TR/PSAP → optimizado
-          if (principalesTotal>=2 && principalesAlterados===0){
-            diagnostico="Función diastólica normal"; pressureStatus="Presión de llenado normal";
-            recomendaciones="Parámetros principales disponibles concordantes con LAP normal. Falta TR/PSAP para completar.";
-            if (soporteElevada && !soporteNormal){
-              diagnostico="Función diastólica probablemente normal (discordante)";
-              pressureStatus="Presión de llenado probablemente normal (discordante)";
-              recomendaciones="Principales normales; adicionales sugieren carga/remodelado. Mida TR/PSAP o use LARS/S-D/IVRT para confirmar.";
+          // Sin TR/PSAP → “probable”
+          if(tot>=2 && alt===0){
+            dx="Función diastólica (probable)";
+            ptxt="Presión de llenado probablemente normal";
+            if(addNorm.length) comments.push("Conclusión probable, apoyada por adicional (normal): "+addNorm.join(", ")+".");
+            comments.push("Falta TR/PSAP; añada TR/PSAP o LARS/S-D/IVRT para robustecer.");
+          } else if(tot>=2 && alt===tot){
+            dx="Disfunción diastólica (probable)";
+            ptxt="Presión de llenado probablemente elevada";
+            if(addElev.length) comments.push("Conclusión probable, apoyada por adicional (elevada): "+addElev.join(", ")+".");
+            comments.push("Falta TR/PSAP; añada TR/PSAP o LARS/S-D/IVRT para confirmar.");
+          } else if(tot>=2 && alt>=1 && alt<tot){
+            if(addElev.length){
+              dx="Disfunción diastólica (probable)";
+              ptxt="Presión de llenado probablemente elevada";
+              comments.push("Discordancia resuelta por adicional (elevada): "+addElev.join(", ")+".");
+            } else if(addNorm.length){
+              const relajBaja = (eAvgOk===false) || (eLatOk===false) || (eSepOk===false);
+              if(relajBaja){
+                if(ea!==null && v.velocidadE<50 && ea<0.8){
+                  dx="LAP probablemente normal; alteración de la relajación (Grado I)";
+                } else {
+                  dx="LAP probablemente normal; alteración de la relajación probable (gradación no concluyente)";
+                }
+                ptxt="Presión de llenado probablemente normal";
+              } else {
+                dx="Función diastólica (probable)";
+                ptxt="Presión de llenado probablemente normal";
+              }
+              comments.push("Discordancia resuelta por adicional (normal): "+addNorm.join(", ")+".");
+            } else {
+              dx="Indeterminado";
+              indNote.style.display="block";
+              comments.push("Sin TR/PSAP y sin adicionales concluyentes.");
             }
-          } else if (principalesTotal>=2 && principalesAlterados===principalesTotal){
-            diagnostico="Disfunción diastólica (probable)";
-            pressureStatus="Presión de llenado probablemente elevada";
-            recomendaciones="e′ por edad y E/e′ sugieren LAP elevada. Falta TR/PSAP; use adicionales (LARS, S/D, IVRT) para confirmar.";
-          } else if (principalesTotal>=2 && (principalesAlterados>=1 && principalesAlterados<principalesTotal)){
-            if (soporteElevada){ diagnostico="Disfunción diastólica (probable)"; pressureStatus="Presión de llenado probablemente elevada"; recomendaciones="Discordancia resuelta por adicionales (LARS ≤18%, S/D <1 o IVRT bajo)."; }
-            else if (soporteNormal){ diagnostico="Función diastólica (probable)"; pressureStatus="Presión de llenado probablemente normal"; recomendaciones="Discordancia resuelta por adicionales (LARS conservado, LAVi/Área en rango o MAC con IVRT ≥80 ms)."; }
-            else { diagnostico="Indeterminado"; indeterminateNote.style.display="block"; recomendaciones="Sin TR/PSAP y sin adicionales concluyentes. Mida LARS/S-D/IVRT/LAVi o recupere TR/PSAP."; }
-          } else if (principalesTotal===1){
-            if (soporteElevada && !soporteNormal){ diagnostico="Disfunción diastólica (probable)"; pressureStatus="Presión de llenado probablemente elevada"; recomendaciones="Conclusión apoyada en parámetros adicionales ante ausencia de TR/PSAP."; }
-            else if (soporteNormal && !soporteElevada){ diagnostico="Función diastólica (probable)"; pressureStatus="Presión de llenado probablemente normal"; recomendaciones="Conclusión apoyada en adicionales ante ausencia de TR/PSAP."; }
-            else { diagnostico="Indeterminado"; indeterminateNote.style.display="block"; recomendaciones="Falta TR/PSAP y no hay suficientes adicionales para concluir."; }
+          } else if(tot===1){
+            dx="Indeterminado";
+            indNote.style.display="block";
+            comments.push("Pilar único; añada TR/PSAP y/o LARS/LAVi/Área/S-D/IVRT.");
           } else {
-            diagnostico="Indeterminado"; indeterminateNote.style.display="block"; recomendaciones="No hay parámetros principales suficientes. Mida e′ y E/e′ y/o TR/PSAP.";
+            dx="Indeterminado";
+            indNote.style.display="block";
           }
         }
 
-        // Gradación (si RS y hay datos E/A)
-        if ((diagnostico.startsWith("Disfunción") || fevi==="menor") && ea!==null && !isNaN(valores.velocidadE)){
-          if (ea<0.8 && valores.velocidadE<50)      diagnostico += " - Grado I";
-          else if (ea>=2.0)                           diagnostico += " - Grado III";
-          else                                        diagnostico += " - Grado II";
+        // Gradación RS cuando corresponda (dato complementario)
+        if((dx.startsWith("Disfunción") || fevi==='menor') && ritmo==='sinusal' && ea!==null && !isNaN(v.velocidadE)){
+          if(ea<0.8 && v.velocidadE<50)      comments.push("Gradación (RS): Grado I si E/A <0.8 y E <50 cm/s (cumplido).");
+          else if(ea>=2.0)                    comments.push("Gradación (RS): Grado III si E/A ≥2.0 (cumplido).");
+          else                                 comments.push("Gradación (RS): Grado II cuando E/A no cumple I/III.");
         }
       }
 
-      if (fevi==="menor") feviWarning.style.display="block";
-
-      // Advertencias
-      let advertencias = "";
-      if (faltan.length>0){
-        advertencias = `<div class="missing-params-warning"><strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.</div>`;
-      }
-      if (isNaN(valores.velocidadE)){
-        advertencias += "<br>⚠️ Falta Onda E → no se puede calcular E/e′.";
-      }
-      if (macHint){
-        advertencias += `<div class="missing-params-warning" style="margin-top:8px;background:#e8f4fd;border-color:#b3d8f7;color:#1e3a5f;">${macHint}</div>`;
+      // Mensaje TR alto con LAP normal
+      if((dx.includes("LAP normal") || ptxt.toLowerCase().includes("normal")) && presOk===false){
+        comments.push("TR/PSAP elevados con E/e′ bajo y LAVi/Área normal sugieren LAP normal; verifique técnica (alineación/aliasing) y/o confirme con PSAP y adicionales.");
       }
 
-      // Render final
-      const results = document.getElementById('results');
+      // FEVI reducida: comentario
+      if(fevi==='menor'){
+        comments.unshift("Con FEVI <50% se asume disfunción diastólica; se informa la LAP según pilares/adicionales.");
+      }
+
+      // Advertencias por faltantes
+      let adv="";
+      if(faltan.length>0) adv+=`<div class="indeterminate-note"><strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.</div>`;
+      if(isNaN(v.velocidadE)) adv+="<br>⚠️ Falta Onda E → no se puede calcular E/e′.";
+      if(macHint) adv+=`<div class="indeterminate-note" style="background:#e8f4fd;border-color:#b3d8f7;color:#1e3a5f;">${macHint}</div>`;
+
+      // Render
+      const results=document.getElementById('results');
+      const h=document.getElementById('diagnostico');
+      const p=document.getElementById('pressureStatus');
+
+      h.textContent=dx; p.textContent=ptxt;
+
       results.className="results";
-      if (diagnostico.toLowerCase().includes("normal")) results.classList.add("normal");
-      else if (diagnostico.toLowerCase().includes("disfunción") || (pressureStatus||"").toLowerCase().includes("elevada")) results.classList.add("abnormal");
+      const dl=(dx||"").toLowerCase(); const pl=(ptxt||"").toLowerCase();
+      if(dl.includes("normal") && !dl.includes("disfunción")) results.classList.add("normal");
+      else if(dl.includes("disfunción") || pl.includes("elevada")) results.classList.add("abnormal");
       else results.classList.add("indeterminate");
 
-      const h = document.getElementById('diagnostico');
-      h.textContent = diagnostico;
+      p.className="pressure-status";
+      if(pl.includes("elevada")) p.classList.add("elevated");
+      else if(pl.includes("normal")) p.classList.add("normal");
 
-      const pressureDiv = document.getElementById('pressureStatus');
-      pressureDiv.textContent = pressureStatus;
-      pressureDiv.className = "pressure-status";
-      if ((pressureStatus||"").includes("elevada")) pressureDiv.classList.add("elevated");
-      else if ((pressureStatus||"").includes("normal")) pressureDiv.classList.add("normal");
-
-      let htmlParametros="";
-      parametros.forEach(p=>{
-        htmlParametros += `<div class="parameter-item ${p.estado}"><strong>${p.nombre}:</strong> ${p.valor} <span style="color:#888;font-size:.95em;">(${p.referencia})</span></div>`;
+      let html="";
+      params.forEach(pp=>{
+        html+=`<div class="parameter-item ${pp.st}"><strong>${pp.n}:</strong> ${pp.val} <span style="color:#888;font-size:.95em;">(${pp.ref})</span></div>`;
       });
-      document.getElementById('parametros-status').innerHTML = htmlParametros;
-      document.getElementById('recomendaciones').innerHTML = advertencias + (recomendaciones||"");
+      document.getElementById('parametros-status').innerHTML=html;
+
+      const commentHTML = comments.length ? ("<ul style='margin:8px 0 0 18px; padding:0'>" + comments.map(c=>`<li>${c}</li>`).join("") + "</ul>") : "";
+      document.getElementById('recomendaciones').innerHTML=adv + commentHTML;
 
       results.style.display="block";
-
-      // Accesibilidad: foco al encabezado del resultado
       h.focus({preventScroll:true});
-      results.scrollIntoView({behavior:"smooth", block:"start"});
+      results.scrollIntoView({behavior:"smooth",block:"start"});
     }
 
-    // ---------- Boot ----------
-    document.addEventListener('DOMContentLoaded', () => {
-      // Submit con Enter
-      const form = document.getElementById('diastolicForm');
-      form.addEventListener('submit', (e)=>{ e.preventDefault(); calcularFuncionDiastolica(); });
+    // Eventos
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.getElementById('openAlgInfo').addEventListener('click',openModal);
+      document.getElementById('algModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget) closeModal();});
+      document.addEventListener('keydown',(e)=>{if(e.key==="Escape"){const m=document.getElementById('algModal');if(m.style.display==='block') closeModal();}});
 
-      // Enter en inputs
-      document.querySelectorAll('input,select').forEach((el)=>{
-        el.addEventListener('keydown', (e)=>{
-          if (e.key === 'Enter'){ e.preventDefault(); document.getElementById('btnCalcular').click(); }
-        });
+      document.getElementById('diastolicForm').addEventListener('submit',(e)=>{e.preventDefault();calcularFuncionDiastolica();});
+      document.querySelectorAll('input,select').forEach(el=>{
+        el.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); calcularFuncionDiastolica(); }});
       });
-
-      // Modal
-      document.getElementById('openAlgInfo').addEventListener('click', openModal);
-      document.getElementById('algModal').addEventListener('click', (e)=>{ if (e.target===e.currentTarget) closeModal(); });
-      document.addEventListener('keydown', (ev)=>{ if (ev.key==="Escape"){ const m=document.getElementById('algModal'); if (m.style.display==='block') closeModal(); } });
 
       updateAgeReferences();
       toggleEASection();
       toggleAIInput();
       syncPresionUI();
-      renderEscenarioInfo();
+      document.getElementById('advancedContent').style.display='none';
     });
-
-    // ---------- Service Worker (auto-update) ----------
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js').catch(console.error);
-      });
-      let reloaded = false;
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!reloaded) { reloaded = true; location.reload(); }
-      });
-    }
   </script>
 </body>
 </html>
-
