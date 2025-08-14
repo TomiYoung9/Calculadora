@@ -89,9 +89,7 @@
     .pressure-status.normal{background:#eafaf1;color:#27ae60}
     .pressure-status.elevated{background:#fdeaea;color:#e74c3c}
 
-    .version-footer{font-size:.85em;color:#5b6470;text-align:center;margin:12px 0 8px}
-    .metrics-footer{font-size:.92em;color:#334;text-align:center;margin:4px 0 18px}
-    .metrics-footer strong{font-weight:700}
+    .version-footer{font-size:.85em;color:#5b6470;text-align:center;margin:12px 0 18px}
 
     /* Modal */
     .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;overflow:auto;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(3px)}
@@ -345,14 +343,6 @@
       </div>
 
       <div class="version-footer">v1.3.8 · actualizada 13/08/2025</div>
-
-      <!-- ⬇️ NUEVO: métrica visible -->
-      <div class="metrics-footer" aria-live="polite">
-        👤 Navegadores únicos: <strong id="uniqCount">—</strong>
-        &nbsp;·&nbsp;
-        🧮 Cálculos realizados: <strong id="calcCount">—</strong>
-      </div>
-      <!-- ⬆️ NUEVO -->
     </div>
   </div>
 
@@ -492,7 +482,7 @@
     }
 
     // --- Algoritmo ASE 2025 ---
-    async function calcularFuncionDiastolica(){
+    function calcularFuncionDiastolica(){
       const ritmo=document.getElementById('ritmo').value;
       const edad=document.getElementById('edad').value;
       const fevi=document.getElementById('fevi').value;
@@ -781,72 +771,6 @@
       results.style.display="block";
       h.focus({preventScroll:true});
       results.scrollIntoView({behavior:"smooth",block:"start"});
-
-      // ⬇️ NUEVO: contar cálculo (global)
-      bumpCalcCounter();
-    }
-
-    // --- MÉTRICAS SIN BACKEND (CountAPI) ---
-    const COUNT_NS = 'calc_diastolica_tyoung_v1'; // namespace propio
-    const KEYS = { unique: 'unique_visitors', calc: 'calculations' };
-
-    async function countapiGet(key){
-      try{
-        const r = await fetch(`https://api.countapi.xyz/get/${COUNT_NS}/${key}`, {cache:'no-store'});
-        if(!r.ok) throw new Error('get failed');
-        const j = await r.json();
-        return j.value;
-      }catch(e){ return null; }
-    }
-    async function countapiCreate(key){
-      try{
-        const r = await fetch(`https://api.countapi.xyz/create?namespace=${COUNT_NS}&key=${key}&value=0`, {cache:'no-store'});
-        if(!r.ok) throw new Error('create failed');
-        const j = await r.json();
-        return j.value;
-      }catch(e){ return null; }
-    }
-    async function ensureKey(key){
-      const v = await countapiGet(key);
-      if(v===null){ await countapiCreate(key); return 0; }
-      return v;
-    }
-    async function countapiHit(key, amount=1){
-      try{
-        const r = await fetch(`https://api.countapi.xyz/hit/${COUNT_NS}/${key}?amount=${amount}`, {cache:'no-store'});
-        if(!r.ok) throw new Error('hit failed');
-        const j = await r.json();
-        return j.value;
-      }catch(e){ return null; }
-    }
-
-    async function updateMetricsUI(){
-      const uniqEl = document.getElementById('uniqCount');
-      const calcEl = document.getElementById('calcCount');
-      const [u,c] = await Promise.all([ensureKey(KEYS.unique), ensureKey(KEYS.calc)]);
-      if(uniqEl) uniqEl.textContent = (u ?? '—');
-      if(calcEl) calcEl.textContent = (c ?? '—');
-    }
-
-    async function registerUniqueVisitor(){
-      try{
-        const flagKey = 'diastolic_calc_unique_v1';
-        const marked = localStorage.getItem(flagKey);
-        if(!marked){
-          const val = await countapiHit(KEYS.unique, 1);
-          localStorage.setItem(flagKey, '1');
-          const el = document.getElementById('uniqCount');
-          if(el && val!=null) el.textContent = val;
-        }
-      }catch(e){}
-    }
-
-    async function bumpCalcCounter(){
-      try{
-        const val = await countapiHit(KEYS.calc, 1);
-        const el = document.getElementById('calcCount');
-        if(el && val!=null) el.textContent = val;
-      }catch(e){}
     }
 
     // Eventos
@@ -865,10 +789,6 @@
       toggleAIInput();
       syncPresionUI();
       document.getElementById('advancedContent').style.display='none';
-
-      // ⬇️ NUEVO: métricas
-      updateMetricsUI();
-      registerUniqueVisitor();
     });
   </script>
 </body>
