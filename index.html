@@ -55,11 +55,11 @@
     .calculate-btn:hover{background:var(--accent-dark)}
 
     .results{margin-top:26px;padding:22px 18px;border-radius:10px;display:none}
-    .results.normal{background:#eafaf1;color:var(--green);border:2px solid var(--green)}
-    .results.abnormal{background:#fdeaea;color:var(--red);border:2px solid var(--red)}
-    .results.indeterminate{background:#fffbe6;color:var(--yellow);border:2px solid var(--yellow)}
+    .results.normal{background:#eafaf1;color:#27ae60;border:2px solid var(--green)}
+    .results.abnormal{background:#fdeaea;color:#e74c3c;border:2px solid var(--red)}
+    .results.indeterminate{background:#fffbe6;color:#f7b731;border:2px solid var(--yellow)}
     .results h3{font-size:1.2em;margin-bottom:10px}
-    .grade-status{font-size:1.02em;font-weight:700;margin:6px 0 8px;padding:8px 10px;border-radius:8px;text-align:center;border:1.5px dashed #b9c6d3;background:#f5faff;color:#0f3b63}
+    .grade-status{display:none}
     .parameter-status{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px;margin-top:12px}
     .parameter-item{background:rgba(255,255,255,0.13);padding:7px 10px;border-radius:7px;border-left:4px solid #fff;font-size:1em}
     .parameter-item.abnormal{border-left-color:var(--red);background:#fdeaea}
@@ -139,7 +139,6 @@
                 <option value="sinusal">Ritmo sinusal</option>
                 <option value="fa">Fibrilación auricular</option>
               </select>
-              <span class="unit"></span>
             </div>
             <div class="input-row">
               <label>FEVI:</label>
@@ -147,7 +146,6 @@
                 <option value="mayorigual">≥50%</option>
                 <option value="menor">&lt;50%</option>
               </select>
-              <span class="unit"></span>
             </div>
             <div class="input-row">
               <label>Edad:</label>
@@ -156,7 +154,6 @@
                 <option value="2">40–65 años</option>
                 <option value="3">&gt;65 años</option>
               </select>
-              <span class="unit"></span>
             </div>
             <div class="input-row input-row--full">
               <label>Escenario especial:</label>
@@ -173,7 +170,6 @@
                 <option value="HCM">Miocardiopatía hipertrófica</option>
                 <option value="BCRI_CRT">BCRI / CRT / marcapaseo</option>
               </select>
-              <span class="unit"></span>
             </div>
           </div>
         </div>
@@ -229,7 +225,6 @@
                 <option value="volumen">Volumen indexado</option>
                 <option value="area">Área</option>
               </select>
-              <span class="unit"></span>
             </div>
             <div class="input-row" id="volumenRow">
               <label>Vol AI indexado:</label>
@@ -256,7 +251,6 @@
                 <option value="TR" selected>Velocidad pico TR</option>
                 <option value="PSAP">PSAP</option>
               </select>
-              <span class="unit"></span>
             </div>
             <div class="input-row">
               <label id="labelPresion">Velocidad pico TR:</label>
@@ -318,8 +312,7 @@
           Resultado indeterminado/discordante. Considere parámetros adicionales (LAVi, LARS, S/D, IVRT) o eco de ejercicio si hay síntomas.
         </div>
         <h3 id="diagnostico" tabindex="-1">Resultado</h3>
-        <!-- NUEVO: estadificación arriba -->
-        <div id="gradeStatus" class="grade-status" style="display:none;"></div>
+        <div id="gradeStatus" class="grade-status"></div>
         <div id="pressureStatus" class="pressure-status"></div>
         <div id="parametros-status" class="parameter-status"></div>
         <div id="recomendaciones" class="recommendations"></div>
@@ -349,7 +342,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.3.4 · actualizada 13/08/2025</div>
+      <div class="version-footer">v1.3.8 · actualizada 13/08/2025</div>
     </div>
   </div>
 
@@ -364,7 +357,7 @@
 
         <h4>2) Decisión (RS)</h4>
         <ul>
-          <li><strong>3/3 alterados → PAI elevada</strong>. <em>Estadificación</em>: Grado II si E/A &lt;2; Grado III si E/A ≥2.</li>
+          <li><strong>3/3 alterados → PAI elevada</strong>. Grado II si E/A &lt;2; Grado III si E/A ≥2.</li>
           <li><strong>0–2/3</strong> → evaluar adicionales: <strong>LARS ≤18%</strong> o <strong>PV S/D ≤0.67</strong> o <strong>LAVi &gt;34</strong> (Área &gt;20 cm²) o <strong>IVRT ≤70 ms</strong>. Si alguno cruza → PAI elevada; si ninguno → PAI normal.</li>
           <li><strong>Grado I</strong> si <u>e′ reducido + E/e′ normal + PASP normal + E/A ≤0.8</u>.</li>
         </ul>
@@ -398,7 +391,6 @@
     function parseNum(id){
       const el=document.getElementById(id); if(!el) return NaN;
       let raw=(el.value||'').trim().replace(/,/g,'.');
-      // limpiar caracteres no numéricos salvo punto y signo
       raw = raw.replace(/[^0-9.\-]/g,'').replace(/(?!^)-/g,'').replace(/(\..*)\./g,'$1');
       const n=parseFloat(raw); return isNaN(n)?NaN:n;
     }
@@ -441,7 +433,6 @@
       else { label.textContent='Velocidad pico TR:'; unidad.textContent='m/s'; input.min=0; input.max=6; input.step=0.01; }
     }
 
-    // Hint por escenario
     function scenarioText(esc,ritmo){
       switch(esc){
         case 'MAC': return "MAC moderada/severa → RS: E/A <0.8 sugiere PAI normal; >1.8 sugiere PAI elevada. Si 0.8–1.8, use IVRT (≥80 ms normal, <80 ms elevada).";
@@ -565,10 +556,10 @@
       const eReduced = (eSepLow || eLatLow || eAvgLow);
 
       // Presión (TR/PSAP)
-      let presAbn=null, presOk=null;
+      let presAbn=null;
       if(!isNaN(v.valorPresion)){
-        if(v.parametroPresion==='TR'){ presAbn = v.valorPresion>2.8; presOk = !presAbn; }
-        else { presAbn = v.valorPresion>=35; presOk = !presAbn; }
+        if(v.parametroPresion==='TR'){ presAbn = v.valorPresion>2.8; }
+        else { presAbn = v.valorPresion>=35; }
       }
 
       // Mostrar parámetros
@@ -594,12 +585,12 @@
         let showVal=""; if(eeAvg!==null) showVal=eeAvg.toFixed(1)+" (prom)"; else if(eeSep!==null) showVal=eeSep.toFixed(1)+" (septal)"; else showVal=eeLat.toFixed(1)+" (lateral)";
         params.push({n:"E/e′ (criterio ASE)",val:showVal,st:eeAbn?"abnormal":"normal",ref:"avg ≥14, septal ≥15 o lateral ≥13"});
       }
-      let aiOk=null, aiElev=null;
+      let aiOk=null;
       if(tipoAI==='volumen' && !isNaN(v.volumenAI)){
-        aiOk = v.volumenAI<=34; aiElev = v.volumenAI>34;
+        aiOk = v.volumenAI<=34;
         params.push({n:"Volumen AI indexado",val:v.volumenAI+" ml/m²",st:aiOk?"normal":"abnormal",ref:"≤34 ml/m²"});
       }else if(tipoAI==='area' && !isNaN(v.areaAI)){
-        aiOk = v.areaAI<=20; aiElev = v.areaAI>20;
+        aiOk = v.areaAI<=20;
         params.push({n:"Área AI",val:v.areaAI+" cm²",st:aiOk?"normal":"abnormal",ref:"≤20 cm² (proxy)"});
       }
       if(!isNaN(v.valorPresion)){
@@ -627,43 +618,43 @@
       }
 
       // --- DECISIÓN ASE 2025 ---
-      let dx="", ptxt="", comments=[], gradeText=null;
+      let paiStatus="", ptxt="", comments=[], gradeLevel=null, byAdditional=false;
       const neutralPresion = (esc==='PHnoCard');
 
       if(fevi==='menor'){ feviWarn.style.display="block"; }
 
       // MAC (RS)
       if(esc==='MAC' && ritmo==='sinusal' && ea!==null){
-        if(ea<0.8){ dx="PAI normal"; ptxt="Presión de llenado normal"; comments.push("MAC (RS): E/A <0.8 → PAI normal."); }
-        else if(ea>1.8){ dx="PAI elevada"; ptxt="Presión de llenado elevada"; comments.push("MAC (RS): E/A >1.8 → PAI elevada."); gradeText = (ea>=2.0) ? "Estadificación: Grado III (E/A ≥2.0)" : "Estadificación: Grado II (E/A <2.0)"; }
+        if(ea<0.8){ paiStatus="PAI normal"; ptxt="Presión de llenado normal"; comments.push("MAC (RS): E/A <0.8 → PAI normal."); }
+        else if(ea>1.8){ paiStatus="PAI elevada"; ptxt="Presión de llenado elevada"; gradeLevel = (ea>=2.0) ? "III" : "II"; comments.push("MAC (RS): E/A >1.8 → PAI elevada."); }
         else {
           if(!isNaN(v.ivrt)){
-            if(v.ivrt>=80){ dx="PAI normal"; ptxt="Presión de llenado normal"; comments.push("MAC (RS): E/A 0.8–1.8 e IVRT ≥80 ms → PAI normal."); }
-            else { dx="PAI elevada"; ptxt="Presión de llenado elevada"; comments.push("MAC (RS): E/A 0.8–1.8 e IVRT <80 ms → PAI elevada."); gradeText = (ea>=2.0) ? "Estadificación: Grado III (E/A ≥2.0)" : "Estadificación: Grado II (E/A <2.0)"; }
+            if(v.ivrt>=80){ paiStatus="PAI normal"; ptxt="Presión de llenado normal"; comments.push("MAC (RS): E/A 0.8–1.8 e IVRT ≥80 ms → PAI normal."); }
+            else { paiStatus="PAI elevada"; ptxt="Presión de llenado elevada"; gradeLevel = (ea>=2.0) ? "III" : "II"; comments.push("MAC (RS): E/A 0.8–1.8 e IVRT <80 ms → PAI elevada."); }
           } else {
-            dx="Indeterminado"; ptxt=""; comments.push("MAC (RS): mida IVRT (umbral 80 ms) para definir PAI."); indNote.style.display="block";
+            paiStatus="Indeterminado"; ptxt=""; comments.push("MAC (RS): mida IVRT (umbral 80 ms) para definir PAI."); indNote.style.display="block";
           }
         }
       } else if(ritmo==='fa' || esc==='AF'){
         // FA
         const cE = (!isNaN(v.velocidadE) && v.velocidadE>=100);
-        const cSep = (!isNaN(eeSep) && eeSep>11);
+        const cSep = (eeSep!==null && eeSep>11);
         const cPres = (!isNaN(v.valorPresion) && ( (v.parametroPresion==='TR' && v.valorPresion>2.8) || (v.parametroPresion==='PSAP' && v.valorPresion>=35) ));
         const cDT = (!isNaN(v.dt) && v.dt<=160);
         const mainPos = [cE,cSep,cPres,cDT].filter(Boolean).length;
 
-        if(mainPos>=3){ dx="FA: PAI elevada"; ptxt="Presión de llenado elevada"; }
-        else if(mainPos<=1){ dx="FA: PAI normal"; ptxt="Presión de llenado normal"; }
+        if(mainPos>=3){ paiStatus="FA: PAI elevada"; ptxt="Presión de llenado elevada"; }
+        else if(mainPos<=1){ paiStatus="FA: PAI normal"; ptxt="Presión de llenado normal"; }
         else {
           const supLARS = (!isNaN(v.laStrain) && v.laStrain<=18);
           const supSD = (!isNaN(v.sd) && v.sd<1.0);
-          if(supLARS && supSD){ dx="FA: PAI elevada"; ptxt="Presión de llenado elevada"; comments.push("FA (2 criterios): soporte positivo (LARS ≤18% y PV S/D <1)."); }
-          else { dx="FA: Indeterminado"; ptxt=""; comments.push("FA (2 criterios): falta soporte completo (LARS ≤18% y PV S/D <1)."); indNote.style.display="block"; }
+          if(supLARS && supSD){ paiStatus="FA: PAI elevada"; ptxt="Presión de llenado elevada"; comments.push("FA (2 criterios): soporte positivo (LARS ≤18% y PV S/D <1)."); }
+          else { paiStatus="FA: Indeterminado"; ptxt=""; comments.push("FA (2 criterios): falta soporte completo (LARS ≤18% y PV S/D <1)."); indNote.style.display="block"; }
         }
 
       } else {
         // RS general
-        const eCrit = eReduced;
+        const eCrit = (eReduced);
         const eeCrit = (eeAbn===true);
         const presCrit = (neutralPresion? false : (presAbn===true));
         const altered = [eCrit, eeCrit, presCrit].filter(Boolean).length;
@@ -676,20 +667,19 @@
         const anyAddElev = (addLARS || addSD || addAI || addIVRT);
 
         if(altered===3){
-          dx="PAI elevada"; ptxt="Presión de llenado elevada";
-          if(ea!==null){ gradeText = (ea>=2.0) ? "Estadificación: Grado III (E/A ≥2.0)" : "Estadificación: Grado II (E/A <2.0)"; }
+          paiStatus="PAI elevada"; ptxt="Presión de llenado elevada";
+          if(ea!==null){ gradeLevel = (ea>=2.0) ? "III" : "II"; }
         } else if(altered===0){
-          dx="PAI normal"; ptxt="Presión de llenado normal"; comments.push("Pilares normales.");
+          paiStatus="PAI normal"; ptxt="Presión de llenado normal"; comments.push("Pilares normales.");
         } else if(altered===1 || altered===2){
           if(altered===1 && eCrit && !eeCrit && !presCrit && ea!==null && ea<=0.8){
-            dx="PAI normal; alteración de la relajación (Grado I)";
-            ptxt="Presión de llenado normal";
-            gradeText = "Estadificación: Grado I (E/A ≤0.8)";
+            paiStatus="PAI normal"; ptxt="Presión de llenado normal";
+            gradeLevel = "I";
             comments.push("RS: e′ reducido + E/e′ normal + PASP normal + E/A ≤0.8 → Grado I.");
           } else {
             if(anyAddElev){
-              dx="PAI elevada"; ptxt="Presión de llenado elevada";
-              if(ea!==null){ gradeText = (ea>=2.0) ? "Estadificación: Grado III (E/A ≥2.0)" : "Estadificación: Grado II (E/A <2.0)"; }
+              paiStatus="PAI elevada"; ptxt="Presión de llenado elevada"; byAdditional=true;
+              if(ea!==null){ gradeLevel = (ea>=2.0) ? "III" : "II"; }
               const addList=[];
               if(addLARS) addList.push("LARS ≤18%");
               if(addSD) addList.push("PV S/D ≤0.67");
@@ -697,17 +687,17 @@
               if(addIVRT) addList.push("IVRT ≤70 ms");
               comments.push("Conclusión apoyada por adicional: "+addList.join(", ")+".");
             } else {
-              dx="PAI normal"; ptxt="Presión de llenado normal";
+              paiStatus="PAI normal"; ptxt="Presión de llenado normal";
               comments.push("Pilares no 3/3 y adicionales sin umbral → PAI normal. Si hay síntomas, considere eco de ejercicio.");
             }
           }
         } else {
-          dx="Indeterminado"; indNote.style.display="block";
+          paiStatus="Indeterminado"; indNote.style.display="block";
         }
       }
 
       // Mensaje técnico si PAI normal pero TR/PSAP alto con E/e′ y AI normales
-      if((dx.includes("PAI normal")) && presAbn===true && eeAbn===false && (aiOk===true)){
+      if((paiStatus.includes("PAI normal")) && presAbn===true && eeAbn===false && (aiOk===true)){
         comments.push("TR/PSAP elevados con E/e′ normal y LAVi/Área normal sugieren PAI normal; verifique técnica (alineación/aliasing) o confirme con adicionales.");
       }
 
@@ -719,33 +709,56 @@
       let adv="";
       if(faltan.length>0) adv+=`<div class="indeterminate-note"><strong>⚠️ Parámetros no ingresados:</strong> ${faltan.join(", ")}.</div>`;
 
-      // Render
+      // -------- Render (TÍTULO) --------
       const results=document.getElementById('results');
       const h=document.getElementById('diagnostico');
       const p=document.getElementById('pressureStatus');
       const g=document.getElementById('gradeStatus');
 
-      h.textContent=dx; 
-      p.textContent=ptxt;
-
-      if (gradeText){
-        g.textContent = gradeText;
-        g.style.display = 'block';
+      // Componer encabezado:
+      // - Con grado: "Disfunción diastólica Grado X (...). PAI ..."
+      //   (si se resolvió por adicional, agrega " (por adicional)")
+      // - Sin grado y RS con PAI normal: "Función diastólica normal"
+      // - Otros casos (FA, indeterminado, etc.): mostrar paiStatus
+      let headline = "";
+      if (gradeLevel){
+        const desc = (gradeLevel==='I') ? " (alteración de la relajación)" : "";
+        const extra = byAdditional && gradeLevel!=='I' ? " (por adicional)" : "";
+        headline = `Disfunción diastólica Grado ${gradeLevel}${desc}${extra}. ${paiStatus}.`;
       } else {
-        g.style.display = 'none';
-        g.textContent = '';
+        const ps = (paiStatus||"").toLowerCase();
+        if (ps.includes("pai normal") && !ps.startsWith("fa")) {
+          headline = "Función diastólica normal";
+        } else {
+          headline = paiStatus || "Resultado";
+        }
       }
 
+      h.textContent = headline;
+      g.textContent = "";
+
+      // Evitar redundancia: ocultar la línea de presión si el titular ya dice PAI/Función normal
+      const lowerHeadline = headline.toLowerCase();
+      const showPressure = (ptxt && !(lowerHeadline.includes("pai ") || lowerHeadline.includes("función diastólica normal")));
+      p.textContent = showPressure ? (ptxt || "") : "";
+      p.style.display = showPressure ? "block" : "none";
+
+      // Colorear tarjeta
       results.className="results";
-      const dl=(dx||"").toLowerCase(); const pl=(ptxt||"").toLowerCase();
-      if(dl.includes("normal") && !dl.includes("indeterminado") && !dl.includes("fa: indeterminado")) results.classList.add("normal");
-      else if(dl.includes("elevada")) results.classList.add("abnormal");
-      else results.classList.add("indeterminate");
+      const hl = headline.toLowerCase();
+      if(hl.includes("función diastólica normal") || hl.includes("pai normal")){
+        results.classList.add("normal");
+      } else if(hl.includes("disfunción diastólica grado") || hl.includes("pai elevada")){
+        results.classList.add("abnormal");
+      } else {
+        results.classList.add("indeterminate");
+      }
 
       p.className="pressure-status";
-      if(pl.includes("elevada")) p.classList.add("elevated");
-      else if(pl.includes("normal")) p.classList.add("normal");
+      if(p.textContent.toLowerCase().includes("elevada")) p.classList.add("elevated");
+      else if(p.textContent.toLowerCase().includes("normal")) p.classList.add("normal");
 
+      // Parámetros
       let html="";
       params.forEach(pp=>{
         html+=`<div class="parameter-item ${pp.st}"><strong>${pp.n}:</strong> ${pp.val} <span style="color:#888;font-size:.95em;">(${pp.ref})</span></div>`;
