@@ -91,7 +91,12 @@
 
     .version-footer{font-size:.85em;color:#5b6470;text-align:center;margin:12px 0 18px}
 
-    /* Modal */
+    /* Footer legal minimalista */
+    .legal-footer{font-size:.8em;color:#666;text-align:center;margin:4px 0 14px}
+    .legal-footer a{color:#666;text-decoration:underline}
+    .legal-footer a:hover{color:#444}
+
+    /* Modal (compartido por ambos modales) */
     .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;overflow:auto;background-color:rgba(0,0,0,0.5);backdrop-filter:blur(3px)}
     .modal-content{background:#fff;margin:5% auto;padding:20px 30px;border-radius:12px;max-width:600px;box-shadow:0 4px 24px rgba(0,0,0,0.2);position:relative}
     .modal-close{position:absolute;top:12px;right:16px;background:transparent;border:none;font-size:28px;font-weight:bold;cursor:pointer;color:#333;line-height:1}
@@ -343,10 +348,16 @@
       </div>
 
       <div class="version-footer">v1.3.8 · actualizada 13/08/2025</div>
+
+      <!-- Footer legal minimalista (siempre visible en una línea) -->
+      <div class="legal-footer">
+        © 2025 A. Tomas Young. Todos los derechos reservados ·
+        Aviso legal: uso educativo. <a href="javascript:void(0)" id="openLegal">Ver más</a>
+      </div>
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal Algoritmo -->
   <div id="algModal" class="modal">
     <div class="modal-content">
       <button class="modal-close" onclick="closeModal()">×</button>
@@ -386,6 +397,27 @@
     </div>
   </div>
 
+  <!-- Modal Legal (disclaimer ampliado) -->
+  <div id="legalModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+      <button class="modal-close" onclick="closeLegal()">×</button>
+      <h2 id="legalTitle">Aviso legal</h2>
+      <div class="modal-body">
+        <p>
+          Esta herramienta se ofrece únicamente con fines educativos y de apoyo a la práctica clínica. No reemplaza el juicio clínico profesional 
+          ni las guías oficiales vigentes. El uso y la interpretación de los resultados son responsabilidad del usuario.
+        </p>
+        <p>
+          Basada en las recomendaciones de la American Society of Echocardiography (ASE) 2025, sin afiliación ni aval oficial de dicha entidad.
+        </p>
+        <p style="margin-bottom:0">
+          El software se proporciona “tal cual”, sin garantías de ningún tipo, expresas o implícitas. El autor no se hace responsable de daños o
+          consecuencias derivados del uso de la información o de los resultados generados por esta herramienta.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <script>
     // --- Utilidad: parsear coma o punto (robusto) ---
     function parseNum(id){
@@ -395,9 +427,13 @@
       const n=parseFloat(raw); return isNaN(n)?NaN:n;
     }
 
-    // Modal
+    // Modal Alg
     function openModal(){ document.getElementById('algModal').style.display='block'; }
     function closeModal(){ document.getElementById('algModal').style.display='none'; }
+
+    // Modal Legal
+    function openLegal(){ document.getElementById('legalModal').style.display='block'; }
+    function closeLegal(){ document.getElementById('legalModal').style.display='none'; }
 
     // Advanced
     function toggleAdvanced(){
@@ -783,6 +819,11 @@
       document.querySelectorAll('input,select').forEach(el=>{
         el.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); calcularFuncionDiastolica(); }});
       });
+
+      // Abrir/Cerrar legal modal
+      document.getElementById('openLegal').addEventListener('click',openLegal);
+      document.getElementById('legalModal').addEventListener('click',(e)=>{if(e.target===e.currentTarget) closeLegal();});
+      document.addEventListener('keydown',(e)=>{if(e.key==="Escape"){const m=document.getElementById('legalModal');if(m.style.display==='block') closeLegal();}});
 
       updateAgeReferences();
       toggleEASection();
