@@ -1,14 +1,14 @@
 /* service-worker.js — Calculadora de Función Diastólica
  * Estrategias:
  * - Navegación (HTML): network-first → fallback index.html
- * - Estáticos same-origin (css/js/img/svg/json): cache-first + revalidación en segundo plano
+ * - Estáticos same-origin (css/js/img/svg/json/ico): cache-first + revalidación en segundo plano
  * - Google Fonts: css (stale-while-revalidate), woff/woff2 (cache-first)
  * Auto-update:
  * - En install → self.skipWaiting() para activar la nueva versión sin esperar
  * - En activate → clients.claim() y se fuerza reload de las ventanas controladas
  */
 
-const VERSION = "v1.3.8";
+const VERSION = "v1.3.9";
 const STATIC_CACHE = `df-static-${VERSION}`;
 const FONTS_CACHE  = `df-fonts-${VERSION}`;
 
@@ -23,7 +23,13 @@ const CORE_ASSETS = [
   INDEX_HTML,
   BASE_PATH + "manifest.json",
   BASE_PATH + "icons/icon-192.png",
-  BASE_PATH + "icons/icon-512.png"
+  BASE_PATH + "icons/icon-512.png",
+  BASE_PATH + "icons/icon-192-maskable.png",
+  BASE_PATH + "icons/icon-512-maskable.png",
+  BASE_PATH + "icons/apple-touch-icon-180.png",
+  BASE_PATH + "icons/favicon-32.png",
+  BASE_PATH + "icons/favicon-16.png",
+  BASE_PATH + "icons/favicon.ico"
 ];
 
 // --- helpers ---
@@ -31,6 +37,7 @@ async function addAllSafe(cache, urls) {
   await Promise.all(
     urls.map(async (u) => {
       try {
+        // cache: "reload" evita devolver 304 del navegador y fuerza red real
         const req = new Request(u, { cache: "reload" });
         const res = await fetch(req);
         if (res && (res.ok || res.type === "opaque")) {
@@ -45,12 +52,14 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(STATIC_CACHE);
     await addAllSafe(cache, CORE_ASSETS);
+    // Auto-activate la nueva versión
     self.skipWaiting();
   })());
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
+    // Borrar caches viejos
     const keys = await caches.keys();
     await Promise.all(
       keys
@@ -58,12 +67,15 @@ self.addEventListener("activate", (event) => {
         .map(k => caches.delete(k))
     );
 
+    // Habilitar navigationPreload si está disponible
     if (self.registration.navigationPreload) {
       try { await self.registration.navigationPreload.enable(); } catch {}
     }
 
+    // Tomar control inmediato
     await self.clients.claim();
 
+    // Forzar recarga de todas las ventanas controladas (auto-update visible)
     try {
       const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
       for (const client of clients) {
@@ -104,12 +116,14 @@ self.addEventListener("fetch", (event) => {
   }
 
   // 5) Default → red
+  // (no interceptamos, dejamos que vaya a la red)
 });
 
 // --- estrategias ---
 
 async function networkFirstHTML(event) {
   try {
+    // Usar navigationPreload si el navegador lo aporta
     const preload = await event.preloadResponse;
     if (preload) return preload;
 
@@ -118,6 +132,7 @@ async function networkFirstHTML(event) {
     cache.put(event.request, netRes.clone());
     return netRes;
   } catch {
+    // Fallback a index.html del cache
     const cache = await caches.open(STATIC_CACHE);
     const fallback = await cache.match(INDEX_HTML);
     return fallback || new Response("Offline", { status: 503, statusText: "Service Unavailable" });
@@ -140,6 +155,7 @@ async function cacheFirst(request, cacheName, opts = { revalidate: false }) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
   if (cached) {
+    // Revalidación en segundo plano si se pide
     if (opts.revalidate) {
       fetch(request).then((res) => {
         if (res && (res.ok || res.type === "opaque")) {
