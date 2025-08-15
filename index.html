@@ -4,7 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calculadora de Función Diastólica</title>
+
+  <!-- Fuente -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- PWA / Iconos -->
+  <meta name="theme-color" content="#3a5a7a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png" sizes="180x180" />
+  <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="icon" href="icons/favicon.ico" sizes="any" />
+
   <style>
     :root{
       --main-bg:#b7d0e8;--header-bg:#3a5a7a;--card-bg:#fff;
@@ -347,7 +358,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.3.8 · actualizada 13/08/2025</div>
+      <div class="version-footer">v1.3.9 · actualizada 13/08/2025</div>
 
       <!-- Footer legal minimalista (siempre visible en una línea) -->
       <div class="legal-footer">
@@ -751,11 +762,7 @@
       const p=document.getElementById('pressureStatus');
       const g=document.getElementById('gradeStatus');
 
-      // Componer encabezado:
-      // - Con grado: "Disfunción diastólica Grado X (...). PAI ..."
-      //   (si se resolvió por adicional, agrega " (por adicional)")
-      // - Sin grado y RS con PAI normal: "Función diastólica normal"
-      // - Otros casos (FA, indeterminado, etc.): mostrar paiStatus
+      // Componer encabezado
       let headline = "";
       if (gradeLevel){
         const desc = (gradeLevel==='I') ? " (alteración de la relajación)" : "";
@@ -773,7 +780,7 @@
       h.textContent = headline;
       g.textContent = "";
 
-      // Evitar redundancia: ocultar la línea de presión si el titular ya dice PAI/Función normal
+      // Ocultar/mostrar línea de presión
       const lowerHeadline = headline.toLowerCase();
       const showPressure = (ptxt && !(lowerHeadline.includes("pai ") || lowerHeadline.includes("función diastólica normal")));
       p.textContent = showPressure ? (ptxt || "") : "";
@@ -831,6 +838,13 @@
       syncPresionUI();
       document.getElementById('advancedContent').style.display='none';
     });
+
+    // Registro del Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+      });
+    }
   </script>
 </body>
 </html>
