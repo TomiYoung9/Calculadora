@@ -80,7 +80,24 @@
 
     .fevi-warning{background:#fff8e1;border:1px solid #ffecb3;padding:10px 12px;border-radius:7px;margin-bottom:12px;color:#6d4c41}
     .indeterminate-note{background:#fffbe6;border:1.5px solid var(--yellow);color:#b38600;padding:10px 12px;border-radius:7px;margin-bottom:12px}
-    .age-reference{background:#e8f4fd;padding:10px 12px;border-radius:7px;margin-bottom:12px;border-left:4px solid var(--accent)}
+
+    /* Panel de valores de referencia (details) */
+    .age-reference{
+      background:#e8f4fd;
+      padding:10px 12px;
+      border-radius:10px;
+      margin:16px 0 12px;
+      border-left:4px solid var(--accent);
+    }
+    .age-reference summary{
+      display:flex; align-items:center; gap:8px;
+      cursor:pointer; list-style:none; user-select:none;
+      font-weight:600; color:var(--text-main);
+    }
+    .age-reference summary::-webkit-details-marker{display:none}
+    .age-chevron{transition:transform .2s; width:18px; height:18px}
+    .age-reference[open] .age-chevron{transform:rotate(90deg)}
+    .age-reference .content{margin-top:8px}
 
     .referencias{margin-top:28px;padding:16px 12px;background:#f8f9fa;border-radius:9px;border-left:5px solid var(--accent-light)}
     .referencias h3{color:#1a2a36;margin-bottom:12px;font-size:1.08em}
@@ -190,11 +207,19 @@
           </div>
         </div>
 
-        <div id="ageReferences" class="age-reference" style="display:none;">
-          <strong>📊 Valores de referencia para este perfil:</strong>
-          <div id="ageReferenceContent"></div>
-          <div id="scenarioHint" style="margin-top:6px;"></div>
-        </div>
+        <!-- Panel de valores de referencia: texto + chevron -->
+        <details id="ageReferences" class="age-reference">
+          <summary>
+            <svg class="age-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M8 5l8 7-8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>📊 Valores de referencia</span>
+          </summary>
+          <div class="content">
+            <div id="ageReferenceContent"></div>
+            <div id="scenarioHint" style="margin-top:6px;"></div>
+          </div>
+        </details>
 
         <div class="form-card" id="eaSection">
           <h3>🔄 Flujo mitral (Doppler pulsado)</h3>
@@ -322,7 +347,7 @@
 
       <div id="results" class="results" aria-live="polite">
         <div id="feviWarning" class="fevi-warning" style="display:none;">
-          ⚠️ <strong>FEVI reducida:</strong> El algoritmo ASE 2025 se aplica <em>independientemente</em> de la FEVI. La disfunción diastólica es frecuente si la FEVI es baja, pero la <strong>PAI</strong> se determina por los pilares y/o adicionales.
+          ⚠️ <strong>FEVI reducida:</strong> Se asume disfunción diastólica. Las presiones de llenado (PAI) se estiman con los parámetros ingresados.
         </div>
         <div id="indeterminateNote" class="indeterminate-note" style="display:none;">
           Resultado indeterminado/discordante. Considere parámetros adicionales (LAVi, LARS, S/D, IVRT) o eco de ejercicio si hay síntomas.
@@ -358,7 +383,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.3.9 · actualizada 13/08/2025</div>
+      <div class="version-footer">v1.4.0 · actualizada 17/08/2025</div>
 
       <!-- Footer legal minimalista (siempre visible en una línea) -->
       <div class="legal-footer">
@@ -374,13 +399,13 @@
       <button class="modal-close" onclick="closeModal()">×</button>
       <h2>🧠 Algoritmo (ASE 2025)</h2>
       <div class="modal-body">
-        <h4>1) Pilares (RS)</h4>
+        <h4>1) Parámetros (RS)</h4>
         <p>e′ (ajustado por edad), E/e′ (promedio ≥14, septal ≥15 o lateral ≥13) y TR ≥2.8 m/s <em>o</em> PSAP ≥35 mmHg.</p>
 
         <h4>2) Decisión (RS)</h4>
         <ul>
           <li><strong>3/3 alterados → PAI elevada</strong>. Grado II si E/A &lt;2; Grado III si E/A ≥2.</li>
-          <li><strong>0–2/3</strong> → evaluar adicionales: <strong>LARS ≤18%</strong> o <strong>PV S/D ≤0.67</strong> o <strong>LAVi &gt;34</strong> (Área &gt;20 cm²) o <strong>IVRT ≤70 ms</strong>. Si alguno cruza → PAI elevada; si ninguno → PAI normal.</li>
+          <li><strong>0–2/3</strong> → evaluar parámetros adicionales: <strong>LARS ≤18%</strong> o <strong>PV S/D ≤0.67</strong> o <strong>LAVi &gt;34</strong> (Área &gt;20 cm²) o <strong>IVRT ≤70 ms</strong>. Si alguno cruza → PAI elevada; si ninguno → PAI normal.</li>
           <li><strong>Grado I</strong> si <u>e′ reducido + E/e′ normal + PASP normal + E/A ≤0.8</u>.</li>
         </ul>
 
@@ -403,7 +428,7 @@
           </tbody>
         </table>
 
-        <p><strong>Adicionales (RS):</strong> LARS ≤18%, PV S/D ≤0.67, LAVi &gt;34 ml/m² (Área &gt;20 cm² proxy), IVRT ≤70 ms.</p>
+        <p><strong>Parámetros adicionales (RS):</strong> LARS ≤18%, PV S/D ≤0.67, LAVi &gt;34 ml/m² (Área &gt;20 cm² proxy), IVRT ≤70 ms.</p>
       </div>
     </div>
   </div>
@@ -485,7 +510,7 @@
         case 'MAC': return "MAC moderada/severa → RS: E/A <0.8 sugiere PAI normal; >1.8 sugiere PAI elevada. Si 0.8–1.8, use IVRT (≥80 ms normal, <80 ms elevada).";
         case 'MR': return "MR significativa → cuidado al usar E/e′ y LAVi; apoye con LARS, S/D e IVRT.";
         case 'MS': return "MS significativa → apoyarse en TR/PSAP, S/D e IVRT; E y E/A se distorsionan.";
-        case 'PHnoCard': return "HP no cardiaca → TR/PSAP no cuentan para PAI (neutralizados); use e′, E/e′ y adicionales.";
+        case 'PHnoCard': return "HP no cardiaca → TR/PSAP no cuentan para PAI (neutralizados); use parámetros de e′, E/e′ y adicionales.";
         case 'LVAD': return "LVAD → enfoque orientativo (S/D, LARS y clínica).";
         case 'HTX': return "Trasplante → priorice LARS y S/D; e′/E/e′ pueden alterarse.";
         case 'Constriccion': return "Constrictiva → no penalizar e′; priorizar S/D e IVRT.";
@@ -495,7 +520,7 @@
         default:
           return (ritmo==='fa')
             ? "FA → criterios: E≥100, septal E/e′>11, TR≥2.8 o PSAP≥35 y DT≤160; apoyo con LARS ≤18% y PV S/D <1."
-            : "Caso general (RS) → pilares e′ (por edad), E/e′ (avg≥14 o sep≥15 o lat≥13) y TR/PSAP; desempate con LARS, PV S/D, LAVi/Área, IVRT.";
+            : "Caso general (RS) → parámetros e′ (por edad), E/e′ (avg≥14 o sep≥15 o lat≥13) y TR/PSAP; desempate con LARS, PV S/D, LAVi/Área, IVRT.";
       }
     }
 
@@ -513,7 +538,7 @@
 
       const aiRef=(tipoAI==='volumen')?"LAVi ≤34 ml/m²":"Área AI ≤20 cm² (proxy)";
       const ritmoRef=(ritmo==='fa')?"<br>• En FA no se usa E/A para la estadificación":"";
-      const feviRef=(fevi==='menor')?"<br>• FEVI reducida: el algoritmo aplica igual; determine PAI por pilares/adicionales.":"";
+      const feviRef=(fevi==='menor')?"<br>• FEVI reducida: se asume disfunción diastólica; la PAI se estima con los parámetros.":"";
 
       const content=`
         • e′ promedio ≥ ${eAvg} cm/s (lateral ≥ ${eLat}, septal ≥ ${eSep})<br>
@@ -525,7 +550,6 @@
       `;
       document.getElementById('ageReferenceContent').innerHTML=content;
       document.getElementById('scenarioHint').innerHTML=scenarioText(esc,ritmo);
-      document.getElementById('ageReferences').style.display='block';
     }
 
     // --- Algoritmo ASE 2025 ---
@@ -558,8 +582,8 @@
       };
 
       const faltan=[];
-      if(isNaN(v.eSeptal)) faltan.push("e' septal");
-      if(isNaN(v.eLateral)) faltan.push("e' lateral");
+      if(isNaN(v.eSeptal)) faltan.push("e′ septal");
+      if(isNaN(v.eLateral)) faltan.push("e′ lateral");
       if(tipoAI==='volumen' && isNaN(v.volumenAI)) faltan.push("Volumen AI indexado");
       if(tipoAI==='area' && isNaN(v.areaAI))     faltan.push("Área AI");
       if(v.parametroPresion==='TR' && isNaN(v.valorPresion))   faltan.push("Velocidad TR");
@@ -587,7 +611,7 @@
       else if(edad==='2'){ eSepRef=6; eLatRef=8; eAvgRef=7; }
       else { eSepRef=6; eLatRef=7; eAvgRef=6.5; }
 
-      // E/e′ (ASE 2025): anormal si avg≥14 O septal≥15 O lateral≥13
+      // E/e′: anormal si avg≥14 O septal≥15 O lateral≥13
       let eeAvg=null, eeSep=null, eeLat=null, eeAbn=null;
       if(!isNaN(v.velocidadE)){
         if(eProm>0) eeAvg=v.velocidadE/eProm;
@@ -613,24 +637,27 @@
       const params=[];
       if(!isNaN(v.eLateral)){
         const st=(esc==='BCRI_CRT')?"indeterminate":(v.eLateral>=eLatRef?"normal":"abnormal");
-        params.push({n:"e' lateral",val:v.eLateral.toFixed(1)+" cm/s",st,ref:(esc==='BCRI_CRT')?"— (ignorado)":"≥"+eLatRef+" cm/s"});
+        params.push({n:"e′ lateral",val:v.eLateral.toFixed(1)+" cm/s",st,ref:(esc==='BCRI_CRT')?"— (ignorado)":"≥"+eLatRef+" cm/s"});
       }
       if(!isNaN(v.eSeptal)){
-        params.push({n:"e' septal",val:v.eSeptal.toFixed(1)+" cm/s",st:(v.eSeptal>=eSepRef)?"normal":"abnormal",ref:"≥"+eSepRef+" cm/s"});
+        params.push({n:"e′ septal",val:v.eSeptal.toFixed(1)+" cm/s",st:(v.eSeptal>=eSepRef)?"normal":"abnormal",ref:"≥"+eSepRef+" cm/s"});
       }
       if(eProm!==null){
         if(esc==='Constriccion'){
-          params.push({n:"e' promedio",val:eProm.toFixed(1)+" cm/s",st:"indeterminate",ref:"No penaliza en constricción"});
+          params.push({n:"e′ promedio",val:eProm.toFixed(1)+" cm/s",st:"indeterminate",ref:"No penaliza en constricción"});
         }else{
-          params.push({n:"e' promedio",val:eProm.toFixed(1)+" cm/s",st:(eProm>=eAvgRef)?"normal":"abnormal",ref:"≥"+eAvgRef+" cm/s"});
+          params.push({n:"e′ promedio",val:eProm.toFixed(1)+" cm/s",st:(eProm>=eAvgRef)?"normal":"abnormal",ref:"≥"+eAvgRef+" cm/s"});
         }
       }
       if(ritmo==='sinusal' && ea!==null){
-        params.push({n:"Relación E/A",val:ea.toFixed(2),st:"indeterminate",ref:"Informativo p/estadificación"});
+        params.push({n:"Relación E/A",val:ea.toFixed(2),st:"indeterminate",ref:""});
       }
       if(eeAvg!==null || eeSep!==null || eeLat!==null){
-        let showVal=""; if(eeAvg!==null) showVal=eeAvg.toFixed(1)+" (prom)"; else if(eeSep!==null) showVal=eeSep.toFixed(1)+" (septal)"; else showVal=eeLat.toFixed(1)+" (lateral)";
-        params.push({n:"E/e′ (criterio ASE)",val:showVal,st:eeAbn?"abnormal":"normal",ref:"avg ≥14, septal ≥15 o lateral ≥13"});
+        let showVal="";
+        if(eeAvg!==null) showVal=eeAvg.toFixed(1)+" (prom)";
+        else if(eeSep!==null) showVal=eeSep.toFixed(1)+" (septal)";
+        else showVal=eeLat.toFixed(1)+" (lateral)";
+        params.push({n:"E/e′",val:showVal,st:eeAbn?"abnormal":"normal",ref:"avg ≥14, septal ≥15 o lateral ≥13"});
       }
       let aiOk=null;
       if(tipoAI==='volumen' && !isNaN(v.volumenAI)){
@@ -717,7 +744,7 @@
           paiStatus="PAI elevada"; ptxt="Presión de llenado elevada";
           if(ea!==null){ gradeLevel = (ea>=2.0) ? "III" : "II"; }
         } else if(altered===0){
-          paiStatus="PAI normal"; ptxt="Presión de llenado normal"; comments.push("Pilares normales.");
+          paiStatus="PAI normal"; ptxt="Presión de llenado normal"; comments.push("Parámetros principales dentro de rango.");
         } else if(altered===1 || altered===2){
           if(altered===1 && eCrit && !eeCrit && !presCrit && ea!==null && ea<=0.8){
             paiStatus="PAI normal"; ptxt="Presión de llenado normal";
@@ -732,10 +759,10 @@
               if(addSD) addList.push("PV S/D ≤0.67");
               if(addAI) addList.push("LAVi >34 ml/m² / Área >20 cm²");
               if(addIVRT) addList.push("IVRT ≤70 ms");
-              comments.push("Conclusión apoyada por adicional: "+addList.join(", ")+".");
+              comments.push("Conclusión apoyada por parámetro adicional: "+addList.join(", ")+".");
             } else {
               paiStatus="PAI normal"; ptxt="Presión de llenado normal";
-              comments.push("Pilares no 3/3 y adicionales sin umbral → PAI normal. Si hay síntomas, considere eco de ejercicio.");
+              comments.push("Parámetros principales no 3/3 y adicionales sin umbral → PAI normal.");
             }
           }
         } else {
@@ -743,13 +770,13 @@
         }
       }
 
-      // Mensaje técnico si PAI normal pero TR/PSAP alto con E/e′ y AI normales
+      // Nota técnica si PAI normal pero TR/PSAP alto con E/e′ y AI normales
       if((paiStatus.includes("PAI normal")) && presAbn===true && eeAbn===false && (aiOk===true)){
         comments.push("TR/PSAP elevados con E/e′ normal y LAVi/Área normal sugieren PAI normal; verifique técnica (alineación/aliasing) o confirme con adicionales.");
       }
 
       if(fevi==='menor'){
-        comments.unshift("FEVI <50%: aplique el algoritmo (ASE 2025) para estimar PAI; la disfunción es frecuente pero la decisión se basa en pilares/adicionales.");
+        comments.unshift("FEVI <50%: se asume disfunción diastólica. La PAI se informa según los parámetros.");
       }
 
       // Advertencias
@@ -760,27 +787,36 @@
       const results=document.getElementById('results');
       const h=document.getElementById('diagnostico');
       const p=document.getElementById('pressureStatus');
-      const g=document.getElementById('gradeStatus');
 
-      // Componer encabezado
+      // Headline (FEVI<50% => siempre “Disfunción diastólica”)
       let headline = "";
-      if (gradeLevel){
-        const desc = (gradeLevel==='I') ? " (alteración de la relajación)" : "";
-        const extra = byAdditional && gradeLevel!=='I' ? " (por adicional)" : "";
-        headline = `Disfunción diastólica Grado ${gradeLevel}${desc}${extra}. ${paiStatus}.`;
-      } else {
-        const ps = (paiStatus||"").toLowerCase();
-        if (ps.includes("pai normal") && !ps.startsWith("fa")) {
-          headline = "Función diastólica normal";
+      const paiLower = (paiStatus||"").toLowerCase();
+
+      if (fevi === 'menor') {
+        if (gradeLevel){
+          const desc = (gradeLevel==='I') ? " (alteración de la relajación)" : "";
+          const extra = byAdditional && gradeLevel!=='I' ? " (por parámetro adicional)" : "";
+          headline = `Disfunción diastólica Grado ${gradeLevel}${desc}${extra}. ${paiStatus}.`;
         } else {
-          headline = paiStatus || "Resultado";
+          headline = `Disfunción diastólica. ${paiStatus||""}`.trim();
+        }
+      } else {
+        if (gradeLevel){
+          const desc = (gradeLevel==='I') ? " (alteración de la relajación)" : "";
+          const extra = byAdditional && gradeLevel!=='I' ? " (por parámetro adicional)" : "";
+          headline = `Disfunción diastólica Grado ${gradeLevel}${desc}${extra}. ${paiStatus}.`;
+        } else {
+          if (paiLower.includes("pai normal") && !paiLower.startsWith("fa")) {
+            headline = "Función diastólica normal";
+          } else {
+            headline = paiStatus || "Resultado";
+          }
         }
       }
 
       h.textContent = headline;
-      g.textContent = "";
 
-      // Ocultar/mostrar línea de presión
+      // Mostrar/ocultar línea de presión
       const lowerHeadline = headline.toLowerCase();
       const showPressure = (ptxt && !(lowerHeadline.includes("pai ") || lowerHeadline.includes("función diastólica normal")));
       p.textContent = showPressure ? (ptxt || "") : "";
@@ -788,13 +824,17 @@
 
       // Colorear tarjeta
       results.className="results";
-      const hl = headline.toLowerCase();
-      if(hl.includes("función diastólica normal") || hl.includes("pai normal")){
-        results.classList.add("normal");
-      } else if(hl.includes("disfunción diastólica grado") || hl.includes("pai elevada")){
-        results.classList.add("abnormal");
+      if (fevi === 'menor') {
+        results.classList.add(paiLower.includes("indeterminado") ? "indeterminate" : "abnormal");
       } else {
-        results.classList.add("indeterminate");
+        const hl = headline.toLowerCase();
+        if(hl.includes("función diastólica normal") || hl.includes("pai normal")){
+          results.classList.add("normal");
+        } else if(hl.includes("disfunción diastólica") || hl.includes("pai elevada")){
+          results.classList.add("abnormal");
+        } else {
+          results.classList.add("indeterminate");
+        }
       }
 
       p.className="pressure-status";
@@ -804,7 +844,7 @@
       // Parámetros
       let html="";
       params.forEach(pp=>{
-        html+=`<div class="parameter-item ${pp.st}"><strong>${pp.n}:</strong> ${pp.val} <span style="color:#888;font-size:.95em;">(${pp.ref})</span></div>`;
+        html+=`<div class="parameter-item ${pp.st}"><strong>${pp.n}:</strong> ${pp.val} ${pp.ref?`<span style="color:#888;font-size:.95em;">(${pp.ref})</span>`:""}</div>`;
       });
       document.getElementById('parametros-status').innerHTML=html;
 
