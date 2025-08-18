@@ -8,7 +8,7 @@
  * - En activate → clients.claim() y se fuerza reload de las ventanas controladas
  */
 
-const VERSION = "v1.3.9";
+const VERSION = "v1.4.0";
 const STATIC_CACHE = `df-static-${VERSION}`;
 const FONTS_CACHE  = `df-fonts-${VERSION}`;
 
