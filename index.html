@@ -52,7 +52,7 @@
     }
     .input-row--full{flex:1 1 100%;min-width:100%}
 
-    .input-row label{font-weight:500;color:var(--text-main);font-size:1em}
+    .input-row label{font-weight:500;color:#1a2a36;font-size:1em}
     .input-row input,.input-row select{
       width:100%;
       min-width:0;
@@ -92,7 +92,7 @@
     .age-reference summary{
       display:flex; align-items:center; gap:8px;
       cursor:pointer; list-style:none; user-select:none;
-      font-weight:600; color:var(--text-main);
+      font-weight:600; color:#1a2a36;
     }
     .age-reference summary::-webkit-details-marker{display:none}
     .age-chevron{transition:transform .2s; width:18px; height:18px}
@@ -143,11 +143,11 @@
       .form-card h3{font-size:1.1em;margin-bottom:8px;line-height:1.3}
       .input-row-group{display:block}
       .input-row{grid-template-columns:1fr;gap:6px;min-width:0}
-      .unit{font-size:.85em;color:var(--text-soft)}
+      .unit{font-size:.85em;color:#5a6e7f}
       .results{padding:12px 10px;font-size:1em;margin-top:14px;line-height:1.3}
       .parameter-status{grid-template-columns:1fr;gap:6px;margin-top:8px}
       .parameter-item{font-size:.9em;padding:5px 8px;word-wrap:break-word;margin-bottom:4px;line-height:1.2}
-      input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+      input::-webkit-inner-spin-button,input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
     }
   </style>
 </head>
@@ -201,7 +201,7 @@
                 <option value="HTX">Trasplante cardíaco</option>
                 <option value="Constriccion">Pericarditis constrictiva</option>
                 <option value="HCM">Miocardiopatía hipertrófica</option>
-                <option value="BCRI_CRT">BCRI / CRT / marcapaseo</option>
+                <option value="BCRI_CRT">BCRI / CRT / marcapaso</option>
               </select>
             </div>
           </div>
@@ -226,12 +226,12 @@
           <div class="input-row-group">
             <div class="input-row">
               <label>Onda E:</label>
-              <input type="number" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="velocidadE" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
             <div class="input-row">
               <label>Onda A:</label>
-              <input type="number" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="velocidadA" step="0.1" min="0" max="300" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
           </div>
@@ -246,12 +246,12 @@
           <div class="input-row-group">
             <div class="input-row">
               <label>e′ lateral:</label>
-              <input type="number" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="eLateral" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
             <div class="input-row">
               <label>e′ septal:</label>
-              <input type="number" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="eSeptal" step="0.1" min="0" max="30" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm/s</span>
             </div>
           </div>
@@ -269,12 +269,12 @@
             </div>
             <div class="input-row" id="volumenRow">
               <label>Vol AI indexado:</label>
-              <input type="number" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="volumenAI" step="1" min="0" max="200" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">ml/m²</span>
             </div>
             <div class="input-row" id="areaRow" style="display:none;">
               <label>Área auricular izquierda:</label>
-              <input type="number" id="areaAI" step="0.1" min="0" max="60" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="areaAI" step="0.1" min="0" max="60" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">cm²</span>
             </div>
           </div>
@@ -295,7 +295,7 @@
             </div>
             <div class="input-row">
               <label id="labelPresion">Velocidad pico TR:</label>
-              <input type="number" id="valorPresion" step="0.01" min="0" max="6" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="valorPresion" step="0.01" min="0" max="6" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit" id="unidadPresion">m/s</span>
             </div>
           </div>
@@ -306,7 +306,7 @@
           <div class="input-row-group">
             <div class="input-row">
               <label>LA Strain (LARS):</label>
-              <input type="number" id="laStrain" step="1" min="0" max="60" placeholder="Opcional" inputmode="decimal"/>
+              <input type="text" id="laStrain" step="1" min="0" max="60" placeholder="Opcional" inputmode="decimal"/>
               <span class="unit">%</span>
             </div>
           </div>
@@ -322,17 +322,17 @@
             <div class="input-row-group">
               <div class="input-row">
                 <label>IVRT:</label>
-                <input type="number" id="ivrt" step="1" min="20" max="200" placeholder="Opcional" inputmode="decimal"/>
+                <input type="text" id="ivrt" step="1" min="20" max="200" placeholder="Opcional" inputmode="decimal"/>
                 <span class="unit">ms</span>
               </div>
               <div class="input-row">
                 <label>Relación S/D (venas pulmonares):</label>
-                <input type="number" id="sd" step="0.01" min="0" max="3" placeholder="Opcional" inputmode="decimal"/>
+                <input type="text" id="sd" step="0.01" min="0" max="3" placeholder="Opcional" inputmode="decimal"/>
                 <span class="unit">—</span>
               </div>
               <div class="input-row">
                 <label>DT mitral:</label>
-                <input type="number" id="dt" step="1" min="60" max="300" placeholder="Opcional (FA)" inputmode="decimal"/>
+                <input type="text" id="dt" step="1" min="60" max="300" placeholder="Opcional (FA)" inputmode="decimal"/>
                 <span class="unit">ms</span>
               </div>
             </div>
@@ -383,7 +383,7 @@
         </a>
       </div>
 
-      <div class="version-footer">v1.4.0 · actualizada 18/08/2025</div>
+      <div class="version-footer">v1.4.1 · actualizada 20/08/2025</div>
 
       <!-- Footer legal minimalista (siempre visible en una línea) -->
       <div class="legal-footer">
@@ -428,7 +428,7 @@
           </tbody>
         </table>
 
-        <p><strong>Parámetros adicionales (RS):</strong> LARS ≤18%, PV S/D ≤0.67, LAVi &gt;34 ml/m² (Área &gt;20 cm² proxy), IVRT ≤70 ms.</p>
+        <p><strong>Parámetros adicionales (RS):</strong> LARS ≤18%, PV S/D ≤0.67, LAVi &gt;34 ml/m² (Área &gt;20 cm²), IVRT ≤70 ms.</p>
       </div>
     </div>
   </div>
@@ -459,8 +459,28 @@
     function parseNum(id){
       const el=document.getElementById(id); if(!el) return NaN;
       let raw=(el.value||'').trim().replace(/,/g,'.');
-      raw = raw.replace(/[^0-9.\-]/g,'').replace(/(?!^)-/g,'').replace(/(\..*)\./g,'$1');
+      raw = raw.replace(/[^0-9.\-]/g,'')      // quita todo lo no numérico (salvo punto y - inicial)
+               .replace(/(?!^)-/g,'')         // permite un solo - al inicio
+               .replace(/(\..*)\./g,'$1');    // evita dobles puntos
       const n=parseFloat(raw); return isNaN(n)?NaN:n;
+    }
+
+    // Normaliza en caliente: convierte "," a "." al tipear
+    function normalizeDecimalInput(e){
+      const v = e.target.value;
+      if (v && v.indexOf(',') !== -1){
+        e.target.value = v.replace(/,/g,'.');
+      }
+    }
+    function attachDecimalNormalizers(){
+      const ids = [
+        'velocidadE','velocidadA','eLateral','eSeptal','volumenAI','areaAI',
+        'valorPresion','laStrain','ivrt','sd','dt'
+      ];
+      ids.forEach(id=>{
+        const el=document.getElementById(id);
+        if(el){ el.addEventListener('input', normalizeDecimalInput); }
+      });
     }
 
     // Modal Alg
@@ -520,7 +540,7 @@
         default:
           return (ritmo==='fa')
             ? "FA → criterios: E≥100, septal E/e′>11, TR≥2.8 o PSAP≥35 y DT≤160; apoyo con LARS ≤18% y PV S/D <1."
-            : "Caso general (RS) → parámetros e′ (por edad), E/e′ (avg≥14 o sep≥15 o lat≥13) y TR/PSAP; desempate con LARS, PV S/D, LAVi/Área, IVRT.";
+            : "Caso general (RS) → parámetros e′ (por edad), E/e′ (promedio≥14 o sep≥15 o lat≥13) y TR/PSAP; desempate con LARS, PV S/D, LAVi/Área, IVRT.";
       }
     }
 
@@ -536,7 +556,7 @@
       else if(edad==='2'){ eSep=6.0; eLat=8.0; eAvg=7.0; }
       else { eSep=6.0; eLat=7.0; eAvg=6.5; }
 
-      const aiRef=(tipoAI==='volumen')?"LAVi ≤34 ml/m²":"Área AI ≤20 cm² (proxy)";
+      const aiRef=(tipoAI==='volumen')?"LAVi ≤34 ml/m²":"Área AI ≤20 cm²";
       const ritmoRef=(ritmo==='fa')?"<br>• En FA no se usa E/A para la estadificación":"";
       const feviRef=(fevi==='menor')?"<br>• FEVI reducida: se asume disfunción diastólica; la PAI se estima con los parámetros.":"";
 
@@ -611,7 +631,7 @@
       else if(edad==='2'){ eSepRef=6; eLatRef=8; eAvgRef=7; }
       else { eSepRef=6; eLatRef=7; eAvgRef=6.5; }
 
-      // E/e′: anormal si avg≥14 O septal≥15 O lateral≥13
+      // E/e′: anormal si promedio≥14 O septal≥15 O lateral≥13
       let eeAvg=null, eeSep=null, eeLat=null, eeAbn=null;
       if(!isNaN(v.velocidadE)){
         if(eProm>0) eeAvg=v.velocidadE/eProm;
@@ -654,10 +674,10 @@
       }
       if(eeAvg!==null || eeSep!==null || eeLat!==null){
         let showVal="";
-        if(eeAvg!==null) showVal=eeAvg.toFixed(1)+" (prom)";
+        if(eeAvg!==null) showVal=eeAvg.toFixed(1)+" (promedio)";
         else if(eeSep!==null) showVal=eeSep.toFixed(1)+" (septal)";
         else showVal=eeLat.toFixed(1)+" (lateral)";
-        params.push({n:"E/e′",val:showVal,st:eeAbn?"abnormal":"normal",ref:"avg ≥14, septal ≥15 o lateral ≥13"});
+        params.push({n:"E/e′",val:showVal,st:eeAbn?"abnormal":"normal",ref:"promedio ≥14, septal ≥15 o lateral ≥13"});
       }
       let aiOk=null;
       if(tipoAI==='volumen' && !isNaN(v.volumenAI)){
@@ -665,7 +685,7 @@
         params.push({n:"Volumen AI indexado",val:v.volumenAI+" ml/m²",st:aiOk?"normal":"abnormal",ref:"≤34 ml/m²"});
       }else if(tipoAI==='area' && !isNaN(v.areaAI)){
         aiOk = v.areaAI<=20;
-        params.push({n:"Área AI",val:v.areaAI+" cm²",st:aiOk?"normal":"abnormal",ref:"≤20 cm² (proxy)"});
+        params.push({n:"Área AI",val:v.areaAI+" cm²",st:aiOk?"normal":"abnormal",ref:"≤20 cm²"});
       }
       if(!isNaN(v.valorPresion)){
         const neutral=(esc==='PHnoCard');
@@ -877,6 +897,9 @@
       toggleAIInput();
       syncPresionUI();
       document.getElementById('advancedContent').style.display='none';
+
+      // Normalizadores de coma→punto en todos los campos numéricos
+      attachDecimalNormalizers();
     });
 
     // Registro del Service Worker
@@ -888,4 +911,3 @@
   </script>
 </body>
 </html>
-
