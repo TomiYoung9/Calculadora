@@ -451,8 +451,9 @@
 
   <script>
     // ===== Config =====
-    const ENABLE_LOGGING = true; // poné false si querés pausar el log (sin tocar el endpoint)
+    const ENABLE_LOGGING = true;
     const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbws5yhFnZkzXEPCIv0z1i8Dko9ighZRwNNd7WXvsGXLMeyqg7RyNYcVkeiJeh7u8wDl/exec';
+    const LOG_TOKEN = 'pass';
 
     // --- Utilidad: parsear coma o punto (robusto) ---
     function parseNum(id){
@@ -949,42 +950,47 @@
     }
 
     // ====== LOG A GOOGLE SHEETS (Apps Script) ======
-    function logCalculoToSheet(){
-      try{
-        const get = id => document.getElementById(id);
-        const val = el => el && typeof el.value !== 'undefined' ? el.value : '';
+  function logCalculoToSheet(){
+  try{
+    const get = id => document.getElementById(id);
+    const val = el => el && typeof el.value !== 'undefined' ? el.value : '';
 
-        const payload = {
-          app_version: (document.querySelector('.version-footer')?.textContent || '').trim(),
-          ritmo: val(get('ritmo')),
-          fevi: val(get('fevi')),
-          edad: val(get('edad')),
-          escenario: val(get('escenarioEspecial')),
-          tipoAI: val(get('tipoAI')),
-          volumenAI: val(get('volumenAI')),
-          areaAI: val(get('areaAI')),
-          parametroPresion: val(get('parametroPresion')),
-          valorPresion: val(get('valorPresion')),
-          laStrain: val(get('laStrain')),
-          velocidadE: val(get('velocidadE')),
-          velocidadA: val(get('velocidadA')),
-          eSeptal: val(get('eSeptal')),
-          eLateral: val(get('eLateral')),
-          ivrt: val(get('ivrt')),
-          sd: val(get('sd')),
-          dt: val(get('dt')),
-          resultado_texto: (document.getElementById('diagnostico')?.textContent || '').trim()
-        };
+    const payload = {
+      app_version: (document.querySelector('.version-footer')?.textContent || '').trim(),
+      ritmo: val(get('ritmo')),
+      fevi: val(get('fevi')),
+      edad: val(get('edad')),
+      escenario: val(get('escenarioEspecial')),
+      tipoAI: val(get('tipoAI')),
+      volumenAI: val(get('volumenAI')),
+      areaAI: val(get('areaAI')),
+      parametroPresion: val(get('parametroPresion')),
+      valorPresion: val(get('valorPresion')),
+      laStrain: val(get('laStrain')),
+      velocidadE: val(get('velocidadE')),
+      velocidadA: val(get('velocidadA')),
+      eSeptal: val(get('eSeptal')),
+      eLateral: val(get('eLateral')),
+      ivrt: val(get('ivrt')),
+      sd: val(get('sd')),
+      dt: val(get('dt')),
+      resultado_texto: (document.getElementById('diagnostico')?.textContent || '').trim()
+    };
 
-        fetch(LOG_ENDPOINT, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          keepalive: true,
-          body: JSON.stringify(payload)
-        }).catch(()=>{});
-      }catch(_){}
-    }
+    const url = LOG_ENDPOINT
+      + '?token='  + encodeURIComponent(LOG_TOKEN)
+      + '&origin=' + encodeURIComponent(location.origin);
+
+    fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify(payload)
+    }).catch(()=>{});
+  }catch(_){}
+}
+
 
     // Eventos
     document.addEventListener('DOMContentLoaded',()=>{
@@ -1019,3 +1025,4 @@
   </script>
 </body>
 </html>
+
