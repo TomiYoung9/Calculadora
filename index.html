@@ -570,32 +570,37 @@
     }
 
     // ===== Mínimos de datos para registrar (y para nota suave) =====
-    function hasMainInputs(){
-      const ritmo = document.getElementById('ritmo').value;
-      const E = parseNum('velocidadE');
-      const eSep = parseNum('eSeptal');
-      const eLat = parseNum('eLateral');
-      const pres = parseNum('valorPresion');
-      const DT = parseNum('dt');
+   function hasMainInputs(){
+  const ritmo = document.getElementById('ritmo').value;
 
-      const hasE = !isNaN(E);
-      const hasAnyEprime = !isNaN(eSep) || !isNaN(eLat);
-      const hasPressure = !isNaN(pres);
-      const hasDT = !isNaN(DT);
+  const E     = parseNum('velocidadE');
+  const eSep  = parseNum('eSeptal');
+  const eLat  = parseNum('eLateral');
+  const pres  = parseNum('valorPresion');
+  const DT    = parseNum('dt');
 
-      if(ritmo==='sinusal'){
-        // Recomendado: E + (e′ septal o lateral) + TR/PSAP
-        return (hasE && hasAnyEprime && hasPressure);
-      } else {
-        // FA: al menos 2 entre E, e′ septal, TR/PSAP, DT
-        let count = 0;
-        if(hasE) count++;
-        if(!isNaN(eSep)) count++;
-        if(hasPressure) count++;
-        if(hasDT) count++;
-        return count >= 2;
-      }
-    }
+  const hasE        = !isNaN(E);
+  const hasAnyEprime= !isNaN(eSep) || !isNaN(eLat);
+  const hasPressure = !isNaN(pres);
+  const hasDT       = !isNaN(DT);
+
+  if (ritmo === 'sinusal'){
+    // ✅ NUEVO: con 2 de 3 ya alcanza para loguear
+    let count = 0;
+    if (hasE) count++;
+    if (hasAnyEprime) count++;
+    if (hasPressure) count++;
+    return count >= 2;
+  } else {
+    // FA: se mantiene 2 de 4
+    let count = 0;
+    if (hasE) count++;
+    if (!isNaN(eSep)) count++;
+    if (hasPressure) count++;
+    if (hasDT) count++;
+    return count >= 2;
+  }
+}
 
     // --- Builder del titular principal (diagnóstico de guía) ---
     function primaryDiagnosisHeadline({ classification, gradeLevel, fevi }) {
@@ -1025,6 +1030,7 @@
   </script>
 </body>
 </html>
+
 
 
 
