@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M25WYTBX0H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-M25WYTBX0H');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora de Función Diastólica — ASE 2025</title>
@@ -169,7 +177,7 @@ body{
 
 /* AI toggle inline */
 .ai-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:end;margin-bottom:8px}
-.aitg-wrap{display:flex;flex-direction:column;gap:3px}
+.aitg-wrap{display:flex;flex-direction:column;gap:3px;margin-top:0}
 .aitg{
   display:flex;border:1px solid var(--s2);border-radius:var(--rr);
   overflow:hidden;background:var(--s05);height:35px;
@@ -442,6 +450,84 @@ body{
   .ctx-row{grid-template-columns:1fr 1fr}
   .esc-grid{grid-template-columns:1fr}
 }
+
+/* ── H2FPEF Score ── */
+.h2w{padding:10px 22px 0}
+.h2trig{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;background:#fff;border:1px solid var(--s2);border-radius:var(--rl);cursor:pointer;font-family:var(--ff);text-align:left;transition:all .12s}
+.h2trig:hover{border-color:var(--b5);background:var(--s05)}
+.h2trig.open{border-radius:var(--rl) var(--rl) 0 0;border-bottom-color:var(--s1)}
+.h2ico{width:28px;height:28px;border-radius:var(--rr);background:var(--b05);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.h2ico svg{width:14px;height:14px;stroke:var(--b6);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.h2txt{flex:1}
+.h2title{font-size:13px;font-weight:600;color:var(--s9)}
+.h2sub{font-size:11px;color:var(--s4);margin-top:1px}
+.h2trig-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.h2prechip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.h2cdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.h2prechip.none{background:var(--s1);color:var(--s5)}
+.h2prechip.none .h2cdot{background:var(--s3)}
+.h2prechip.some{background:var(--a05);color:var(--a8);border:1px solid var(--a2)}
+.h2prechip.some .h2cdot{background:var(--a6)}
+.h2prechip.many{background:var(--r05);color:var(--r8);border:1px solid var(--r2)}
+.h2prechip.many .h2cdot{background:var(--r6)}
+.h2arr{width:14px;height:14px;stroke:var(--s4);stroke-width:2;fill:none;transition:transform .15s;flex-shrink:0}
+.h2arr.open{transform:rotate(90deg)}
+.h2panel{background:#fff;border:1px solid var(--s2);border-top:none;border-radius:0 0 var(--rl) var(--rl);overflow:hidden;display:none}
+.h2panel.open{display:block}
+.h2vars{padding:10px 13px;display:flex;flex-direction:column;gap:5px}
+.h2vr-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--s4);margin-bottom:2px}
+.h2vr{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:var(--rr);border:1px solid var(--s2);background:#fff;transition:background .12s,border-color .12s}
+.h2vr.h2present{background:var(--a05);border-color:var(--a2)}
+/* Indicador visual de estado — ocupa el lugar del badge de puntos pero es solo color */
+.h2vstate{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:background .15s}
+.h2vstate.on{background:var(--a6)}
+.h2vstate.off{background:var(--s2)}
+.h2vi{flex:1;min-width:0}
+.h2vn{font-size:12px;font-weight:500;color:var(--s8)}
+.h2vd{font-size:11px;color:var(--s4);margin-top:1px}
+.h2tog{display:flex;border:1px solid var(--s2);border-radius:6px;overflow:hidden;flex-shrink:0}
+.h2tb{padding:4px 9px;font-size:11px;font-weight:500;color:var(--s5);background:none;border:none;cursor:pointer;font-family:var(--ff);transition:all .1s}
+.h2tb.on{background:var(--s8);color:#fff}
+.h2tb:not(.on):hover{background:var(--s1)}
+.h2score{padding:0 13px 13px}
+.h2slbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--s4);margin-bottom:5px}
+.h2strk{height:5px;border-radius:20px;background:var(--s1);margin-bottom:4px;overflow:hidden}
+.h2sfill{height:100%;border-radius:20px;transition:width .3s,background .3s;background:var(--g6);width:5%}
+.h2szones{display:flex;font-size:10px;color:var(--s4);margin-bottom:9px}
+.h2sz{flex:1}
+.h2sz:last-child{text-align:right}
+.h2sbox{padding:10px 11px;border-radius:var(--rr);display:flex;align-items:flex-start;gap:11px}
+.h2sbox.low{background:var(--g05);border:1px solid var(--g2)}
+.h2sbox.mid{background:var(--a05);border:1px solid var(--a2)}
+.h2sbox.high{background:var(--r05);border:1px solid var(--r2)}
+.h2sn{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1;flex-shrink:0}
+.h2sn.low{color:var(--g8)}
+.h2sn.mid{color:var(--a8)}
+.h2sn.high{color:var(--r8)}
+.h2sd{font-size:10px;color:var(--s4)}
+.h2sp{font-size:12px;font-weight:600;margin-bottom:3px}
+.h2sp.low{color:var(--g8)}
+.h2sp.mid{color:var(--a8)}
+.h2sp.high{color:var(--r8)}
+.h2si{font-size:11px;color:var(--s5);line-height:1.5}
+.h2ase{margin:0 13px 10px;padding:9px 10px;border-radius:var(--rr);border:1px solid var(--s2);background:var(--s05);font-size:11px;color:var(--s5);line-height:1.55;display:none}
+.h2ase.show{display:block}
+.h2ase strong{color:var(--s8);font-weight:600;display:block;margin-bottom:3px}
+.hbadge{display:inline-flex;align-items:center;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;vertical-align:middle}
+.hbadge.e{background:var(--r2);color:var(--r8)}
+.hbadge.n{background:var(--g2);color:var(--g8)}
+.hbadge.i{background:var(--s2);color:var(--s6)}
+.h2ref{padding:8px 13px;border-top:1px solid var(--s1);font-size:10px;color:var(--s4);line-height:1.6}
+.h2ref a{color:var(--b6);text-decoration:none}
+.h2ref a:visited{color:var(--b6)}
+.h2ref a:hover{text-decoration:underline}
+.h2ref em{font-style:italic}
+@media(max-width:500px){.h2w{padding-left:12px;padding-right:12px}}
+
+@media(max-width:500px){
+  .h2w{padding-left:12px;padding-right:12px}
+}
+
 </style>
 </head>
 <body>
@@ -576,6 +662,7 @@ body{
             <button class="aio on" onclick="setAI(this,'vol')">LAVi</button>
             <button class="aio" onclick="setAI(this,'area')">Área</button>
           </div>
+          <span style="font-size:10px;color:transparent;display:block;margin-top:1px">_</span>
         </div>
         <div class="f">
           <label id="aiLbl">LAVi</label>
@@ -668,17 +755,144 @@ body{
   </div>
 </div>
 
-<!-- Referencia -->
-<div class="ref-wrap">
-  <button class="ref-btn" onclick="toggleRef()">
-    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-    Referencia — ASE 2025
+<!-- H2FPEF Score -->
+<div class="h2w" id="h2wrap">
+
+  <button class="h2trig" id="h2trig" onclick="toggleH2()">
+    <div class="h2ico">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </div>
+    <div class="h2txt">
+      <div class="h2title">Calcular score H&#x2082;FPEF</div>
+      <div class="h2sub">Probabilidad de ICFEp &middot; Reddy et al, Circulation 2018</div>
+    </div>
+    <div class="h2trig-right">
+      <span class="h2prechip none" id="h2prechip" style="display:none">
+        <span class="h2cdot"></span><span id="h2prechip-txt"></span>
+      </span>
+      <svg class="h2arr" id="h2arr" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
   </button>
-  <div class="ref-body" id="refBody">
-    Nagueh SF et al. Recommendations for the Evaluation of Left Ventricular Diastolic Function by Echocardiography and for HFpEF Diagnosis. <em>J Am Soc Echocardiogr</em>. 2025;38(7):537-569.<br>
-    <a href="https://doi.org/10.1016/j.echo.2025.03.011" target="_blank" rel="noopener">DOI: 10.1016/j.echo.2025.03.011</a>
+
+  <div class="h2panel" id="h2panel">
+
+    <div class="h2vars">
+      <div class="h2vr-lbl">Variables ecogr&aacute;ficas</div>
+      <!-- FA auto -->
+      <div class="h2vr" id="h2vr-fa">
+        <div class="h2vstate off" id="h2vs-fa"></div>
+        <div class="h2vi">
+          <div class="h2vn">Fibrilaci&oacute;n auricular</div>
+          <div class="h2vd" id="h2vd-fa">Parox&iacute;stica o persistente &middot; 3 puntos</div>
+        </div>
+        <div class="h2tog">
+          <button class="h2tb" id="h2fa0" onclick="h2sv('fa',false,this)">No</button>
+          <button class="h2tb" id="h2fa1" onclick="h2sv('fa',true,this)">S&iacute;</button>
+        </div>
+      </div>
+      <!-- HTP auto -->
+      <div class="h2vr" id="h2vr-ph">
+        <div class="h2vstate off" id="h2vs-ph"></div>
+        <div class="h2vi">
+          <div class="h2vn">HTP por eco</div>
+          <div class="h2vd" id="h2vd-ph">PSAP &gt;35 mmHg &middot; 1 punto</div>
+        </div>
+        <div class="h2tog">
+          <button class="h2tb" id="h2ph0" onclick="h2sv('ph',false,this)">No</button>
+          <button class="h2tb" id="h2ph1" onclick="h2sv('ph',true,this)">S&iacute;</button>
+        </div>
+      </div>
+      <!-- E/e' auto -->
+      <div class="h2vr" id="h2vr-ee">
+        <div class="h2vstate off" id="h2vs-ee"></div>
+        <div class="h2vi">
+          <div class="h2vn">E/e&prime; septal &gt;9</div>
+          <div class="h2vd" id="h2vd-ee">1 punto</div>
+        </div>
+        <div class="h2tog">
+          <button class="h2tb" id="h2ee0" onclick="h2sv('ee',false,this)">No</button>
+          <button class="h2tb" id="h2ee1" onclick="h2sv('ee',true,this)">S&iacute;</button>
+        </div>
+      </div>
+      <div class="h2vr-lbl" style="margin-top:4px">Variables cl&iacute;nicas</div>
+      <!-- Obesidad -->
+      <div class="h2vr" id="h2vr-h">
+        <div class="h2vstate off" id="h2vs-h"></div>
+        <div class="h2vi">
+          <div class="h2vn">Obesidad</div>
+          <div class="h2vd">IMC &gt;30 kg/m&sup2; &middot; 2 puntos</div>
+        </div>
+        <div class="h2tog">
+          <button class="h2tb on" onclick="h2sv('h',false,this)">No</button>
+          <button class="h2tb" onclick="h2sv('h',true,this)">S&iacute;</button>
+        </div>
+      </div>
+      <!-- HTA -->
+      <div class="h2vr" id="h2vr-ht">
+        <div class="h2vstate off" id="h2vs-ht"></div>
+        <div class="h2vi">
+          <div class="h2vn">Hipertensi&oacute;n tratada</div>
+          <div class="h2vd">&#x2265;2 antihipertensivos &middot; 1 punto</div>
+        </div>
+        <div class="h2tog">
+          <button class="h2tb on" onclick="h2sv('ht',false,this)">No</button>
+          <button class="h2tb" onclick="h2sv('ht',true,this)">S&iacute;</button>
+        </div>
+      </div>
+      <!-- Edad -->
+      <div class="h2vr" id="h2vr-age">
+        <div class="h2vstate off" id="h2vs-age"></div>
+        <div class="h2vi">
+          <div class="h2vn">Edad &gt;60 a&ntilde;os</div>
+          <div class="h2vd">1 punto</div>
+        </div>
+        <div class="h2tog">
+          <button class="h2tb on" onclick="h2sv('age',false,this)">No</button>
+          <button class="h2tb" onclick="h2sv('age',true,this)">S&iacute;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra + resultado score -->
+    <div class="h2score">
+      <div class="h2slbl">Score total</div>
+      <div class="h2strk"><div class="h2sfill" id="h2fill"></div></div>
+      <div class="h2szones">
+        <span class="h2sz" style="color:var(--g6)">Baja</span>
+        <span class="h2sz" style="text-align:center;color:var(--a6)">Intermedia</span>
+        <span class="h2sz" style="color:var(--r6)">Alta</span>
+      </div>
+      <div class="h2sbox low" id="h2sbox">
+        <div>
+          <div class="h2sn low" id="h2sn">0</div>
+          <div class="h2sd">/9</div>
+        </div>
+        <div>
+          <div class="h2sp low" id="h2sprob">&mdash;</div>
+          <div class="h2si" id="h2sint">&mdash;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integración ASE -->
+    <div class="h2ase" id="h2ase">
+      <strong>Integraci&oacute;n con resultado diast&oacute;lico ASE 2025</strong>
+      <span id="h2asebody"></span>
+    </div>
+
+    <!-- Referencias -->
+    <div class="h2ref">
+      <strong style="color:var(--s5);font-weight:600">Referencias</strong><br>
+      1. Reddy YNV et al. <em>Circulation</em>. 2018;138:861-70.<br>
+      2. Rahi W et al. <em>J Am Coll Cardiol Img</em>. 2026;19:166-174.
+      <a href="https://doi.org/10.1016/j.jcmg.2025.09.011" target="_blank" rel="noopener">DOI: 10.1016/j.jcmg.2025.09.011</a><br>
+      3. Nagueh SF et al. <em>J Am Soc Echocardiogr</em>. 2025;38:537-69.
+    </div>
   </div>
+
 </div>
+
+
 
 <!-- Footer -->
 <div class="footer">
@@ -693,7 +907,7 @@ body{
         Tomas Young
       </a>
     </div>
-    <span class="fver">v2.0.1</span>
+    <span class="fver">v2.1.3</span>
   </div>
   <div class="footer-legal">
     © 2025 A. Tomás Young. Todos los derechos reservados ·
@@ -754,6 +968,20 @@ body{
 
 <!-- ══════════════════════ SCRIPTS ══════════════════════ -->
 <script>
+
+
+// ══════════════════════════════════════════════
+// ANALYTICS — GA4 eventos custom
+// ══════════════════════════════════════════════
+function gaEvent(name, params){
+  if(typeof gtag === 'undefined') return;
+  gtag('event', name, params || {});
+}
+
+// Pageview con contexto
+window.addEventListener('load', function(){
+  gaEvent('app_open', { app_version: '2.1.3' });
+});
 
 // ══════════════════════════════════════════════
 // MOTOR CANÓNICO ASE 2025
@@ -1002,6 +1230,7 @@ function toggleEsc(){
 function setEsc(el,key,hint){
   document.querySelectorAll('.esc-opt').forEach(o=>o.classList.remove('on'));
   el.classList.add('on');
+  if(key) gaEvent('escenario_especial', { escenario: key, app_version: '2.1.3' });
   const badge=document.getElementById('escBadge');
   const hintEl=document.getElementById('escHint');
   const badgeTxt=document.getElementById('escBadgeTxt');
@@ -1088,8 +1317,24 @@ function calcular(){
   renderResultado(res, params);
   _calculado=true;
 
+  // GA4 — evento cálculo diastólico
+  gaEvent('calcular_diastolico', {
+    ritmo:       params.ritmoFA ? 'FA' : 'RS',
+    fevi:        params.feviReducida ? 'reducida' : 'normal',
+    edad:        params.grupoEdad,
+    lap_status:  res.lapStatus,
+    grado:       res.grado || 'ninguno',
+    tiene_e_sep: params.eSep != null ? 'si' : 'no',
+    tiene_e_lat: params.eLat != null ? 'si' : 'no',
+    tiene_tr:    params.TR   != null ? 'si' : 'no',
+    tiene_lars:  params.LARS != null ? 'si' : 'no',
+    escenario:   document.querySelector('.esc-opt.on')?.textContent?.trim() || 'ninguno',
+    app_version: '2.1.3'
+  });
+
   // Logging
   if (hasMainInputs(params)) enviarLog(params, res);
+  h2autoFill(params, res);
 
   document.getElementById('resultWrap').style.display='block';
   setTimeout(()=>document.getElementById('resultWrap').scrollIntoView({behavior:'smooth',block:'start'}),60);
@@ -1196,7 +1441,6 @@ function closeModalOutside(e){ if(e.target===document.getElementById('modalOverl
 // ══════════════════════════════════════════════
 // REF + DISCLAIMER
 // ══════════════════════════════════════════════
-function toggleRef(){ document.getElementById('refBody').classList.toggle('open'); }
 function toggleDisclaimer(e){ e.preventDefault(); document.getElementById('disclaimer').classList.toggle('open'); }
 
 // ══════════════════════════════════════════════
@@ -1204,6 +1448,142 @@ function toggleDisclaimer(e){ e.preventDefault(); document.getElementById('discl
 // ══════════════════════════════════════════════
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
 updateContextHints();
+
+
+// ══════════════════════════════════════════════
+// H2FPEF SCORE — Reddy et al, Circulation 2018
+// Integración: Rahi et al, JACC CI 2026;19:166-174
+// ══════════════════════════════════════════════
+const H2S = {h:false,ht:false,fa:false,age:false,ph:false,ee:false};
+const H2P = {h:2,ht:1,fa:3,age:1,ph:1,ee:1};
+const H2PR= [1,2,5,15,30,50,72,86,95,99];
+let _h2ctx = {lapStatus:'',grado:null};
+
+function h2calcScore(){ return Object.keys(H2S).reduce((a,k)=>a+(H2S[k]?H2P[k]:0),0); }
+
+function h2sv(key,val,btn){
+  H2S[key]=val;
+  btn.closest('.h2tog').querySelectorAll('.h2tb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  h2updateRow(key);
+  h2updateScore();
+  h2updateChip();
+}
+
+function h2updateRow(key){
+  const vr  = document.getElementById('h2vr-'+key);
+  const dot = document.getElementById('h2vs-'+key);
+  if(!vr||!dot) return;
+  const on = H2S[key];
+  dot.className = 'h2vstate '+(on?'on':'off');
+  vr.classList.toggle('h2present', on);
+}
+
+function h2updateChip(){
+  const pts = h2calcScore();
+  const chip = document.getElementById('h2prechip');
+  const txt  = document.getElementById('h2prechip-txt');
+  if(!chip) return;
+  if(pts===0){ chip.style.display='none'; return; }
+  chip.style.display='inline-flex';
+  if(pts<=2){ chip.className='h2prechip some'; }
+  else       { chip.className='h2prechip many'; }
+  txt.textContent='+'+pts+' pt'+(pts!==1?'s':'')+' acumulado'+(pts!==1?'s':'');
+}
+
+function h2updateScore(){
+  const total=h2calcScore();
+  const prob=H2PR[Math.min(total,9)];
+  const fill=document.getElementById('h2fill');
+  fill.style.width=Math.max(Math.round(total/9*100),4)+'%';
+  let cls;
+  if(prob<30){cls='low';fill.style.background='var(--g6)';}
+  else if(prob<=80){cls='mid';fill.style.background='var(--a6)';}
+  else{cls='high';fill.style.background='var(--r6)';}
+  const box=document.getElementById('h2sbox');
+  const sn=document.getElementById('h2sn');
+  const sp=document.getElementById('h2sprob');
+  const si=document.getElementById('h2sint');
+  box.className='h2sbox '+cls;
+  sn.className='h2sn '+cls; sn.textContent=total;
+  sp.className='h2sp '+cls;
+  // GA4 — evento score H2FPEF (solo cuando hay datos reales)
+  const h2total_ev = h2calcScore();
+  if(h2total_ev > 0){
+    gaEvent('calcular_h2fpef', {
+      score_total: h2total_ev,
+      probabilidad_clase: cls,
+      fa:   H2S.fa  ? 'si':'no',
+      htp:  H2S.ph  ? 'si':'no',
+      ee:   H2S.ee  ? 'si':'no',
+      obesidad: H2S.h  ? 'si':'no',
+      hta:  H2S.ht  ? 'si':'no',
+      edad: H2S.age ? 'si':'no',
+      lap_diastolico: _h2ctx.lapStatus || 'no_calculado',
+      app_version: '2.1.3'
+    });
+  }
+
+  if(cls==='low'){
+    sp.textContent='Probabilidad baja de ICFEp (~'+prob+'%)';
+    si.textContent='El H₂FPEF tiene alto valor predictivo negativo en este rango. La evaluación ecográfica agrega poco para excluir ICFEp (Rahi et al, JACC CI 2026).';
+  } else if(cls==='mid'){
+    sp.textContent='Probabilidad intermedia de ICFEp (~'+prob+'%)';
+    si.textContent='En la zona intermedia, el resultado diastólico ASE 2025 mejora la precisión diagnóstica (NRI 1.38, p<0.001). Se recomienda integrar ambos. Si el resultado es normal al reposo, considere eco de esfuerzo.';
+  } else {
+    sp.textContent='Probabilidad alta de ICFEp (~'+prob+'%)';
+    si.textContent='Alta probabilidad. El diagnóstico de ICFEp es probable en el contexto clínico adecuado. La evaluación ASE 2025 aporta confirmación y permite gradación de la disfunción diastólica.';
+  }
+  // Integración ASE
+  const aseBlock=document.getElementById('h2ase');
+  const aseBody=document.getElementById('h2asebody');
+  const lap=_h2ctx.lapStatus, grado=_h2ctx.grado;
+  if(prob<30||!lap){aseBlock.classList.remove('show');return;}
+  aseBlock.classList.add('show');
+  let msg='';
+  if(lap==='elevada') msg=' El resultado diastólico ASE 2025 muestra <span class="hbadge e">PAI elevada · Grado '+grado+'</span> — confirma elevación de presiones de llenado y refuerza el diagnóstico de ICFEp.';
+  else if(lap==='normal'&&grado==='I') msg=' El resultado diastólico muestra <span class="hbadge n">Grado I · PAI normal</span> — relajación deteriorada sin elevación de PAI al reposo. Dado el score, se recomienda eco de esfuerzo para descartar elevación inducida por ejercicio.';
+  else if(lap==='normal') msg=' El resultado diastólico muestra <span class="hbadge n">Función normal</span> — discordante con el score H₂FPEF. Considere eco de esfuerzo o cateterismo derecho.';
+  else msg=' El resultado diastólico es <span class="hbadge i">Indeterminado</span>. En el contexto de score '+(cls==='mid'?'intermedio':'alto')+', completá los parámetros ecográficos o considerá evaluación de esfuerzo.';
+  aseBody.innerHTML=msg;
+}
+
+function toggleH2(){
+  const panel=document.getElementById('h2panel');
+  const arr=document.getElementById('h2arr');
+  const trig=document.getElementById('h2trig');
+  const open=!panel.classList.contains('open');
+  panel.classList.toggle('open',open);
+  arr.classList.toggle('open',open);
+  trig.classList.toggle('open',open);
+  if(open){
+    h2updateScore();
+    gaEvent('abrir_h2fpef', { app_version: '2.1.3' });
+  }
+}
+
+function h2autoFill(params,res){
+  // FA
+  H2S.fa=!!params.ritmoFA;
+  const fa0=document.getElementById('h2fa0'),fa1=document.getElementById('h2fa1');
+  if(fa0&&fa1){fa0.classList.toggle('on',!H2S.fa);fa1.classList.toggle('on',H2S.fa);}
+  // PSAP
+  H2S.ph=params.PSAP!=null&&params.PSAP>35;
+  const ph0=document.getElementById('h2ph0'),ph1=document.getElementById('h2ph1');
+  if(ph0&&ph1){ph0.classList.toggle('on',!H2S.ph);ph1.classList.toggle('on',H2S.ph);}
+  // E/e' septal
+  const hasE=params.E!=null&&!isNaN(params.E),hasSep=params.eSep!=null&&!isNaN(params.eSep);
+  const eeSep=(hasE&&hasSep&&params.eSep>0)?params.E/params.eSep:null;
+  H2S.ee=eeSep!=null?eeSep>9:false;
+  const ee0=document.getElementById('h2ee0'),ee1=document.getElementById('h2ee1');
+  if(ee0&&ee1){ee0.classList.toggle('on',!H2S.ee);ee1.classList.toggle('on',H2S.ee);}
+  // Contexto ASE
+  _h2ctx={lapStatus:res.lapStatus,grado:res.grado};
+  // Actualizar estado visual de filas eco
+  ['fa','ph','ee'].forEach(k=>h2updateRow(k));
+  h2updateChip();
+  if(document.getElementById('h2panel').classList.contains('open')) h2updateScore();
+}
 
 </script>
 </body>
