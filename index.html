@@ -674,13 +674,13 @@ body{
       <div class="fg">
         <div class="f">
           <label>Vel máx IT</label>
-          <div class="fr"><input id="inp-TR" type="text" placeholder="—" inputmode="decimal" autocomplete="off" oninput="markStale()"><span class="fu">m/s</span></div>
+          <div class="fr"><input id="inp-TR" type="text" placeholder="—" inputmode="decimal" autocomplete="off" oninput="onTRInput()"><span class="fu">m/s</span></div>
           <span class="fh">Umbral ≥2.8 m/s</span>
         </div>
         <div class="f">
           <label>PSAP</label>
-          <div class="fr"><input id="inp-PSAP" type="text" placeholder="—" inputmode="decimal" autocomplete="off" oninput="markStale()"><span class="fu">mmHg</span></div>
-          <span class="fh">Umbral ≥35 mmHg</span>
+          <div class="fr"><input id="inp-PSAP" type="text" placeholder="—" inputmode="decimal" autocomplete="off" oninput="onPsapManual()"><span class="fu">mmHg</span></div>
+          <span class="fh" id="hint-PSAP">Umbral ≥35 mmHg</span>
         </div>
       </div>
     </div>
@@ -907,7 +907,7 @@ body{
         Tomas Young
       </a>
     </div>
-    <span class="fver">v2.1.3</span>
+    <span class="fver" id="footerVersion">v2.1.3</span>
   </div>
   <div class="footer-legal">
     © 2025 A. Tomás Young. Todos los derechos reservados ·
@@ -969,6 +969,10 @@ body{
 <!-- ══════════════════════ SCRIPTS ══════════════════════ -->
 <script>
 
+// ══════════════════════════════════════════════
+// VERSIÓN — fuente única de verdad
+// ══════════════════════════════════════════════
+const APP_VERSION = '2.1.3';
 
 // ══════════════════════════════════════════════
 // ANALYTICS — GA4 eventos custom
@@ -980,7 +984,7 @@ function gaEvent(name, params){
 
 // Pageview con contexto
 window.addEventListener('load', function(){
-  gaEvent('app_open', { app_version: '2.1.3' });
+  gaEvent('app_open', { app_version: APP_VERSION });
 });
 
 // ══════════════════════════════════════════════
@@ -1230,7 +1234,7 @@ function toggleEsc(){
 function setEsc(el,key,hint){
   document.querySelectorAll('.esc-opt').forEach(o=>o.classList.remove('on'));
   el.classList.add('on');
-  if(key) gaEvent('escenario_especial', { escenario: key, app_version: '2.1.3' });
+  if(key) gaEvent('escenario_especial', { escenario: key, app_version: APP_VERSION });
   const badge=document.getElementById('escBadge');
   const hintEl=document.getElementById('escHint');
   const badgeTxt=document.getElementById('escBadgeTxt');
@@ -1259,12 +1263,59 @@ function markStale(){
   document.getElementById('staleBar').classList.add('show');
 }
 
+// ══════════════════════════════════════════════
+// PSAP — auto-cálculo desde TR (PAD asumida = 5 mmHg)
+// PSAP = 4 × TR² + PAD
+// ══════════════════════════════════════════════
+const PAD_ASUMIDA = 5;       // mmHg — valor por defecto
+let _psapAutoCalc = false;   // flag: ¿el valor actual viene del auto-cálculo?
+
+function onTRInput(){
+  markStale();
+  const tr = v('inp-TR');
+  const psapInp = document.getElementById('inp-PSAP');
+  const hint    = document.getElementById('hint-PSAP');
+
+  if(tr == null){
+    // Sin TR: si el PSAP estaba auto-calculado, limpiar
+    if(_psapAutoCalc){
+      psapInp.value = '';
+      _psapAutoCalc = false;
+      hint.textContent = 'Umbral ≥35 mmHg';
+      hint.classList.remove('warn');
+    }
+    return;
+  }
+
+  // Auto-calcular SOLO si el campo PSAP está vacío o ya estaba auto-calculado
+  if(psapInp.value.trim() === '' || _psapAutoCalc){
+    const psapEst = Math.round(4 * tr * tr + PAD_ASUMIDA);
+    psapInp.value = psapEst;
+    _psapAutoCalc = true;
+    hint.innerHTML = `PSAP ≈ ${psapEst} mmHg estimada de TR (PAD asumida = ${PAD_ASUMIDA} mmHg). Modificable.`;
+    hint.classList.add('warn');
+  }
+}
+
+function onPsapManual(){
+  markStale();
+  // Si el usuario edita el PSAP, marcarlo como manual (rompe el auto-link con TR)
+  _psapAutoCalc = false;
+  const hint = document.getElementById('hint-PSAP');
+  hint.textContent = 'Umbral ≥35 mmHg · Valor ingresado manualmente';
+  hint.classList.remove('warn');
+}
+
 function resetForm(){
   ['inp-E','inp-A','inp-eSep','inp-eLat','inp-LAVi','inp-TR','inp-PSAP','inp-LARS','inp-SD','inp-IVRT','inp-DT']
     .forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   document.getElementById('resultWrap').style.display='none';
   document.getElementById('staleBar').classList.remove('show');
   _stale=false; _calculado=false;
+  // Reset PSAP auto-calc state
+  _psapAutoCalc = false;
+  const psapHint = document.getElementById('hint-PSAP');
+  if(psapHint){ psapHint.textContent = 'Umbral ≥35 mmHg'; psapHint.classList.remove('warn'); }
   // Reset chips a default
   document.querySelectorAll('[data-group="ritmo"]').forEach(c=>c.classList.remove('on'));
   document.querySelector('[data-val="rs"]').classList.add('on');
@@ -1329,7 +1380,7 @@ function calcular(){
     tiene_tr:    params.TR   != null ? 'si' : 'no',
     tiene_lars:  params.LARS != null ? 'si' : 'no',
     escenario:   document.querySelector('.esc-opt.on')?.textContent?.trim() || 'ninguno',
-    app_version: '2.1.3'
+    app_version: APP_VERSION
   });
 
   // Logging
@@ -1409,26 +1460,78 @@ function renderResultado(res, params){
 // LOGGING GOOGLE SHEETS
 // ══════════════════════════════════════════════
 const ENABLE_LOGGING = true;
-const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyGMkDdFRo7uhUPYGhwi1tzErKQZsoe2bkQ1Gp6HyCznHsHO-lNR4UlVIm9x7F5zFac/exec';
-const LOG_TOKEN = 'pass';
+const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz0JwcGxElLQ5K8oubarhnZeb9oB5HlmMdTlyNlAHcVS5QZr1GhJajGSmOHNmaT_zVi/exec';
+const LOG_TOKEN = '9999';
 
 function enviarLog(params, res){
   if(!ENABLE_LOGGING) return;
-  const data={
+  const data = {
+    tipo: 'diastolico',
     token: LOG_TOKEN,
-    version: '2.0.0',
-    ritmo: params.ritmoFA?'FA':'RS',
-    fevi: params.feviReducida?'<50%':'>=50%',
+    version: APP_VERSION,
+    timestamp: new Date().toISOString(),
+    ritmo: params.ritmoFA ? 'FA' : 'RS',
+    fevi: params.feviReducida ? '<50%' : '>=50%',
     edad: params.grupoEdad,
+    escenario: document.querySelector('.esc-opt.on')?.textContent?.trim() || 'Ninguno',
     E: params.E, A: params.A,
     eSep: params.eSep, eLat: params.eLat,
     TR: params.TR, PSAP: params.PSAP,
     LAVi: params.LAVi, LARS: params.LARS,
     SD: params.SD, IVRT: params.IVRT, DT: params.DT,
-    lapStatus: res.lapStatus, grado: res.grado,
-    headline: res.headline,
+    lapStatus: res.lapStatus,
+    grado: res.grado,
+    headline: res.headline
   };
-  fetch(LOG_ENDPOINT,{method:'POST',body:JSON.stringify(data)}).catch(()=>{});
+  fetch(LOG_ENDPOINT, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'text/plain' }
+  }).catch(()=>{});
+}
+
+// ══════════════════════════════════════════════
+// LOGGING H2FPEF (con debounce de 1.5 s y dedupe)
+// ══════════════════════════════════════════════
+let _h2logTimer = null;
+let _h2lastPayload = '';
+function enviarLogH2FPEF(){
+  if(!ENABLE_LOGGING) return;
+  if(_h2logTimer) clearTimeout(_h2logTimer);
+  _h2logTimer = setTimeout(()=>{
+    const total = h2calcScore();
+    if(total === 0) return; // no logear cero
+    const prob = H2PR[Math.min(total,9)];
+    let clase = 'baja';
+    if(prob >= 30 && prob <= 80) clase = 'intermedia';
+    else if(prob > 80) clase = 'alta';
+
+    const data = {
+      tipo: 'h2fpef',
+      token: LOG_TOKEN,
+      version: APP_VERSION,
+      timestamp: new Date().toISOString(),
+      hta:    H2S.ht,
+      imc30:  H2S.h,
+      fa:     H2S.fa,
+      psap35: H2S.ph,
+      edad60: H2S.age,
+      ee9:    H2S.ee,
+      score:  total,
+      probabilidad: prob,
+      clase:  clase,
+      lap_diastolico: _h2ctx.lapStatus || 'no_calculado'
+    };
+    // dedupe: no enviar mismo set de variables dos veces seguidas
+    const sig = JSON.stringify({hta:data.hta,imc30:data.imc30,fa:data.fa,psap35:data.psap35,edad60:data.edad60,ee9:data.ee9});
+    if(sig === _h2lastPayload) return;
+    _h2lastPayload = sig;
+    fetch(LOG_ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'text/plain' }
+    }).catch(()=>{});
+  }, 1500);
 }
 
 // ══════════════════════════════════════════════
@@ -1448,6 +1551,9 @@ function toggleDisclaimer(e){ e.preventDefault(); document.getElementById('discl
 // ══════════════════════════════════════════════
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
 updateContextHints();
+
+// Sincronizar footer con APP_VERSION
+document.getElementById('footerVersion').textContent = 'v' + APP_VERSION;
 
 
 // ══════════════════════════════════════════════
@@ -1520,8 +1626,9 @@ function h2updateScore(){
       hta:  H2S.ht  ? 'si':'no',
       edad: H2S.age ? 'si':'no',
       lap_diastolico: _h2ctx.lapStatus || 'no_calculado',
-      app_version: '2.1.3'
+      app_version: APP_VERSION
     });
+    enviarLogH2FPEF();
   }
 
   if(cls==='low'){
@@ -1558,7 +1665,7 @@ function toggleH2(){
   trig.classList.toggle('open',open);
   if(open){
     h2updateScore();
-    gaEvent('abrir_h2fpef', { app_version: '2.1.3' });
+    gaEvent('abrir_h2fpef', { app_version: APP_VERSION });
   }
 }
 
